@@ -1,0 +1,23 @@
+table {
+  width: 100%;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+.no-records {
+  font-weight: bold;
+  text-align: center;
+  color: red;
+}
+
+@media print {
+  :not(app-purchase-receipt) {
+    display: none;
+  }
+  app-purchase-receipt {
+    display: block !important;
+  }
+}

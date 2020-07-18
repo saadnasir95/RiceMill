@@ -1,0 +1,17 @@
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+html,
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+@media print {
+  app-footer {
+    display: none;
+  }
+}
+
+mat-error {
+  font-size: 12px;
+}

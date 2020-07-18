@@ -1,0 +1,10 @@
+{
+  "loginPage": {
+    "login": "لوگن",
+    "email":"ای میل",
+    "password":"پاس ورڈ",
+    "emailRequired": "ای میل کی ضرورت ہے",
+    "emailValid":"درست ای میل درج کریں",
+    "passwordRequired": "پاس ورڈ کی ضرورت ہے"
+  }
+}

@@ -1,0 +1,29 @@
+<div class="row h-100 w-100 login">
+  <div class="col-md-3 m-auto">
+    <div class="card">
+      <div class="card-header card-header-danger rounded">
+        <h4 class="card-title text-center">{{'loginPage.login'|translate}}</h4>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+          <mat-form-field class="d-block w-100 mt-4">
+            <input type="email" matInput [placeholder]="'loginPage.email' | translate" formControlName="email">
+            <mat-error *ngIf="loginForm.get('email').hasError('required')">{{'loginPage.emailRequired'|translate}}
+            </mat-error>
+            <mat-error *ngIf="loginForm.get('email').hasError('email')">{{'loginPage.emailValid'|translate}}</mat-error>
+          </mat-form-field>
+          <mat-form-field class="d-block w-100 mb-4">
+            <input type="password" matInput [placeholder]="'loginPage.password'|translate" formControlName="password">
+            <mat-error *ngIf="loginForm.get('password').hasError('required')">{{'loginPage.passwordRequired'|translate}}
+            </mat-error>
+          </mat-form-field>
+          <div class="d-flex justify-content-center">
+            <button mat-raised-button type="submit" class="btn btn-danger btn-round">
+              <span *ngIf="spinner.isLoading"><i class="fas fa-spinner fa-spin"></i>&nbsp;</span>
+              {{'loginPage.login'|translate}}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

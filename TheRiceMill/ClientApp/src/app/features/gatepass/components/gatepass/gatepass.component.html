@@ -1,0 +1,113 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header card-header-primary rounded py-4">
+          <h3 class="card-title"><i class="fa fa-passport" aria-hidden="true"></i>
+            {{'gatepassPage.gatepass' | translate}}</h3>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <mat-form-field class="col-md-8">
+              <input matInput (keyup)="applyFilter($event.target.value)"
+                [placeholder]="'gatepassPage.search' | translate">
+            </mat-form-field>
+            <div class="col-md-4">
+              <button mat-raised-button type="button" class="btn btn-primary" (click)="openModal()"><i
+                  class="material-icons">add</i> {{'gatepassPage.addGatepass' | translate}}</button>
+            </div>
+          </div>
+          <mat-spinner *ngIf="isLoadingData"></mat-spinner>
+          <div class="mat-elevation-z8">
+            <table class="table-responsive-sm" mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData()">
+              <ng-container matColumnDef="Id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'gatepassPage.id' | translate}}</th>
+                <td mat-cell *matCellDef="let gatepass"> {{gatepass.id}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="Type">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'gatepassPage.type' | translate}}</th>
+                <td mat-cell *matCellDef="let gatepass"> {{gatepass.type | gatepassType}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="Company.Name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'gatepassPage.company' | translate}} </th>
+                <td mat-cell *matCellDef="let gatepass"> {{gatepass.company.name}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="Vehicle.Name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'gatepassPage.vehicle' | translate}}</th>
+                <td mat-cell *matCellDef="let gatepass"> {{gatepass.vehicle.name}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="Vehicle.PlateNo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'gatepassPage.plateNumber' | translate}}</th>
+                <td mat-cell *matCellDef="let gatepass"> {{gatepass.vehicle.plateNo}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="Product.Name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'gatepassPage.product' | translate}} </th>
+                <td mat-cell *matCellDef="let gatepass"> {{gatepass.product.name}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="BagQuantity">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'gatepassPage.bagQuantity' | translate}}</th>
+                <td mat-cell *matCellDef="let gatepass"> {{gatepass.bagQuantity}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="BagWeight">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'gatepassPage.bagWeight' | translate}}</th>
+                <td mat-cell *matCellDef="let gatepass"> {{gatepass.bagWeight}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="KandaWeight">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'gatepassPage.kandaWeight' | translate}}</th>
+                <td mat-cell *matCellDef="let gatepass"> {{gatepass.kandaWeight}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="TotalMaund">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'gatepassPage.maund' | translate}}</th>
+                <td mat-cell *matCellDef="let gatepass"> {{gatepass.totalMaund}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="CreatedDate">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{'gatepassPage.date' | translate}} </th>
+                <td mat-cell *matCellDef="let gatepass">
+                  {{gatepass.checkDateTime | localDatetime}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="Action">
+                <th mat-header-cell *matHeaderCellDef> {{'gatepassPage.action' | translate}} </th>
+                <td mat-cell *matCellDef="let gatepass">
+                  <a href="javascript:;" (click)="editGatepass(gatepass)"><i class="fa fa-pen"
+                      aria-hidden="true"></i></a>
+                  &nbsp;
+                  <a href="javascript:;" (click)="deleteGatepass(gatepass)"><i class="fa fa-trash text-danger"
+                      aria-hidden="true"></i></a>
+                  &nbsp;
+                  <a href="javascript:;" (click)="printGatepass(gatepass)"><i class="material-icons text-info">
+                      print
+                    </i></a>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="disclaimer">
+                <td mat-footer-cell *matFooterCellDef colspan="11" class="no-records">
+                  No records found
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              <div *ngIf="gatepassList">
+                <tr mat-footer-row *matFooterRowDef="['disclaimer']" class="no-records"></tr>
+              </div>
+            </table>
+            <mat-paginator [pageSizeOptions]="[10, 50, 100,200]" [showFirstLastButtons]="true" (page)="changePage()">
+            </mat-paginator>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<app-gatepass-receipt class="d-none"></app-gatepass-receipt>

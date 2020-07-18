@@ -1,0 +1,131 @@
+<!-- <div class="container">
+  <h2 class="h2 font-weight text-uppercase text-center">Kazim Rice and Processing Mills Kamalia</h2>
+  <hr>
+  <div class="row">
+    <div class="col-8">
+      <p class="m-0 font-weight">Address:
+        <span class="font-weight-normal">Sandhlwali road near 708 GB, Kamalia</span>
+      </p>
+      <div class="col-10 d-flex justify-content-md-between p-0">
+        <p class="m-0 font-weight">Phone Number: </p>
+        <div class="col-9 p-0">
+          <p class="m-0">0321 6565566</p>
+          <p class="m-0">0311 1742283</p>
+          <p class="m-0">0343 8797929</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-4">
+      <p class="h4 text-right font-weight m-0">Gatepass Receipt</p>
+      <p class="m-0 text-right">Gatepass Number: <span>{{gatepass.id}}</span></p>
+    </div>
+  </div>
+  <hr>
+  <h4 class="h4 mt-4 font-weight">Gatepass Details</h4>
+  <div class="table-responsive">
+    <table class="table table-bordered">
+      <thead class="bg-light">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Type</th>
+          <th scope="col">Company</th>
+          <th scope="col">Vehicle</th>
+          <th scope="col">Plate No</th>
+          <th scope="col">Product</th>
+          <th scope="col">Bag Qty</th>
+          <th scope="col">Bag Weight</th>
+          <th scope="col">Kanda Weight</th>
+          <th scope="col">Total Maund</th>
+          <th scope="col">Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{gatepass.id}}</td>
+          <td>{{gatepass.type|gatepassType}}</td>
+          <td>{{gatepass.company.name}}</td>
+          <td>{{gatepass.vehicle.name}}</td>
+          <td>{{gatepass.vehicle.plateNo}}</td>
+          <td>{{gatepass.product.name}}</td>
+          <td>{{gatepass.bagQuantity}}</td>
+          <td>{{gatepass.bagWeight}}</td>
+          <td>{{gatepass.kandaWeight}}</td>
+          <td>{{gatepass.totalMaund}}</td>
+          <td>{{gatepass.checkDateTime |localDatetime}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div> -->
+
+<div class="container">
+  <div class="row invoice-header px-3 py-2">
+    <div class="col-5">
+      <h3 class="mt-0">Kazim Rice and Processing Mills Kamalia</h3>
+      <h4>Purchase Receipt</h4>
+    </div>
+    <div class="col-3 text-right">
+      <p class="mb-0">0321 6565566</p>
+      <p class="mb-0">0311 1742283</p>
+      <p class="mb-0">0343 8797929</p>
+      <!-- <p>email@adress.com</p> -->
+      <!-- <p>personal-website.com</p> -->
+    </div>
+    <div class="col-4 text-right">
+      <p class="mb-0">Sandhlwali road near 708 GB</p>
+      <p>Kamalia, Punjab</p>
+      <!-- <p>VAT ID / PID</p> -->
+    </div>
+  </div>
+
+  <div class="invoice-content row px-5 pt-5">
+    <div class="col-3">
+      <h5 class="gray-ish">Invoiced to:</h5>
+      <p class="gray-ish">{{gatepass.company.name}}</p>
+      <p class="gray-ish">{{gatepass.company.address}}</p>
+      <p class="gray-ish">{{gatepass.company.phoneNumber}}</p>
+    </div>
+    <div class="col-3">
+      <h5 class="gray-ish">Gatepass number:</h5>
+      <p class="gray-ish">{{gatepass.id}}</p>
+
+      <h5 class="gray-ish">Gatepass Date</h5>
+      <p class="gray-ish">{{gatepass.checkDateTime | localDatetime}}</p>
+
+    </div>
+    <div class="col-6 text-right total-field">
+      <h4 class="gray-ish">Gatepass Type</h4>
+      <h1 class="gray-ish">{{gatepass.type | gatepassType}}</h1>
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-10 offset-1 invoice-table pt-1">
+      <table class="table table-hover">
+        <thead class="thead splitForPrint">
+          <tr>
+            <th scope="col gray-ish">Vehicle</th>
+            <th scope="col gray-ish">Plate No</th>
+            <th scope="col gray-ish">Product</th>
+            <th scope="col gray-ish">Bag Qty</th>
+            <th scope="col gray-ish">Bag Weight</th>
+            <th scope="col gray-ish">Kanda Weight</th>
+            <th scope="col gray-ish">Total Maund</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{gatepass.vehicle.name}}</td>
+            <td>{{gatepass.vehicle.plateNo}}</td>
+            <td>{{gatepass.product.name}}</td>
+            <td>{{gatepass.bagQuantity}}</td>
+            <td>{{gatepass.bagWeight}}</td>
+            <td>{{gatepass.kandaWeight}}</td>
+            <td>{{gatepass.totalMaund}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+

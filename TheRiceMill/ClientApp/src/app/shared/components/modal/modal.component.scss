@@ -1,0 +1,10 @@
+@media (min-width: 768px) {
+  :host-context(app-vehicle-modal) app-modal {
+    width: 30%;
+  }
+}
+@media (max-width: 767px) {
+  :host-context(app-vehicle-modal) :host {
+    width: 100%;
+  }
+}

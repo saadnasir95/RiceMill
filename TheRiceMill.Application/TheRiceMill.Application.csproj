@@ -1,0 +1,24 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="BankTransactions\Shared" />
+    <Folder Include="Users\Queries\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentValidation" Version="8.1.3" />
+    <PackageReference Include="MediatR" Version="6.0.0" />
+    <PackageReference Include="OpenIddict" Version="2.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TheRiceMill.Common\TheRiceMill.Common.csproj" />
+    <ProjectReference Include="..\TheRiceMill.Domain\TheRiceMill.Domain.csproj" />
+    <ProjectReference Include="..\TheRiceMill.Persistence\TheRiceMill.Persistence.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,163 @@
+<!-- <div class="container">
+  <h2 class="h2 font-weight text-uppercase text-center">Kazim Rice and Processing Mills Kamalia</h2>
+  <hr>
+  <div class="row">
+    <div class="col-8">
+      <p class="m-0 font-weight">Address:
+        <span class="font-weight-normal">Sandhlwali road near 708 GB, Kamalia</span>
+      </p>
+      <div class="col-10 d-flex justify-content-md-between p-0">
+        <p class="m-0 font-weight">Phone Number: </p>
+        <div class="col-9 p-0">
+          <p class="m-0">0321 6565566</p>
+          <p class="m-0">0311 1742283</p>
+          <p class="m-0">0343 8797929</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-4">
+      <p class="h4 text-right font-weight m-0">Sale Receipt</p>
+      <p class="m-0 text-right">Sale Number: <span>{{sale.id}}</span></p>
+    </div>
+  </div>
+  <hr>
+  <h4 class="h4 mt-4 font-weight">Sale Details</h4>
+  <div class="table-responsive">
+    <table class="table table-bordered">
+      <thead class="bg-light">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Company</th>
+          <th scope="col">Product</th>
+          <th scope="col">Bag Qty</th>
+          <th scope="col">Kanda Weight</th>
+          <th scope="col">Total Actual Bag Weight</th>
+          <th scope="col">Total Maund</th>
+          <th scope="col">Rate per Maund</th>
+          <th scope="col">Total Price</th>
+          <th scope="col">Date</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>{{sale.id}}</td>
+          <td>{{sale.company.name}}</td>
+          <td>{{sale.product.name}}</td>
+          <td>{{sale.bagQuantity}}</td>
+          <td>{{sale.kandaWeight}}</td>
+          <td>{{sale.totalActualBagWeight| currency:'KG '}}</td>
+          <td>{{sale.totalMaund}}</td>
+          <td>{{sale.ratePerMaund | currency:'Rs '}}</td>
+          <td>{{sale.totalPrice | currency:'Rs '}}</td>
+          <td>{{sale.checkOut |localDatetime}}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div> -->
+
+<div class="container">
+  <div class="row invoice-header px-3 py-2">
+    <div class="col-5">
+      <h3 class="mt-0">Kazim Rice and Processing Mills Kamalia</h3>
+      <h4>Purchase Receipt</h4>
+    </div>
+    <div class="col-3 text-right">
+      <p class="mb-0">0321 6565566</p>
+      <p class="mb-0">0311 1742283</p>
+      <p class="mb-0">0343 8797929</p>
+      <!-- <p>email@adress.com</p> -->
+      <!-- <p>personal-website.com</p> -->
+    </div>
+    <div class="col-4 text-right">
+      <p class="mb-0">Sandhlwali road near 708 GB</p>
+      <p>Kamalia, Punjab</p>
+      <!-- <p>VAT ID / PID</p> -->
+    </div>
+  </div>
+
+  <div class="invoice-content row px-5 pt-5">
+    <div class="col-3">
+      <h5 class="gray-ish">Invoiced to:</h5>
+      <p class="gray-ish">{{sale.company.name}}</p>
+      <p class="gray-ish">{{sale.company.address}}</p>
+      <p class="gray-ish">{{sale.company.phoneNumber}}</p>
+    </div>
+    <div class="col-3">
+      <h5 class="gray-ish">Sale number:</h5>
+      <p class="gray-ish">{{sale.id}}</p>
+
+      <h5 class="gray-ish">Sale Date</h5>
+      <p class="gray-ish">{{sale.checkOut | localDatetime}}</p>
+
+    </div>
+    <div class="col-6 text-right total-field">
+      <h4 class="gray-ish">Sale Total</h4>
+      <h1 class="gray-ish">{{sale.totalPrice | currency:'Rs '}}</h1>
+    </div>
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-10 offset-1 invoice-table pt-1">
+      <table class="table table-hover">
+        <thead class="thead splitForPrint">
+          <tr>
+            <th scope="col gray-ish">Product</th>
+            <th scope="col gray-ish">Bag Qty</th>
+            <th scope="col gray-ish">Kanda Weight</th>
+            <th scope="col gray-ish">Total Actual Bag Weight</th>
+            <th scope="col gray-ish">Total Maund</th>
+            <th scope="col gray-ish">Rate per Maund</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{{sale.product.name}}</td>
+            <td>{{sale.bagQuantity}}</td>
+            <td>{{sale.kandaWeight}}</td>
+            <td>{{sale.totalActualBagWeight| currency:'KG '}}</td>
+            <td>{{sale.totalMaund}}</td>
+            <td>{{sale.ratePerMaund | currency:'Rs '}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="row invoice_details">
+    <!-- invoiced to details -->
+    <div class="col-4 offset-1 pt-3">
+      <!-- <h4 class="gray-ish">Invoice Summary & Notes</h4>
+     <p class="pt-3 almost-gray">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras purus sapien, ullamcorper quis orci eu, consectetur congue nulla. In a fermentum est, ornare maximus neque. Phasellus metus risus, mattis ac sapien in, volutpat laoreet lectus. Maecenas tincidunt condimentum quam, ut porttitor dui ultricies nec.</p> -->
+    </div>
+    <!-- Invoice assets and total -->
+    <div class="offset-1 col-5 mb-3 pr-4 sub-table">
+      <table class="table table-borderless">
+        <tbody>
+          <tr>
+            <th scope="row gray-ish">Subtotal</th>
+            <td class="text-right">{{sale.basePrice | currency:'Rs '}}</td>
+          </tr>
+          <tr>
+            <th scope="row gray-ish">Commission</th>
+            <td class="text-right">{{sale.commission | currency: 'Rs '}}</td>
+          </tr>
+
+          <tr *ngFor="let charge of sale.additionalCharges">
+            <th scope="row gray-ish">{{charge.task}}</th>
+            <td class="text-right">{{charge.total | currency:'Rs '}}</td>
+          </tr>
+          <tr class="last-row">
+            <th scope="row">
+              <h4>Total</h4>
+            </th>
+            <td class="text-right">
+              <h4>{{sale.totalPrice | currency:'Rs '}}</h4>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <!-- <p class="text-center pb-3"><em> Taxes will be calculated in &euro; regarding transport and other taxable
+      services.</em></p> -->
+</div>

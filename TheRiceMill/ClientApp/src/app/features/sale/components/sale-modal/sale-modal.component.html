@@ -1,0 +1,340 @@
+<ng-template #header>
+  <h2 mat-dialog-title class="d-inline" *ngIf="isNew">Add Sale</h2>
+  <h2 mat-dialog-title class="d-inline" *ngIf="!isNew">Edit Sale</h2>
+  <span class="float-right">
+    <i class="fa fa-times show-cursor" style="cursor: pointer;" (click)="closeModal()">
+    </i>
+  </span>
+  <div class="clearfix"></div>
+</ng-template>
+
+<ng-template #body>
+  <form [formGroup]="saleForm" (ngSubmit)="submit()">
+    <mat-dialog-content>
+      <div class="row">
+        <div class="col-12">
+          <mat-form-field class="w-100">
+            <input type="datetime-local" matInput placeholder="Choose Check in DateTime" formControlName="checkOut">
+            <mat-error *ngIf="saleForm.get('checkOut').hasError('required')">Check out datetime required</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row" formGroupName="companyGroup">
+        <div class="col-md-4">
+          <mat-form-field class="w-100">
+            <input type="text" matInput placeholder="Enter Company Name" formControlName="name" autocomplete="off"
+              [matAutocomplete]="companyAutoComplete">
+            <mat-autocomplete #companyAutoComplete="matAutocomplete" (optionSelected)="selectedCompany($event)">
+              <mat-option *ngFor="let company of companySuggestions" [value]="company">
+                {{company.name + ' -- ' + company.address}}</mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="saleForm.get('companyGroup.name').hasError('required')">Company Name is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-4">
+          <mat-form-field class="w-100">
+            <input type="text" matInput placeholder="Enter Phone Number" formControlName="phoneNumber">
+            <mat-error *ngIf="saleForm.get('companyGroup.phoneNumber').hasError('required')">Company Name is required
+            </mat-error>
+            <mat-error *ngIf="saleForm.get('companyGroup.phoneNumber').hasError('maxlength')">
+              Phone number must be less than 13 digits</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-4">
+          <mat-form-field class="w-100">
+            <input type="text" matInput placeholder="Enter Company Address" formControlName="address">
+            <mat-error *ngIf="saleForm.get('companyGroup.address').hasError('required')">Company address is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row" formGroupName="vehicleGroup">
+        <div class="col-md-6">
+          <mat-form-field class="w-100">
+            <input type="text" matInput placeholder="Enter Vehicle Name" formControlName="name" autocomplete="off"
+              [matAutocomplete]="vehicleAutoComplete">
+            <mat-autocomplete #vehicleAutoComplete="matAutocomplete" (optionSelected)="selectedVehicle($event)">
+              <mat-option *ngFor="let vehicle of vehicleSuggestions" [value]="vehicle">
+                {{vehicle.name + ' -- ' + vehicle.plateNo}}</mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="saleForm.get('vehicleGroup.name').hasError('required')">Vehicle Name is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-6">
+          <mat-form-field class="w-100">
+            <input type="text" matInput placeholder="Enter Plate Number" formControlName="plateNo">
+            <mat-error *ngIf="saleForm.get('vehicleGroup.plateNo').hasError('required')">Plate Number is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <mat-form-field class="w-100" formGroupName="productGroup">
+            <input type="text" matInput placeholder="Enter Product Name" formControlName="name" autocomplete="off"
+              [matAutocomplete]="productAutoComplete">
+            <mat-autocomplete #productAutoComplete="matAutocomplete" (optionSelected)="selectedProduct($event)">
+              <mat-option *ngFor="let product of productSuggestions" [value]="product">
+                {{product.name + ' -- ' + product.price.toString()}}</mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="saleForm.get('productGroup.name').hasError('required')">Product Name is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-6">
+          <mat-form-field class="w-100">
+            <input type="text" matInput placeholder="Enter Bilty Number" formControlName="biltyNumber">
+            <mat-error *ngIf="saleForm.get('biltyNumber').hasError('required')">Bilty Number is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="row" formGroupName="weightPriceGroup">
+        <div class="col-md-4">
+          <mat-form-field>
+            <input type="number" matInput placeholder="Enter Bag Quantity" formControlName="bagQuantity">
+            <mat-error *ngIf="saleForm.get('weightPriceGroup.bagQuantity').hasError('required')">
+              Bag quantity is required
+            </mat-error>
+            <mat-error *ngIf="saleForm.get('weightPriceGroup.bagQuantity').hasError('min')">
+              Bag quantity must be greater than 0</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-4">
+          <mat-form-field>
+            <input type="number" matInput placeholder="Enter Bag Weight in grams" formControlName="bagWeight">
+            <mat-error *ngIf="saleForm.get('weightPriceGroup.bagWeight').hasError('required')">
+              Bag weight is required
+            </mat-error>
+            <mat-error *ngIf="saleForm.get('weightPriceGroup.bagWeight').hasError('min')">
+              Bag weight must be greater than 0</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-4">
+          <mat-form-field>
+            <input type="number" matInput placeholder="Kanda Weight" formControlName="kandaWeight">
+            <mat-error *ngIf="saleForm.get('weightPriceGroup.kandaWeight').hasError('required')">kanda weight is
+              required
+            </mat-error>
+            <mat-error *ngIf="saleForm.get('weightPriceGroup.kandaWeight').hasError('min')">Kanda weight must be
+              greater than 0</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-6">
+          <mat-form-field>
+            <input type="number" matInput placeholder="Empty Bag Weight" formControlName="emptyBagWeight" readonly>
+            <mat-error *ngIf="saleForm.get('weightPriceGroup.emptyBagWeight').hasError('required')">
+              Empty bag weight is required
+            </mat-error>
+            <mat-error *ngIf="saleForm.get('weightPriceGroup.emptyBagWeight').hasError('min')">
+              Empty Weight must be greater than 0</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-6">
+          <mat-form-field>
+            <input type="number" matInput placeholder="Total Empty Bag Weight" formControlName="totalEmptyBagWeight"
+              readonly>
+            <mat-error *ngIf="saleForm.get('weightPriceGroup.totalEmptyBagWeight').hasError('required')">
+              Empty bag weight is required
+            </mat-error>
+            <mat-error *ngIf="saleForm.get('weightPriceGroup.totalEmptyBagWeight').hasError('min')">
+              Empty Bag Weight must be greater than 0</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-6">
+          <mat-form-field>
+            <input type="number" matInput placeholder="Expected Bag Weight" formControlName="expectedBagWeight"
+              readonly>
+            <mat-error *ngIf="saleForm.get('weightPriceGroup.expectedBagWeight').hasError('required')">
+              Expected bag weight is required
+            </mat-error>
+            <mat-error *ngIf="saleForm.get('weightPriceGroup.expectedBagWeight').hasError('min')">
+              Expected bag weight must be greater than 0</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-6">
+          <mat-form-field>
+            <input type="number" matInput placeholder="Total Expected Bag Weight"
+              formControlName="totalExpectedBagWeight" readonly>
+            <mat-error *ngIf="saleForm.get('weightPriceGroup.totalExpectedBagWeight').hasError('required')">
+              Total expected bag weight is required
+            </mat-error>
+            <mat-error *ngIf="saleForm.get('weightPriceGroup.totalExpectedBagWeight').hasError('min')">
+              Total expected bag weight must be greater than 0</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-4">
+          <mat-form-field>
+            <input type="number" matInput placeholder="Actual Bag Weight" formControlName="actualBagWeight" readonly>
+            <mat-error *ngIf="saleForm.get('weightPriceGroup.actualBagWeight').hasError('required')">
+              Actual bag weight is required
+            </mat-error>
+            <mat-error *ngIf="saleForm.get('weightPriceGroup.actualBagWeight').hasError('min')">
+              Actual bag weight must be greater than 0</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-4">
+          <mat-form-field>
+            <input type="number" matInput placeholder="Total Actual Bag Weight" formControlName="totalActualBagWeight"
+              readonly>
+            <mat-error *ngIf="saleForm.get('weightPriceGroup.totalActualBagWeight').hasError('required')">
+              Total Actual bag weight is required
+            </mat-error>
+            <mat-error *ngIf="saleForm.get('weightPriceGroup.totalActualBagWeight').hasError('min')">
+              Total Actual bag weight must be greater than 0</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-4">
+          <mat-form-field>
+            <input type="number" matInput placeholder="Maund Weight" formControlName="totalMaund" readonly>
+            <mat-error *ngIf="saleForm.get('weightPriceGroup.totalMaund').hasError('required')">
+              Maund weight is required
+            </mat-error>
+            <mat-error *ngIf="saleForm.get('weightPriceGroup.totalMaund').hasError('min')">
+              Maund weight must be greater than 0</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-4">
+          <mat-form-field>
+            <input type="number" matInput placeholder="Enter Maund Price" formControlName="ratePerMaund">
+            <mat-error *ngIf="saleForm.get('weightPriceGroup.ratePerMaund').hasError('required')">
+              Maund Price is required
+            </mat-error>
+            <mat-error *ngIf="saleForm.get('weightPriceGroup.ratePerMaund').hasError('min')">
+              Maund Price must be greater than 0</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-4">
+          <mat-form-field>
+            <input type="number" matInput placeholder="Kg Price" formControlName="ratePerKg" readonly>
+            <mat-error *ngIf="saleForm.get('weightPriceGroup.ratePerKg').hasError('required')">
+              Kg Price is required
+            </mat-error>
+            <mat-error *ngIf="saleForm.get('weightPriceGroup.ratePerKg').hasError('min')">
+              Kg Price must be greater than 0</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-4">
+          <mat-form-field>
+            <input type="number" matInput placeholder="Total Price" formControlName="totalPrice" readonly>
+            <mat-error *ngIf="saleForm.get('weightPriceGroup.totalPrice').hasError('required')">
+              Total Price is required
+            </mat-error>
+            <mat-error *ngIf="saleForm.get('weightPriceGroup.totalPrice').hasError('min')">
+              Total Price must be greater than 0</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-6">
+          <mat-form-field>
+            <input type="number" matInput placeholder="Commission Rate" formControlName="percentCommission">
+            <mat-error *ngIf="saleForm.get('weightPriceGroup.percentCommission').hasError('required')">
+              Commission rate is required
+            </mat-error>
+            <mat-error *ngIf="saleForm.get('weightPriceGroup.percentCommission').hasError('min')">
+              Commission rate must be greater than 0</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-6">
+          <mat-form-field>
+            <input type="number" matInput placeholder="Commission" formControlName="commission" readonly>
+            <mat-error *ngIf="saleForm.get('weightPriceGroup.commission').hasError('required')">
+              Commission is required
+            </mat-error>
+            <mat-error *ngIf="saleForm.get('weightPriceGroup.commission').hasError('min')">
+              Commission must be greater than 0</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+      <mat-divider class="mb-2"></mat-divider>
+      <div formArrayName="additionalCharges">
+        <div *ngFor="let labour of saleForm.get('additionalCharges').controls; index as i" [formGroupName]="i"
+          class="row">
+          <div class="col-2 d-flex">
+            <!-- <label id="addPrice" class="d-block">Add Price</label> -->
+            <mat-checkbox aria-labelledby="addPrice" formControlName="addPrice" color="primary" class="m-auto">Add price
+            </mat-checkbox>
+          </div>
+          <input type="number" hidden formControlName="id">
+          <mat-form-field class="col-3">
+            <input type="text" matInput placeholder="Enter Task" formControlName="task">
+          </mat-form-field>
+          <mat-form-field class="col-2">
+            <input type="number" matInput placeholder="Enter Bag Quantiy" formControlName="bagQuantity">
+          </mat-form-field>
+          <mat-form-field class="col-2">
+            <input type="number" matInput placeholder="Enter Rate" formControlName="rate">
+          </mat-form-field>
+          <mat-form-field class="col-2">
+            <input type="number" matInput placeholder="Total Price" formControlName="total" readonly>
+          </mat-form-field>
+          <div class="col-1 d-flex">
+            <i class="fas fa-window-close fa-lg show-cursor my-auto text-danger" style="cursor: pointer;"
+              (click)="deleteCharges(i)">
+            </i>
+          </div>
+        </div>
+        <button mat-raised-button type="button" class="btn btn-primary" (click)="addCharges()">Add Labour</button>
+      </div>
+      <!-- <mat-divider></mat-divider> -->
+      <!-- <div formArrayName="commissions">
+        <div *ngFor="let labour of saleForm.get('commissions').controls; index as i" [formGroupName]="i" class="row">
+          <mat-form-field class="col-4">
+            <input type="number" matInput placeholder="Enter Rate" formControlName="rate">
+          </mat-form-field>
+          <mat-form-field class="col-4">
+            <input type="number" matInput placeholder="Total Price" formControlName="total" readonly>
+          </mat-form-field>
+          <div class="col-1 d-flex">
+            <i class="fas fa-window-close fa-lg show-cursor my-auto text-danger" style="cursor: pointer;"
+              (click)="deleteCommission(i)">
+            </i>
+          </div>
+        </div>
+        <button mat-raised-button type="button" class="btn btn-primary" (click)="addCommission()">Add
+          Commission</button>
+      </div> -->
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <div class="row ml-1">
+        <button mat-raised-button type="submit" class="btn btn-primary" *ngIf="isNew">
+          <span *ngIf="spinner.isLoading">
+            <i class="fas fa-spinner fa-spin"></i>&nbsp;
+          </span>Save</button>
+        <button mat-raised-button type="submit" class="btn btn-primary" *ngIf="!isNew">
+          <span *ngIf="spinner.isLoading">
+            <i class="fas fa-spinner fa-spin"></i>&nbsp;
+          </span>Update</button>
+        <button mat-raised-button type="button" (click)="closeModal()" class="btn btn-danger">Cancel</button>
+      </div>
+    </mat-dialog-actions>
+  </form>
+</ng-template>
+
+<ng-template #deleteHeader>
+  <h2 mat-dialog-title class="d-inline" *ngIf="isNew">Delete Sale</h2>
+  <span class="float-right">
+    <i class="fa fa-times show-cursor" style="cursor: pointer;" (click)="closeModal()">
+    </i>
+  </span>
+  <div class="clearfix"></div>
+</ng-template>
+
+<ng-template #deleteBody>
+  <mat-dialog-content>
+    Are you sure you want to delete this sale?
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <div class="row mt-3 ml-1">
+      <button mat-raised-button (click)="delete()" type="button" class="btn btn-primary">
+        <span *ngIf="spinner.isLoading">
+          <i class="fas fa-spinner fa-spin"></i>&nbsp;
+        </span>Yes</button>
+      <button mat-raised-button (click)="closeModal()" class="btn btn-danger">Cancel</button>
+    </div>
+  </mat-dialog-actions>
+</ng-template>
+
+<app-modal [Header]="header" [Body]="body" *ngIf="!isDelete"></app-modal>
+<app-modal [Body]="deleteBody" *ngIf="isDelete"></app-modal>

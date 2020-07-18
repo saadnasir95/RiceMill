@@ -1,0 +1,10 @@
+{
+  "loginPage": {
+    "login": "Login",
+    "email": "Email",
+    "password": "Password",
+    "emailRequired": "Email is required",
+    "emailValid":"Enter a valid email",
+    "passwordRequired": "Password is required"
+  }
+}

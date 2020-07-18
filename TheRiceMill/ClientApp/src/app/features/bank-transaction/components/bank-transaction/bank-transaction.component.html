@@ -1,0 +1,110 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header card-header-primary rounded py-4">
+          <h3 class="card-title"><i class="fa fa-university" aria-hidden="true"></i> Bank</h3>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <mat-form-field class="col-8">
+              <mat-label>Select Bank Account</mat-label>
+              <mat-select [(ngModel)]="selectedBankAccountId" (selectionChange)="onBankAccountChange()">
+                <mat-option *ngFor="let account of bankAccountList" [value]="account.id">
+                  {{account.bankId.toString() | bank}} -- {{account.accountNumber}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div class="col-4">
+              <button mat-raised-button type="button" class="btn btn-primary" (click)="openModal()"><i
+                  class="material-icons">add</i> Add Transaction</button>
+            </div>
+          </div>
+          <mat-spinner *ngIf="isLoadingData"></mat-spinner>
+          <div class="row" *ngIf="transactionData">
+            <div class="col-12">
+              <h4 class="text-right netBalance">Net Balance: {{transactionData.netBalance | localCurrency}}
+              </h4>
+            </div>
+          </div>
+          <div class="mat-elevation-z8">
+            <table class="table-responsive-sm" mat-table [dataSource]="dataSource">
+              <ng-container matColumnDef="transactionDate">
+                <th mat-header-cell *matHeaderCellDef> Transaction Date</th>
+                <td mat-cell *matCellDef="let transaction"> {{transaction.transactionDate | localDatetime}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="company.Name">
+                <th mat-header-cell *matHeaderCellDef> Company </th>
+                <td mat-cell *matCellDef="let transaction"> {{transaction.company.name}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="transactionType">
+                <th mat-header-cell *matHeaderCellDef> Transaction Type</th>
+                <td mat-cell *matCellDef="let transaction"> {{transaction.transactionType | transactionType}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="paymentType">
+                <th mat-header-cell *matHeaderCellDef> Payment Type </th>
+                <td mat-cell *matCellDef="let transaction"> {{transaction.paymentType | paymentType}} </td>
+              </ng-container>
+
+
+              <ng-container matColumnDef="credit">
+                <th mat-header-cell *matHeaderCellDef> Credit</th>
+                <td mat-cell *matCellDef="let transaction">
+                  <span *ngIf="transaction.credit!==0">
+                    {{transaction.credit | currency:'Rs '}}
+                  </span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="debit">
+                <th mat-header-cell *matHeaderCellDef> Debit </th>
+                <td mat-cell *matCellDef="let transaction">
+                  <span *ngIf="transaction.debit!==0">
+                    {{transaction.debit | currency:'Rs '}}
+                  </span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="balance">
+                <th mat-header-cell *matHeaderCellDef> Balance </th>
+                <td mat-cell *matCellDef="let transaction">
+                  <span>
+                    {{transaction.balance | localCurrency}}
+                  </span>
+                </td>
+              </ng-container>
+
+
+              <ng-container matColumnDef="Action">
+                <th mat-header-cell *matHeaderCellDef> Action </th>
+                <td mat-cell *matCellDef="let transaction">
+                  <a href="javascript:;" (click)="editTransaction(transaction)"><i class="fa fa-pen"
+                      aria-hidden="true"></i></a>
+                  &nbsp;
+                  <a href="javascript:;" (click)="deleteTransaction(transaction)"><i class="fa fa-trash text-danger"
+                      aria-hidden="true"></i></a>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="disclaimer">
+                <td mat-footer-cell *matFooterCellDef colspan="8" class="no-records">
+                  No records found
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              <div *ngIf="transactionList">
+                <tr mat-footer-row *matFooterRowDef="['disclaimer']" class="no-records"></tr>
+              </div>
+            </table>
+            <mat-paginator [pageSizeOptions]="[10, 50, 100,200]" [showFirstLastButtons]="true" (page)="changePage()">
+            </mat-paginator>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,127 @@
+<ng-template #header>
+  <h2 mat-dialog-title class="d-inline" *ngIf="isNew">Add Transaction</h2>
+  <h2 mat-dialog-title class="d-inline" *ngIf="!isNew">Edit Transaction</h2>
+  <span class="float-right">
+    <i class="fa fa-times show-cursor" style="cursor: pointer;" (click)="closeModal()">
+    </i>
+  </span>
+  <div class="clearfix"></div>
+</ng-template>
+
+<ng-template #body>
+  <form [formGroup]="bankTransactionForm" (ngSubmit)="submit()">
+    <mat-dialog-content>
+      <div class="row">
+        <div class="col-6">
+          <mat-form-field class="w-100">
+            <input type="datetime-local" matInput placeholder="Choose DateTime" formControlName="transactionDate">
+            <mat-error *ngIf="bankTransactionForm.get('transactionDate').hasError('required')">Datetime is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-3">
+          <label id="gatepassType" class="d-block">Select Transaction Type</label>
+          <mat-radio-group aria-labelledby="gatepassType" formControlName="transactionType">
+            <mat-radio-button [value]="1" class="mr-2" color="primary"> Credit</mat-radio-button>
+            <mat-radio-button [value]="2" color="primary"> Debit</mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div class="col-3">
+          <label id="paymentType" class="d-block">Select Payment Type</label>
+          <mat-radio-group aria-labelledby="paymentType" formControlName="paymentType">
+            <mat-radio-button [value]="2" class="mr-2" color="primary"> Cheque</mat-radio-button>
+            <mat-radio-button [value]="1" color="primary"> Cash</mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div class="col-7">
+          <mat-form-field>
+            <mat-label>Select Bank Name</mat-label>
+            <mat-select formControlName="bankAccountId">
+              <mat-option *ngFor="let account of bankAccountList" [value]="account.id">
+                {{account.bankId.toString() | bank}} -- {{account.accountNumber}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="bankTransactionForm.get('bankAccountId').hasError('required')">Bank account is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-5">
+          <mat-form-field>
+            <mat-label>Select Company</mat-label>
+            <mat-select formControlName="companyId">
+              <mat-option *ngFor="let company of companyList" [value]="company.id">
+                {{company.name}}
+              </mat-option>
+            </mat-select>
+            <mat-error *ngIf="bankTransactionForm.get('companyId').hasError('required')">Company name is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-6" *ngIf="!isCash">
+          <mat-form-field class="w-100">
+            <input type="text" matInput placeholder="Enter Cheque Number" formControlName="chequeNumber">
+            <mat-error *ngIf="bankTransactionForm.get('chequeNumber').hasError('required')">Cheque number is
+              required
+            </mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-6">
+          <mat-form-field class="w-100">
+            <input type="number" matInput placeholder="Enter Amount" formControlName="transactionAmount">
+            <mat-error *ngIf="bankTransactionForm.get('transactionAmount').hasError('required')">Amount is
+              required
+            </mat-error>
+            <mat-error *ngIf="bankTransactionForm.get('transactionAmount').hasError('min')">Amount must be greater than
+              0
+            </mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+    </mat-dialog-content>
+    <mat-dialog-actions>
+      <div class="row ml-1">
+        <button mat-raised-button type="submit" class="btn btn-primary" *ngIf="isNew">
+          <span *ngIf="spinner.isLoading">
+            <i class="fas fa-spinner fa-spin"></i>&nbsp;
+          </span>
+          Save
+        </button>
+        <button mat-raised-button type="submit" class="btn btn-primary" *ngIf="!isNew">
+          <span *ngIf="spinner.isLoading">
+            <i class="fas fa-spinner fa-spin"></i>&nbsp;
+          </span>
+          Update</button>
+        <button mat-raised-button type="button" (click)="closeModal()" class="btn btn-danger">Cancel</button>
+      </div>
+    </mat-dialog-actions>
+  </form>
+</ng-template>
+
+<ng-template #deleteHeader>
+  <h2 mat-dialog-title class="d-inline" *ngIf="isNew">Delete Transaction</h2>
+  <span class="float-right">
+    <i class="fa fa-times show-cursor" style="cursor: pointer;" (click)="closeModal()">
+    </i>
+  </span>
+  <div class="clearfix"></div>
+</ng-template>
+
+<ng-template #deleteBody>
+  <mat-dialog-content>
+    Are you sure you want to delete this transaction?
+  </mat-dialog-content>
+  <mat-dialog-actions>
+    <div class="row mt-3 ml-1">
+      <button mat-raised-button (click)="delete()" type="button" class="btn btn-primary">
+        <span *ngIf="spinner.isLoading">
+          <i class="fas fa-spinner fa-spin"></i>&nbsp;
+        </span>
+        Yes
+      </button>
+      <button mat-raised-button (click)="closeModal()" class="btn btn-danger">Cancel</button>
+    </div>
+  </mat-dialog-actions>
+</ng-template>
+
+<app-modal [Header]="header" [Body]="body" *ngIf="!isDelete"></app-modal>
+<app-modal [Body]="deleteBody" *ngIf="isDelete"></app-modal>
