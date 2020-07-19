@@ -1,80 +1,23 @@
-<!-- <div class="container">
-  <h2 class="h2 font-weight text-uppercase text-center">Kazim Rice and Processing Mills Kamalia</h2>
-  <hr>
-  <div class="row">
-    <div class="col-8">
-      <p class="m-0 font-weight">Address:
-        <span class="font-weight-normal">Sandhlwali road near 708 GB, Kamalia</span>
-      </p>
-      <div class="col-10 d-flex justify-content-md-between p-0">
-        <p class="m-0 font-weight">Phone Number: </p>
-        <div class="col-9 p-0">
-          <p class="m-0">0321 6565566</p>
-          <p class="m-0">0311 1742283</p>
-          <p class="m-0">0343 8797929</p>
-        </div>
-      </div>
-    </div>
-    <div class="col-4">
-      <p class="h4 text-right font-weight m-0">Sale Receipt</p>
-      <p class="m-0 text-right">Sale Number: <span>{{sale.id}}</span></p>
-    </div>
-  </div>
-  <hr>
-  <h4 class="h4 mt-4 font-weight">Sale Details</h4>
-  <div class="table-responsive">
-    <table class="table table-bordered">
-      <thead class="bg-light">
-        <tr>
-          <th scope="col">#</th>
-          <th scope="col">Company</th>
-          <th scope="col">Product</th>
-          <th scope="col">Bag Qty</th>
-          <th scope="col">Kanda Weight</th>
-          <th scope="col">Total Actual Bag Weight</th>
-          <th scope="col">Total Maund</th>
-          <th scope="col">Rate per Maund</th>
-          <th scope="col">Total Price</th>
-          <th scope="col">Date</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>{{sale.id}}</td>
-          <td>{{sale.company.name}}</td>
-          <td>{{sale.product.name}}</td>
-          <td>{{sale.bagQuantity}}</td>
-          <td>{{sale.kandaWeight}}</td>
-          <td>{{sale.totalActualBagWeight| currency:'KG '}}</td>
-          <td>{{sale.totalMaund}}</td>
-          <td>{{sale.ratePerMaund | currency:'Rs '}}</td>
-          <td>{{sale.totalPrice | currency:'Rs '}}</td>
-          <td>{{sale.checkOut |localDatetime}}</td>
-        </tr>
-      </tbody>
-    </table>
-  </div>
-</div> -->
-
 <div class="container">
   <div class="row invoice-header px-3 py-2">
-    <div class="col-5">
-      <h3 class="mt-0">Kazim Rice and Processing Mills Kamalia</h3>
-      <h4>Purchase Receipt</h4>
+    <div class="row invoice-header px-3 py-2">
+      <div class="col-5">
+        <h3 class="mt-0">Company Name</h3>
+        <h4>Purchase Receipt</h4>
+      </div>
+      <div class="col-3 text-right">
+        <p class="mb-0">Phone Number # 1</p>
+        <p class="mb-0">Phone Number # 2</p>
+        <p class="mb-0">Phone Number # 3</p>
+        <!-- <p>email@adress.com</p> -->
+        <!-- <p>personal-website.com</p> -->
+      </div>
+      <div class="col-4 text-right">
+        <p class="mb-0">Company Address</p>
+        <p>Company City, Country</p>
+        <!-- <p>VAT ID / PID</p> -->
+      </div>
     </div>
-    <div class="col-3 text-right">
-      <p class="mb-0">0321 6565566</p>
-      <p class="mb-0">0311 1742283</p>
-      <p class="mb-0">0343 8797929</p>
-      <!-- <p>email@adress.com</p> -->
-      <!-- <p>personal-website.com</p> -->
-    </div>
-    <div class="col-4 text-right">
-      <p class="mb-0">Sandhlwali road near 708 GB</p>
-      <p>Kamalia, Punjab</p>
-      <!-- <p>VAT ID / PID</p> -->
-    </div>
-  </div>
 
   <div class="invoice-content row px-5 pt-5">
     <div class="col-3">

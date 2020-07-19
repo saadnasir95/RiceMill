@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  baseUrl: 'https://zkricemillproject.azurewebsites.net'
+  baseUrl: 'https://ricemill.azurewebsites.net'
 };

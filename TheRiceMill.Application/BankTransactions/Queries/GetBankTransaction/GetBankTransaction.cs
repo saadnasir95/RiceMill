@@ -44,7 +44,7 @@ namespace TheRiceMill.Application.BankTransactions.Queries.GetBankTransaction
             {
                 throw new NotFoundException(nameof(Domain.Entities.BankAccount), request.BankAccountId);
             }
-            var currentBalance = _context.BankTransactions.Where(p => p.BankAccountId == request.BankAccountId).Sum(p => p.Credit - p.Debit);
+            var currentBalance = _context.BankTransactions.Where(p => p.BankAccountId == request.BankAccountId).Sum(p => p.Credit - p.Debit) + bankAccount.CurrentBalance;
             var list = await _context.BankTransactions.GetManyReadOnly(query, "CreatedDate", request.Page,
                 request.PageSize,
                 true, p => p.Include(pr => pr.BankAccount.Bank).Include(pr => pr.Company)).Select(p =>
