@@ -1,5 +1,5 @@
 import { PipeTransform, Pipe } from '@angular/core';
-import { GatepassType } from '../model/enums';
+import { GatePassType } from '../model/enums';
 
 @Pipe({
   name: 'gatepassType'
@@ -7,10 +7,10 @@ import { GatepassType } from '../model/enums';
 export class GatepassTypePipe implements PipeTransform {
   transform(value: number) {
     switch (value) {
-      case GatepassType.Gatein:
-        return 'Gatein';
-      case GatepassType.Gateout:
-        return 'Gateout';
+      case GatePassType.InwardGatePass:
+        return 'IGP';
+      case GatePassType.OutwardGatePass:
+        return 'OGP';
     }
   }
 }

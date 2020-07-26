@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { GateinDirection, ProductType, GatepassType } from '../../../../shared/model/enums';
+import { ProductType, GatePassType } from '../../../../shared/model/enums';
 import { MatDialogRef, MatAutocompleteSelectedEvent } from '@angular/material';
 import { Vehicle } from '../../../../shared/model/vehicle.model';
 import { Product } from '../../../../shared/model/product.model';
@@ -29,10 +29,9 @@ export class GatepassModalComponent implements OnInit {
   productSuggestions: Product[];
   isGatein = true;
   gatepassForm: FormGroup = new FormGroup({
-    checkDateTime: new FormControl(moment.tz('Asia/Karachi').format().slice(0, 16), Validators.required),
-    gatepassType: new FormControl(+GatepassType.Gatein, Validators.required),
-    direction: new FormControl(+GateinDirection.Milling, Validators.required),
-    biltyNumber: new FormControl('123', Validators.required),
+    dateTime: new FormControl(moment.tz('Asia/Karachi').format().slice(0, 16), Validators.required),
+    type: new FormControl(+GatePassType.InwardGatePass, Validators.required),
+    broker: new FormControl(''),
     companyGroup: new FormGroup({
       name: new FormControl('', Validators.required),
       address: new FormControl('', Validators.required),
@@ -49,16 +48,12 @@ export class GatepassModalComponent implements OnInit {
     }),
     weightPriceGroup: new FormGroup({
       bagQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
-      bagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
-      kandaWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
-      totalMaund: new FormControl(0, [Validators.required, Validators.min(0)]),
+      boriQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
+      weightPerBag: new FormControl(0, [Validators.required, Validators.min(0)]),
+      netWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
+      maund: new FormControl(0, [Validators.required, Validators.min(0)]),
     })
   });
-  public gatepassDirectionTypes = [
-    { text: 'Milling', value: +GateinDirection.Milling },
-    { text: 'Outside', value: +GateinDirection.Outside },
-    { text: 'Stockpile', value: +GateinDirection.Stockpile },
-  ];
   public modalRef: MatDialogRef<GatepassModalComponent>;
   public isNew = true;
   public isDelete = false;
@@ -72,49 +67,47 @@ export class GatepassModalComponent implements OnInit {
     public spinner: SpinnerService) { }
 
   ngOnInit() {
-    this.gatepassForm.get('gatepassType').valueChanges.subscribe(
-      (value) => {
-        if (value === +GatepassType.Gatein) {
-          this.isGatein = true;
-        } else {
-          this.isGatein = false;
-        }
-        // this.gatepassForm.get('productGroup.type').setValue(value);
-        if (this.isGatein) {
-          this.gatepassForm.get('biltyNumber').setValue('123');
-          this.gatepassForm.get('productGroup.type').setValue(+ProductType.Purchase);
-        } else {
-          this.gatepassForm.get('direction').setValue(+GateinDirection.Milling);
-          this.gatepassForm.get('productGroup.type').setValue(+ProductType.Sale);
-        }
-      });
+    // this.gatepassForm.get('gatepassType').valueChanges.subscribe(
+    //   (value) => {
+    //     if (value === +GatePassType.InwardGatePass) {
+    //       this.isGatein = true;
+    //     } else {
+    //       this.isGatein = false;
+    //     }
+    //     // this.gatepassForm.get('productGroup.type').setValue(value);
+    //     if (this.isGatein) {
+    //       this.gatepassForm.get('biltyNumber').setValue('123');
+    //       this.gatepassForm.get('productGroup.type').setValue(+ProductType.Purchase);
+    //     } else {
+    //       this.gatepassForm.get('direction').setValue(+GateinDirection.Milling);
+    //       this.gatepassForm.get('productGroup.type').setValue(+ProductType.Sale);
+    //     }
+    //   });
 
-    this.gatepassForm.get('weightPriceGroup.bagQuantity').valueChanges.subscribe(
-      (value) => {
-        const kandaWeight = +value * +this.gatepassForm.get('weightPriceGroup').value.bagWeight;
-        this.gatepassForm.get('weightPriceGroup').patchValue({
-          kandaWeight: kandaWeight,
-          totalMaund: (kandaWeight / 40)
-        }, { emitEvent: false });
-      }
-    );
+    // this.gatepassForm.get('weightPriceGroup.bagQuantity').valueChanges.subscribe(
+    //   (value) => {
+    //     const kandaWeight = +value * +this.gatepassForm.get('weightPriceGroup').value.bagWeight;
+    //     this.gatepassForm.get('weightPriceGroup').patchValue({
+    //       kandaWeight: kandaWeight,
+    //       totalMaund: (kandaWeight / 40)
+    //     }, { emitEvent: false });
+    //   }
+    // );
 
-    this.gatepassForm.get('weightPriceGroup.bagWeight').valueChanges.subscribe(
-      (value) => {
-        const kandaWeight = +value * +this.gatepassForm.get('weightPriceGroup').value.bagQuantity;
-        this.gatepassForm.get('weightPriceGroup').patchValue({
-          kandaWeight: kandaWeight,
-          totalMaund: (kandaWeight / 40)
-        }, { emitEvent: false });
-      }
-    );
+    // this.gatepassForm.get('weightPriceGroup.bagWeight').valueChanges.subscribe(
+    //   (value) => {
+    //     const kandaWeight = +value * +this.gatepassForm.get('weightPriceGroup').value.bagQuantity;
+    //     this.gatepassForm.get('weightPriceGroup').patchValue({
+    //       kandaWeight: kandaWeight,
+    //       totalMaund: (kandaWeight / 40)
+    //     }, { emitEvent: false });
+    //   }
+    // );
 
-    this.gatepassForm.get('weightPriceGroup.kandaWeight').valueChanges.subscribe(
+    this.gatepassForm.get('weightPriceGroup.netWeight').valueChanges.subscribe(
       (value) => {
-        const bagQuantity = +this.gatepassForm.get('weightPriceGroup').value.bagQuantity;
         this.gatepassForm.get('weightPriceGroup').patchValue({
-          bagWeight: +value / (bagQuantity === 0 ? 1 : bagQuantity),
-          totalMaund: (+value / 40)
+          maund: (+value / 40)
         }, { emitEvent: false });
       }
     );
@@ -188,10 +181,9 @@ export class GatepassModalComponent implements OnInit {
     this.gatepass = new Gatepass();
     Object.assign(this.gatepass, gatepass);
     this.gatepassForm.setValue({
-      checkDateTime: moment.utc(gatepass.checkDateTime).tz('Asia/Karachi').format().slice(0, 16),
-      gatepassType: gatepass.type,
-      direction: gatepass.direction,
-      biltyNumber: gatepass.biltyNumber,
+      dateTime: moment.utc(gatepass.dateTime).tz('Asia/Karachi').format().slice(0, 16),
+      type: gatepass.type,
+      broker: gatepass.broker,
       vehicleGroup: {
         name: gatepass.vehicle.name,
         plateNo: gatepass.vehicle.plateNo
@@ -208,9 +200,10 @@ export class GatepassModalComponent implements OnInit {
       },
       weightPriceGroup: {
         bagQuantity: gatepass.bagQuantity,
-        bagWeight: gatepass.bagWeight,
-        kandaWeight: gatepass.kandaWeight,
-        totalMaund: gatepass.totalMaund
+        boriQuantity: gatepass.boriQuantity,
+        weightPerBag: gatepass.weightPerBag,
+        netWeight: gatepass.netWeight,
+        maund: gatepass.maund
       }
     }, { emitEvent: false });
   }
@@ -255,24 +248,20 @@ export class GatepassModalComponent implements OnInit {
         this.gatepass.vehicle = new Vehicle();
         this.gatepass.vehicleId = 0;
       }
-      this.gatepass.checkDateTime = moment(this.gatepassForm.value.checkDateTime).utc().format();
-      this.gatepass.direction = +this.gatepassForm.value.direction;
-      this.gatepass.type = +this.gatepassForm.value.gatepassType;
-      this.gatepass.biltyNumber = +this.gatepassForm.value.biltyNumber;
-      // this.gatepass.productId = +this.gatepass.productId;
+      this.gatepass.dateTime = moment(this.gatepassForm.value.dateTime).utc().format();
+      this.gatepass.type = +this.gatepassForm.value.type;
+      this.gatepass.broker = this.gatepassForm.value.broker;
       this.gatepass.product.id = +this.gatepass.productId;
       this.gatepass.product.name = this.gatepassForm.get('productGroup').value.name;
       this.gatepass.product.price = +this.gatepassForm.get('productGroup').value.price;
       this.gatepass.product.type = +this.gatepassForm.get('productGroup').value.type;
       this.gatepass.product.createdDate = moment.utc().format();
 
-      // this.gatepass.vehicleId = +this.gatepass.vehicleId;
       this.gatepass.vehicle.id = +this.gatepass.vehicleId;
       this.gatepass.vehicle.name = this.gatepassForm.get('vehicleGroup').value.name;
       this.gatepass.vehicle.plateNo = this.gatepassForm.get('vehicleGroup').value.plateNo;
       this.gatepass.vehicle.createdDate = moment.utc().format();
 
-      // this.gatepass.companyId = +this.gatepass.companyId;
       this.gatepass.company.id = +this.gatepass.companyId;
       this.gatepass.company.name = this.gatepassForm.get('companyGroup').value.name;
       this.gatepass.company.phoneNumber = this.gatepassForm.get('companyGroup').value.phoneNumber;
@@ -280,9 +269,10 @@ export class GatepassModalComponent implements OnInit {
       this.gatepass.company.createdDate = moment.utc().format();
 
       this.gatepass.bagQuantity = this.gatepassForm.get('weightPriceGroup').value.bagQuantity;
-      this.gatepass.bagWeight = this.gatepassForm.get('weightPriceGroup').value.bagWeight;
-      this.gatepass.kandaWeight = this.gatepassForm.get('weightPriceGroup').value.kandaWeight;
-      this.gatepass.totalMaund = this.gatepassForm.get('weightPriceGroup').value.totalMaund;
+      this.gatepass.boriQuantity = this.gatepassForm.get('weightPriceGroup').value.boriQuantity;
+      this.gatepass.weightPerBag = this.gatepassForm.get('weightPriceGroup').value.weightPerBag;
+      this.gatepass.netWeight = this.gatepassForm.get('weightPriceGroup').value.netWeight;
+      this.gatepass.maund = this.gatepassForm.get('weightPriceGroup').value.maund;
 
       if (this.isNew) {
         this.gatepassService.addGatepass(this.gatepass).subscribe(

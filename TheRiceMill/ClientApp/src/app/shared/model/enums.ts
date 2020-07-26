@@ -8,9 +8,9 @@ export enum GateinDirection {
   Outside
 }
 
-export enum GatepassType {
-  Gateout = 1,
-  Gatein
+export enum GatePassType {
+  OutwardGatePass = 1,
+  InwardGatePass
 }
 
 export enum TransactionType {
