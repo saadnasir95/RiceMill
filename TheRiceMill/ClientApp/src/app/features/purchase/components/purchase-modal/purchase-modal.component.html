@@ -19,7 +19,61 @@
           </mat-form-field>
         </div>
       </div>
-      <div class="row" formGroupName="companyGroup">
+
+      <div class="row">
+        <div class="col-6">
+          <mat-form-field class="w-100">
+            <!-- <input type="number" matInput placeholder="Enter Credit" formControlName="credit"> -->
+            <mat-chip-list #chipList>
+              <mat-chip
+                *ngFor="let gatepass of gatepasses"
+                [selectable]="selectable"
+                [removable]="removable"
+                (removed)="remove(gatepass)">
+                {{gatepass}}
+                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+              </mat-chip>
+              <input
+                placeholder="Add Gatepasses..."
+                #gatepassInput
+                formControlName="gatepass"
+                [matAutocomplete]="auto"
+                [matChipInputFor]="chipList"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputAddOnBlur]="addOnBlur"
+                (matChipInputTokenEnd)="add($event)">
+            </mat-chip-list>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+              <mat-option *ngFor="let gatepass of filteredGatepasses | async" [value]="gatepass">
+                {{gatepass}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-6">
+          <mat-form-field class="w-100">
+            <input type="number" matInput placeholder="Enter Credit" formControlName="credit">
+            <mat-error *ngIf="purchaseForm.get('credit').hasError('min')">
+              Credit must be greater than 0</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-6">
+          <mat-form-field class="w-100">
+            <input type="number" matInput placeholder="Enter Debit" formControlName="debit">
+            <mat-error *ngIf="purchaseForm.get('debit').hasError('min')">
+              Debit must be greater than 0</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
+
+
+      <!---------------------->
+      <!-- Old Modal Fields -->
+      <!-- <div class="row" formGroupName="companyGroup">
         <div class="col-md-4">
           <mat-form-field class="w-100">
             <input type="text" matInput placeholder="Enter Company Name" formControlName="name" autocomplete="off"
@@ -85,13 +139,13 @@
             </mat-error>
           </mat-form-field>
         </div>
-        <!-- <div class="col-md-6">
+        <div class="col-md-6">
             <mat-form-field class="w-100">
               <input type="text" matInput placeholder="Enter Product Price" formControlName="plateNo">
               <mat-error *ngIf="purchaseForm.get('productGroup.plateNo').hasError('required')">Plate Number is required
               </mat-error>
             </mat-form-field>
-          </div> -->
+          </div>
         <div class="col-md-6">
           <mat-form-field class="w-100 ">
             <mat-select placeholder="Select Gatein Direction" formControlName="direction">
@@ -280,7 +334,10 @@
               Commission must be greater than 0</mat-error>
           </mat-form-field>
         </div>
-      </div>
+      </div> -->
+      <!---------------------->
+      <!-- Old Modal Fields -->
+
       <mat-divider class="mb-2"></mat-divider>
       <div formArrayName="additionalCharges">
         <div *ngFor="let labour of purchaseForm.get('additionalCharges').controls; index as i" [formGroupName]="i"
