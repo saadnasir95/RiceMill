@@ -29,10 +29,10 @@ namespace TheRiceMill.Application.BankTransactions.Commands.UpdateBankTransactio
             {
                 throw new NotFoundException(nameof(Domain.Entities.BankAccount), request.BankAccountId);
             }
-            var company = _context.Companies.GetByReadOnly(p => p.Id == request.CompanyId);
+            var company = _context.Parties.GetByReadOnly(p => p.Id == request.CompanyId);
             if (company == null)
             {
-                throw new NotFoundException(nameof(Company), request.CompanyId);
+                throw new NotFoundException(nameof(Party), request.CompanyId);
             }
 
             var bankTransaction = _context.BankTransactions.GetBy(p => p.Id == request.Id);
@@ -48,14 +48,14 @@ namespace TheRiceMill.Application.BankTransactions.Commands.UpdateBankTransactio
             }
             
             bankTransaction.BankAccountId = request.BankAccountId;
-            bankTransaction.CompanyId = request.CompanyId;
+            bankTransaction.PartyId = request.CompanyId;
             bankTransaction.Credit = request.TransactionType == TransactionType.Debit ? request.TransactionAmount : 0;
             bankTransaction.Debit = request.TransactionType == TransactionType.Credit ? request.TransactionAmount : 0;
             bankTransaction.TransactionDate = request.TransactionDate;
             bankTransaction.TransactionType = (int) request.TransactionType;
             bankTransaction.ChequeNumber = request.ChequeNumber;
             bankTransaction.PaymentType = (int) request.PaymentType;
-            ledger.CompanyId = request.CompanyId;
+            ledger.PartyId = request.CompanyId;
             ledger.Credit = request.TransactionType == TransactionType.Credit ? request.TransactionAmount : 0;
             ledger.Debit = request.TransactionType == TransactionType.Debit ? request.TransactionAmount : 0;
             ledger.LedgerType = (int) LedgerType.BankTransaction;

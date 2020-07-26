@@ -30,7 +30,7 @@ namespace TheRiceMill.Application.GatePasses.Queries
         {
             request.SetDefaultValue();
             var converter = new DateConverter();
-            Expression<Func<GatePass, bool>> searchQuery = p => p.Company.Name.Contains(request.Search) ||
+            Expression<Func<GatePass, bool>> searchQuery = p => p.Party.Name.Contains(request.Search) ||
                                     (p.Id + "" == request.Search) ||
                                     p.Vehicle.PlateNo.Contains(request.Search) ||
                                     p.Product.Name.Contains(request.Search);
@@ -38,7 +38,7 @@ namespace TheRiceMill.Application.GatePasses.Queries
                 .GetMany(searchQuery,
                 request.OrderBy, request.Page,
                 request.PageSize, request.IsDescending,
-                p => p.Include(pr => pr.Company).Include(pr => pr.Vehicle).Include(pr => pr.Product))
+                p => p.Include(pr => pr.Party).Include(pr => pr.Vehicle).Include(pr => pr.Product))
                 .Select(p => new GatePassResponseModel()
                 {
                     Type = (GatePassType)p.Type,
@@ -52,9 +52,9 @@ namespace TheRiceMill.Application.GatePasses.Queries
                     Id = p.Id,
                     Company = new CompanyRequestModel()
                     {
-                        Address = p.Company.Address,
-                        Name = p.Company.Name,
-                        PhoneNumber = p.Company.PhoneNumber
+                        Address = p.Party.Address,
+                        Name = p.Party.Name,
+                        PhoneNumber = p.Party.PhoneNumber
                     },
                     Product = new ProductRequestModel()
                     {
@@ -67,7 +67,7 @@ namespace TheRiceMill.Application.GatePasses.Queries
                         PlateNo = p.Vehicle.PlateNo,
                         Name = p.Vehicle.Name,
                     },
-                    CompanyId = p.CompanyId,
+                    CompanyId = p.PartyId,
                     ProductId = p.ProductId,
                     VehicleId = p.VehicleId,
                     PurchaseId = p.PurchaseId,

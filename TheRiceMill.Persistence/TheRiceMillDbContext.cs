@@ -24,7 +24,7 @@ namespace TheRiceMill.Persistence
         public DbSet<GatePass> GatePasses { get; set; }
         public DbSet<Vehicle> Vehicles { get; set; }
         public DbSet<Product> Products { get; set; }
-        public DbSet<Company> Companies { get; set; }
+        public DbSet<Party> Parties { get; set; }
         public DbSet<Purchase> Purchases { get; set; }
         public DbSet<Sale> Sales { get; set; }
         public DbSet<Charge> Charges { get; set; }

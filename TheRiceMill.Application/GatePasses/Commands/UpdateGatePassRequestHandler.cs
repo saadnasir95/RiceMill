@@ -33,31 +33,31 @@ namespace TheRiceMill.Application.GatePasses.Commands
                 throw new NotFoundException(nameof(GatePass), request.Id);
             }
             request.Copy(gatePass);
-            Company company;
+            Party company;
             Vehicle vehicle;
             Product product;
             if (!string.IsNullOrEmpty(request.Company?.Name))
             {
-                company = _context.Companies.GetBy(p => p.NormalizedName.Equals(request.Company.Name.ToUpper()));
+                company = _context.Parties.GetBy(p => p.NormalizedName.Equals(request.Company.Name.ToUpper()));
                 if (company == null)
                 {
-                    gatePass.Company = new Company()
+                    gatePass.Party = new Party()
                     {
                         Name = request.Company.Name,
                         NormalizedName = request.Company.Name.ToUpper(),
                         PhoneNumber = request.Company.PhoneNumber,
                         Address = request.Company.Address
                     };
-                    company = gatePass.Company;
+                    company = gatePass.Party;
                 }
                 else
                 {
-                    gatePass.CompanyId = company.Id;
+                    gatePass.PartyId = company.Id;
                 }
             }
             else
             {
-                company = _context.Companies.GetBy(p => p.Id == request.CompanyId);
+                company = _context.Parties.GetBy(p => p.Id == request.CompanyId);
             }
             if (!string.IsNullOrEmpty(request.Vehicle?.PlateNo))
             {
