@@ -4,10 +4,9 @@ import { Product } from './product.model';
 
 export class Gatepass {
   id: number;
-  checkDateTime: string;
+  dateTime: string;
   type: number;
-  direction: number;
-  biltyNumber: number;
+  broker: string;
   companyId: number;
   company: Company;
   vehicleId: number;
@@ -15,7 +14,10 @@ export class Gatepass {
   productId: number;
   product: Product;
   bagQuantity: number;
-  bagWeight: number;
-  kandaWeight: number;
-  totalMaund: number;
+  boriQuantity: number;
+  weightPerBag: number;
+  netWeight: number;
+  maund: number;
+  saleId: number;
+  purchaseId: number;
 }

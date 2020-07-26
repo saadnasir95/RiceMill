@@ -1,6 +1,6 @@
 <ng-template #header>
-  <h2 mat-dialog-title class="d-inline" *ngIf="isNew">{{'gatepassModalPage.addGatepass'|translate}}</h2>
-  <h2 mat-dialog-title class="d-inline" *ngIf="!isNew">{{'gatepassModalPage.addGatepass'|translate}}</h2>
+  <h2 mat-dialog-title class="d-inline" *ngIf="isNew">Add Gate Pass</h2>
+  <h2 mat-dialog-title class="d-inline" *ngIf="!isNew">Update Gate Pass</h2>
   <span class="float-right">
     <i class="fa fa-times show-cursor" style="cursor: pointer;" (click)="closeModal()">
     </i>
@@ -12,53 +12,53 @@
   <form [formGroup]="gatepassForm" (ngSubmit)="submit()">
     <mat-dialog-content>
       <div class="row">
-        <div class="col-9">
+        <div class="col-md-9 col-sm-12">
           <mat-form-field class="w-100">
-            <input type="datetime-local" matInput [placeholder]="'gatepassModalPage.datetime'|translate"
-              formControlName="checkDateTime">
-            <mat-error *ngIf="gatepassForm.get('checkDateTime').hasError('required')">
-              {{'gatepassModalPage.datetimeRequired'|translate}}</mat-error>
+            <input type="datetime-local" matInput placeholder="Choose DateTime"
+              formControlName="dateTime">
+            <mat-error *ngIf="gatepassForm.get('dateTime').hasError('required')">
+              Datetime is required</mat-error>
           </mat-form-field>
         </div>
-        <div class="col-3">
-          <label id="gatepassType" class="d-block">{{'gatepassModalPage.gatepassType'|translate}}</label>
-          <mat-radio-group aria-labelledby="gatepassType" formControlName="gatepassType">
-            <mat-radio-button [value]="2" class="mr-2" color="primary"> Gatein</mat-radio-button>
-            <mat-radio-button [value]="1" color="primary"> Gateout</mat-radio-button>
+        <div class="col-md-3 col-sm-12">
+          <label id="type" class="d-block">Select Gate Pass Type</label>
+          <mat-radio-group aria-labelledby="type" formControlName="type">
+            <mat-radio-button [value]="2" class="mr-2" color="primary"> Inward</mat-radio-button>
+            <mat-radio-button [value]="1" color="primary"> Outward</mat-radio-button>
           </mat-radio-group>
         </div>
       </div>
       <div class="row" formGroupName="companyGroup">
         <div class="col-md-4">
           <mat-form-field class="w-100">
-            <input type="text" matInput [placeholder]="'gatepassModalPage.companyName'|translate" formControlName="name"
+            <input type="text" matInput placeholder="Enter Company Name" formControlName="name"
               autocomplete="off" [matAutocomplete]="companyAutoComplete" autocomplete="company">
             <mat-autocomplete #companyAutoComplete="matAutocomplete" (optionSelected)="selectedCompany($event)">
               <mat-option *ngFor="let company of companySuggestions" [value]="company">
                 {{company.name + ' -- ' + company.address}}</mat-option>
             </mat-autocomplete>
             <mat-error *ngIf="gatepassForm.get('companyGroup.name').hasError('required')">
-              {{'gatepassModalPage.companyNameRequired'|translate}}
+              Company Name is required
             </mat-error>
           </mat-form-field>
         </div>
         <div class="col-md-4">
           <mat-form-field class="w-100">
-            <input type="text" matInput [placeholder]="'gatepassModalPage.phoneNumber'|translate"
+            <input type="text" matInput placeholder="Enter Phone Number"
               formControlName="phoneNumber">
             <mat-error *ngIf="gatepassForm.get('companyGroup.phoneNumber').hasError('required')">
-              {{'gatepassModalPage.phoneNumberRequired'|translate}}
+              Phone number is required
             </mat-error>
             <mat-error *ngIf="gatepassForm.get('companyGroup.phoneNumber').hasError('maxlength')">
-              {{'gatepassModalPage.phoneNumberMaxLength'|translate}}</mat-error>
+              Phone number must be less than 13 digits</mat-error>
           </mat-form-field>
         </div>
         <div class="col-md-4">
           <mat-form-field class="w-100">
-            <input type="text" matInput [placeholder]="'gatepassModalPage.companyAddress'|translate"
+            <input type="text" matInput placeholder="Enter Company Address"
               formControlName="address">
             <mat-error *ngIf="gatepassForm.get('companyGroup.address').hasError('required')">
-              {{'gatepassModalPage.companyAddressRequired'|translate}}
+              Company address is required
             </mat-error>
           </mat-form-field>
         </div>
@@ -66,23 +66,23 @@
       <div class="row" formGroupName="vehicleGroup">
         <div class="col-md-6">
           <mat-form-field class="w-100">
-            <input type="text" matInput [placeholder]="'gatepassModalPage.vehicleName'|translate" formControlName="name"
+            <input type="text" matInput placeholder="Enter Vehicle Name" formControlName="name"
               autocomplete="off" [matAutocomplete]="vehicleAutoComplete">
             <mat-autocomplete #vehicleAutoComplete="matAutocomplete" (optionSelected)="selectedVehicle($event)">
               <mat-option *ngFor="let vehicle of vehicleSuggestions" [value]="vehicle">
                 {{vehicle.name + ' -- ' + vehicle.plateNo}}</mat-option>
             </mat-autocomplete>
             <mat-error *ngIf="gatepassForm.get('vehicleGroup.name').hasError('required')">
-              {{'gatepassModalPage.vehicleNameRequired'|translate}}
+              Vehicle name is required
             </mat-error>
           </mat-form-field>
         </div>
         <div class="col-md-6">
           <mat-form-field class="w-100">
-            <input type="text" matInput [placeholder]="'gatepassModalPage.plateNumber'|translate"
+            <input type="text" matInput placeholder="Enter Plate Number"
               formControlName="plateNo">
             <mat-error *ngIf="gatepassForm.get('vehicleGroup.plateNo').hasError('required')">
-              {{'gatepassModalPage.plateNumberRequired'|translate}}
+              Plate number is required
             </mat-error>
           </mat-form-field>
         </div>
@@ -90,81 +90,78 @@
       <div class="row">
         <div class="col-md-6">
           <mat-form-field class="w-100" formGroupName="productGroup">
-            <input type="text" matInput [placeholder]="'gatepassModalPage.productName'|translate" formControlName="name"
+            <input type="text" matInput placeholder="Enter Product Name" formControlName="name"
               autocomplete="off" [matAutocomplete]="productAutoComplete">
             <mat-autocomplete #productAutoComplete="matAutocomplete" (optionSelected)="selectedProduct($event)">
               <mat-option *ngFor="let product of productSuggestions" [value]="product">
                 {{product.name + ' -- ' + product.price.toString()}}</mat-option>
             </mat-autocomplete>
             <mat-error *ngIf="gatepassForm.get('productGroup.name').hasError('required')">
-              {{'gatepassModalPage.productNameRequired'|translate}}
+              Product name is required
             </mat-error>
           </mat-form-field>
         </div>
-        <div class="col-md-6" *ngIf="isGatein">
-          <mat-form-field class="w-100 ">
-            <mat-select [placeholder]="'gatepassModalPage.gateinDirection'|translate" formControlName="direction">
-              <mat-option *ngFor="let direction of gatepassDirectionTypes" [value]="direction.value">
-                {{ direction.text }}
-              </mat-option>
-            </mat-select>
-            <mat-error *ngIf="gatepassForm.get('direction').hasError('required')">
-              {{'gatepassModalPage.gateinDirectionRequired'|translate}}</mat-error>
-          </mat-form-field>
-        </div>
-        <div class="col-md-6" *ngIf="!isGatein">
+        <div class="col-md-6">
           <mat-form-field class="w-100">
-            <input type="text" matInput [placeholder]="'gatepassModalPage.biltyNumber'|translate"
-              formControlName="biltyNumber">
-            <mat-error *ngIf="gatepassForm.get('biltyNumber').hasError('required')">
-              {{'gatepassModalPage.biltyNumberRequired'|translate}}
-            </mat-error>
+            <input type="text" matInput placeholder="Enter Broker Name"
+              formControlName="broker">
           </mat-form-field>
         </div>
       </div>
       <div class="row" formGroupName="weightPriceGroup">
-        <div class="col-md-6">
+        <div class="col-md-4">
           <mat-form-field>
-            <input type="number" matInput [placeholder]="'gatepassModalPage.bagQuantity'|translate"
+            <input type="number" matInput placeholder="Enter Bag Quantity"
               formControlName="bagQuantity">
             <mat-error *ngIf="gatepassForm.get('weightPriceGroup.bagQuantity').hasError('required')">
-              {{'gatepassModalPage.bagQuantityRequired'|translate}}
+              Bag quantity is required
             </mat-error>
             <mat-error *ngIf="gatepassForm.get('weightPriceGroup.bagQuantity').hasError('min')">
-              {{'gatepassModalPage.bagQuantityMin'|translate}}</mat-error>
+              Bag quantity must be greater than or equal to 0</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-4">
+          <mat-form-field>
+            <input type="number" matInput placeholder="Enter Bori Quantity"
+              formControlName="boriQuantity">
+            <mat-error *ngIf="gatepassForm.get('weightPriceGroup.boriQuantity').hasError('required')">
+              Bori quantity is required
+            </mat-error>
+            <mat-error *ngIf="gatepassForm.get('weightPriceGroup.boriQuantity').hasError('min')">
+              Bori quantity must be greater than or equal to 0</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-4">
+          <mat-form-field>
+            <input type="number" matInput placeholder="Enter Weight Per Bag"
+              formControlName="weightPerBag">
+            <mat-error *ngIf="gatepassForm.get('weightPriceGroup.weightPerBag').hasError('required')">
+              Weight per bag is required
+            </mat-error>
+            <mat-error *ngIf="gatepassForm.get('weightPriceGroup.weightPerBag').hasError('min')">
+              Weight per bag must be greater than or equal to 0</mat-error>
           </mat-form-field>
         </div>
         <div class="col-md-6">
           <mat-form-field>
-            <input type="number" matInput [placeholder]="'gatepassModalPage.bagWeight'|translate"
-              formControlName="bagWeight">
-            <mat-error *ngIf="gatepassForm.get('weightPriceGroup.bagWeight').hasError('required')">
-              {{'gatepassModalPage.bagWeightRequired'|translate}}
+            <input type="number" matInput placeholder="Enter Net Weight"
+              formControlName="netWeight">
+            <mat-error *ngIf="gatepassForm.get('weightPriceGroup.netWeight').hasError('required')">
+              Net weight is required
             </mat-error>
-            <mat-error *ngIf="gatepassForm.get('weightPriceGroup.bagWeight').hasError('min')">
-              {{'gatepassModalPage.bagWeightMin'|translate}}</mat-error>
+            <mat-error *ngIf="gatepassForm.get('weightPriceGroup.netWeight').hasError('min')">
+              Net weight must be greater than or equal to 0</mat-error>
           </mat-form-field>
         </div>
         <div class="col-md-6">
           <mat-form-field>
-            <input type="number" matInput [placeholder]="'gatepassModalPage.kandaWeight'|translate"
-              formControlName="kandaWeight">
-            <mat-error *ngIf="gatepassForm.get('weightPriceGroup.kandaWeight').hasError('required')">
-              {{'gatepassModalPage.kandaWeightRequired'|translate}}
+            <input type="number" matInput placeholder="Enter Maund Weight"
+              formControlName="maund" readonly>
+            <mat-error *ngIf="gatepassForm.get('weightPriceGroup.maund').hasError('required')">
+              Maund weight is required
             </mat-error>
-            <mat-error *ngIf="gatepassForm.get('weightPriceGroup.kandaWeight').hasError('min')">
-              {{'gatepassModalPage.kandaWeightMin'|translate}}</mat-error>
-          </mat-form-field>
-        </div>
-        <div class="col-md-6">
-          <mat-form-field>
-            <input type="number" matInput [placeholder]="'gatepassModalPage.maund'|translate"
-              formControlName="totalMaund" readonly>
-            <mat-error *ngIf="gatepassForm.get('weightPriceGroup.totalMaund').hasError('required')">
-              {{'gatepassModalPage.maundRequired'|translate}}
-            </mat-error>
-            <mat-error *ngIf="gatepassForm.get('weightPriceGroup.totalMaund').hasError('min')">
-              {{'gatepassModalPage.maundMin'|translate}}</mat-error>
+            <mat-error *ngIf="gatepassForm.get('weightPriceGroup.maund').hasError('min')">
+              Maund weight must be greater than or equal to 0</mat-error>
           </mat-form-field>
         </div>
       </div>
@@ -175,16 +172,16 @@
           <span *ngIf="spinner.isLoading">
             <i class="fas fa-spinner fa-spin"></i>&nbsp;
           </span>
-          {{'gatepassModalPage.save'|translate}}
+          Save
         </button>
         <button mat-raised-button type="submit" class="btn btn-primary" *ngIf="!isNew">
           <span *ngIf="spinner.isLoading">
             <i class="fas fa-spinner fa-spin"></i>&nbsp;
           </span>
-          {{'gatepassModalPage.update'|translate}}
+          Update
         </button>
         <button mat-raised-button type="button" (click)="closeModal()"
-          class="btn btn-danger">{{'gatepassModalPage.cancel'|translate}}</button>
+          class="btn btn-danger">Cancel</button>
       </div>
     </mat-dialog-actions>
   </form>
