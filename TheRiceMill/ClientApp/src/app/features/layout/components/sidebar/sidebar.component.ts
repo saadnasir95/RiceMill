@@ -18,7 +18,7 @@ export class SidebarComponent implements OnInit {
       { path: '/admin/gatepass', title: 'Gate Pass', icon: 'fas fa-passport', class: '' },
       { path: '/admin/purchase', title: 'Purchase', icon: 'fa fa-shopping-cart', class: '' },
       { path: '/admin/sale', title: 'Sale', icon: 'fa fa-shopping-cart', class: '' },
-      { path: '/admin/company', title: 'Company', icon: 'fa fa-building', class: '' },
+      { path: '/admin/party', title: 'Party', icon: 'fa fa-building', class: '' },
       { path: '/admin/vehicle', title: 'Vehicle', icon: 'fa fa-truck', class: '' },
       { path: '/admin/product', title: 'Product', icon: 'fa fa-shopping-bag', class: '' },
       { path: '/admin/company-ledger', title: 'Company Ledger', icon: 'fa fa-book', class: '' },
