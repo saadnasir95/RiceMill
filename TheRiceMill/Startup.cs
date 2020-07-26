@@ -153,7 +153,6 @@ namespace TheRiceMill.Presentation
                 c.DocumentTitle = "Swagger UI - Quick Application";
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "The Rice Mill API V1");
             });
-
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

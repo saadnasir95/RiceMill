@@ -30,5 +30,6 @@ namespace TheRiceMill.Domain.Entities
         public double Commission { get; set; }
         public double PercentCommission { get; set; }
         public List<Charge> Charges { get; set; }
+        public List<GatePass> GatePasses { get; set; }
     }
 }

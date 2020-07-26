@@ -111,11 +111,12 @@ namespace TheRiceMill.Application.GatePasses.Commands
             {
                 Type = request.Type,
                 BagQuantity = request.BagQuantity,
-                BagWeight = request.BagWeight,
-                KandaWeight = request.KandaWeight,
-                TotalMaund = request.TotalMaund,
-                CheckDateTime = request.CheckDateTime,
-                Direction = request.Direction,
+                BoriQuantity = request.BoriQuantity,
+                WeightPerBag = request.WeightPerBag,
+                NetWeight = request.NetWeight,
+                Maund = request.Maund,
+                Broker = request.Broker,
+                DateTime = request.DateTime,
                 Id = gatePass.Id,
                 Company = new CompanyRequestModel()
                 {
@@ -134,7 +135,6 @@ namespace TheRiceMill.Application.GatePasses.Commands
                     PlateNo = vehicle.PlateNo,
                     Name = vehicle.Name,
                 },
-                BiltyNumber = request.BiltyNumber,
                 CompanyId = company.Id,
                 ProductId = product.Id,
                 VehicleId = vehicle.Id

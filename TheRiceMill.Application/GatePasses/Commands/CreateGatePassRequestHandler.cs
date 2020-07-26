@@ -28,17 +28,17 @@ namespace TheRiceMill.Application.GatePasses.Commands
         {
             var gatePass = new GatePass()
             {
-                BiltyNumber = request.BiltyNumber,
-                Direction = request.Direction.ToInt(),
                 Type = request.Type.ToInt(),
                 CompanyId = request.CompanyId,
                 VehicleId = request.VehicleId,
-                CheckIn = request.CheckDateTime,
+                DateTime = request.DateTime,
                 ProductId = request.ProductId,
                 BagQuantity = request.BagQuantity,
-                BagWeight = request.BagWeight,
-                KandaWeight = request.KandaWeight,
-                TotalMaund = request.TotalMaund,
+                BoriQuantity = request.BoriQuantity,
+                WeightPerBag = request.WeightPerBag,
+                NetWeight = request.NetWeight,
+                Maund = request.Maund,
+                Broker = request.Broker,
             };
             Company company;
             Vehicle vehicle;
@@ -67,7 +67,7 @@ namespace TheRiceMill.Application.GatePasses.Commands
                 company = _context.Companies.GetBy(p => p.Id == request.CompanyId);
                 if (company == null)
                 {
-                    throw new NotFoundException(nameof(Company),request.CompanyId);
+                    throw new NotFoundException(nameof(Company), request.CompanyId);
                 }
             }
             if (!string.IsNullOrEmpty(request.Vehicle?.PlateNo))
@@ -93,7 +93,7 @@ namespace TheRiceMill.Application.GatePasses.Commands
                 vehicle = _context.Vehicles.GetBy(p => p.Id == request.VehicleId);
                 if (vehicle == null)
                 {
-                    throw new NotFoundException(nameof(Vehicle),request.VehicleId);
+                    throw new NotFoundException(nameof(Vehicle), request.VehicleId);
                 }
             }
 
@@ -121,7 +121,7 @@ namespace TheRiceMill.Application.GatePasses.Commands
                 product = _context.Products.GetBy(p => p.Id == request.ProductId);
                 if (product == null)
                 {
-                    throw new NotFoundException(nameof(Product),request.ProductId);
+                    throw new NotFoundException(nameof(Product), request.ProductId);
                 }
             }
             _context.GatePasses.Add(gatePass);
@@ -129,12 +129,13 @@ namespace TheRiceMill.Application.GatePasses.Commands
             return new ResponseViewModel().CreateOk(new GatePassResponseModel()
             {
                 Type = request.Type,
+                Broker = request.Broker,
                 BagQuantity = request.BagQuantity,
-                BagWeight = request.BagWeight,
-                KandaWeight = request.KandaWeight,
-                TotalMaund = request.TotalMaund,
-                CheckDateTime = request.CheckDateTime,
-                Direction = request.Direction,
+                BoriQuantity = request.BoriQuantity,
+                WeightPerBag = request.WeightPerBag,
+                NetWeight = request.NetWeight,
+                Maund = request.Maund,
+                DateTime = request.DateTime,
                 Id = gatePass.Id,
                 Company = new CompanyRequestModel()
                 {
@@ -153,7 +154,6 @@ namespace TheRiceMill.Application.GatePasses.Commands
                     PlateNo = vehicle.PlateNo,
                     Name = vehicle.Name,
                 },
-                BiltyNumber = request.BiltyNumber,
                 CompanyId = company.Id,
                 ProductId = product.Id,
                 VehicleId = vehicle.Id

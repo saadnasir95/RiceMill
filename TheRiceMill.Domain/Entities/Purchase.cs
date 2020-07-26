@@ -93,8 +93,8 @@ namespace TheRiceMill.Domain.Entities
         public double TotalPrice { get; set; }
         public double Commission { get; set; }
         public double PercentCommission { get; set; }
-
-        public List<Charge> Charges { get; set; }
         public double BasePrice { get; set; }
+        public List<Charge> Charges { get; set; }
+        public List<GatePass> GatePasses { get; set; }
     }
 }

@@ -11,11 +11,11 @@
         /// <summary>
         /// Sale
         /// </summary>
-        GateOut = 1,
+        OutwardGatePass = 1,
         /// <summary>
         /// Purchase
         /// </summary>
-        GateIn
+        InwardGatePass
     }
 
     public enum Direction

@@ -17,7 +17,12 @@ namespace TheRiceMill.Persistence.Configurations
             builder.HasOne(p => p.Product)
                 .WithMany(b => b.GatePasses)
                 .HasForeignKey(p => p.ProductId);
-
+            builder.HasOne(s => s.Sale)
+                .WithMany(g => g.GatePasses)
+                .HasForeignKey(s => s.SaleId);
+            builder.HasOne(p => p.Purhcase)
+                .WithMany(g => g.GatePasses)
+                .HasForeignKey(s => s.PurchaseId);
         }
     }
 }
