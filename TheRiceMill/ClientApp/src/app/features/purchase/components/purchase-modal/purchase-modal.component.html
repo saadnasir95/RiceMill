@@ -44,8 +44,11 @@
                 (matChipInputTokenEnd)="add($event)">
             </mat-chip-list>
             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-              <mat-option *ngFor="let gatepass of filteredGatepasses | async" [value]="gatepass">
-                {{gatepass}}
+              <mat-option class="custom-height" *ngFor="let gatepass of filteredGatepasses" [value]="gatepass">
+                <span>
+                  <p><b>Company:</b> {{gatepass?.company?.name}} </p>
+                  <p><b>Product:</b> {{gatepass?.product?.name}} </p>
+                </span>
               </mat-option>
             </mat-autocomplete>
           </mat-form-field>

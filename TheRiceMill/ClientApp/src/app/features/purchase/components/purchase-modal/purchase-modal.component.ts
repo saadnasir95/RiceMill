@@ -22,6 +22,9 @@ import { SpinnerService } from '../../../../shared/services/spinner.service';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import { Observable } from 'rxjs/internal/Observable';
 import { startWith, map } from 'rxjs/operators';
+import { GatepassService } from '../../../../shared/services/gatepass.service';
+import { GatepassResponse } from '../../../../shared/model/gatepass-response.model';
+import { Gatepass } from '../../../../shared/model/gatepass.model';
 
 @Component({
   selector: 'app-purchase-modal',
@@ -36,8 +39,8 @@ export class PurchaseModalComponent implements OnInit {
   removable = true;
   addOnBlur = false;
   separatorKeysCodes: number[] = [ENTER, COMMA];
-  filteredGatepasses: Observable<string[]>;
-  gatepasses: string[] = ['Gatepass1'];
+  filteredGatepasses: Gatepass[];
+  gatepasses: string[] = [];
   allGatepasses: string[] = ['Gatepass1', 'Gatepass2', 'Gatepass3', 'Gatepass4', 'Gatepass5'];
 
   vehicleSuggestions: Vehicle[];
@@ -103,10 +106,40 @@ export class PurchaseModalComponent implements OnInit {
     private vehicleService: VehicleService,
     private productService: ProductService,
     private notificationService: NotificationService,
+    private gatepassService: GatepassService,
     public spinner: SpinnerService) {
-      this.filteredGatepasses = this.purchaseForm.controls['gatepass'].valueChanges.pipe(
-        startWith(null),
-        map((fruit: string | null) => fruit ? this._filter(fruit) : this.allGatepasses.slice()));
+
+      this.purchaseForm.controls['gatepass'].valueChanges.subscribe(
+        (response: string) => {
+          this.gatepassService
+          .getGatepassList(10, 0, response, 'false', '',true)
+          .subscribe(
+            (response: GatepassResponse) => {
+              this.filteredGatepasses = response.data;
+              // this.gatepassList = response.data;
+              // this.dataSource.data = this.gatepassList;
+              // this.paginator.length = response.count;
+            }
+      )
+    })
+
+
+    //   this.purchaseForm.controls['gatepass'].valueChanges.subscribe(
+    //     startWith(null),
+    //     map((fruit: string | null) => {
+    //       debugger
+    //       fruit ? this.gatepassService
+    // .getGatepassList(10, 0, fruit, 'false', '',true)
+    // .subscribe(
+    //   (response: GatepassResponse) => {
+    //     this.filteredGatepasses = response.data;
+    //     // this.gatepassList = response.data;
+    //     // this.dataSource.data = this.gatepassList;
+    //     // this.paginator.length = response.count;
+    //   },
+    //   (error) => console.log(error)
+    // ) : this.allGatepasses.slice()
+    //     } ));
      }
 
   ngOnInit() {
@@ -376,9 +409,9 @@ export class PurchaseModalComponent implements OnInit {
     const value = event.value;
 
     // Add our gatepass
-    // if ((value || '').trim()) {
-    //   this.gatepasses.push(value.trim());
-    // }
+    if ((value || '').trim()) {
+      this.gatepasses.push(value.trim());
+    }
 
     // Reset the input value
     if (input) {
@@ -397,14 +430,10 @@ export class PurchaseModalComponent implements OnInit {
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    this.gatepasses.push(event.option.viewValue);
+    console.log("EVENT ===>",event)
+    this.gatepasses.push(event.option.value.id);
     this.gatepassInput.nativeElement.value = '';
     this.purchaseForm.controls['gatepass'].setValue(null);
-  }
-
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.allGatepasses.filter(gatepass => gatepass.toLowerCase().indexOf(filterValue) === 0);
   }
 
   closeModal() {
