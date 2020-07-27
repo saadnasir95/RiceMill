@@ -24,11 +24,11 @@ namespace TheRiceMill.Application.Companies.Commands
 
         public async Task<ResponseViewModel> Handle(CreateCompanyRequestModel request, CancellationToken cancellationToken)
         {
-            if (_context.Companies.Any(p => p.NormalizedName.Equals(request.Name.ToUpper())))
+            if (_context.Parties.Any(p => p.NormalizedName.Equals(request.Name.ToUpper())))
             {
-                throw new AlreadyExistsException(nameof(Company), nameof(request.Name), request.Name);
+                throw new AlreadyExistsException(nameof(Party), nameof(request.Name), request.Name);
             }
-            var company = new Company()
+            var company = new Party()
             {
                 Name = request.Name,
                 NormalizedName = request.Name.ToUpper(),

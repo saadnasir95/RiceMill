@@ -47,19 +47,19 @@ namespace TheRiceMill.Application.BankTransactions.Queries.GetBankTransaction
             var currentBalance = _context.BankTransactions.Where(p => p.BankAccountId == request.BankAccountId).Sum(p => p.Credit - p.Debit) + bankAccount.CurrentBalance;
             var list = await _context.BankTransactions.GetManyReadOnly(query, "CreatedDate", request.Page,
                 request.PageSize,
-                true, p => p.Include(pr => pr.BankAccount.Bank).Include(pr => pr.Company)).Select(p =>
+                true, p => p.Include(pr => pr.BankAccount.Bank).Include(pr => pr.Party)).Select(p =>
                 new Info()
                 {
                     Id = p.Id,
                     BankId = p.BankAccount.BankId,
                     Company = new CompanyRequestModel()
                     {
-                        Address = p.Company.Address,
-                        Name = p.Company.Name,
-                        PhoneNumber = p.Company.PhoneNumber,
+                        Address = p.Party.Address,
+                        Name = p.Party.Name,
+                        PhoneNumber = p.Party.PhoneNumber,
                     },
                     BankAccountId = p.BankAccount.Id,
-                    CompanyId = p.CompanyId,
+                    CompanyId = p.PartyId,
                     TransactionDate = dateConverter.ConvertToDateTimeIso(p.TransactionDate),
                     TransactionType = p.TransactionType,
                     ChequeNumber = p.ChequeNumber,
