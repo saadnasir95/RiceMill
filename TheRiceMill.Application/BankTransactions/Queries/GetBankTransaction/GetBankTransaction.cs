@@ -52,14 +52,14 @@ namespace TheRiceMill.Application.BankTransactions.Queries.GetBankTransaction
                 {
                     Id = p.Id,
                     BankId = p.BankAccount.BankId,
-                    Company = new CompanyRequestModel()
+                    Party = new PartyRequestModel()
                     {
                         Address = p.Party.Address,
                         Name = p.Party.Name,
                         PhoneNumber = p.Party.PhoneNumber,
                     },
                     BankAccountId = p.BankAccount.Id,
-                    CompanyId = p.PartyId,
+                    PartyId = p.PartyId,
                     TransactionDate = dateConverter.ConvertToDateTimeIso(p.TransactionDate),
                     TransactionType = p.TransactionType,
                     ChequeNumber = p.ChequeNumber,
@@ -99,8 +99,8 @@ namespace TheRiceMill.Application.BankTransactions.Queries.GetBankTransaction
             public double Debit { get; set; }
             public int TransactionType { get; set; }
             public string TransactionDate { get; set; }
-            public int CompanyId { get; set; }
-            public CompanyRequestModel Company { get; set; }
+            public int PartyId { get; set; }
+            public PartyRequestModel Party { get; set; }
             public int Id { get; set; }
             public int BankAccountId { get; set; }
             public string ChequeNumber { get; set; }

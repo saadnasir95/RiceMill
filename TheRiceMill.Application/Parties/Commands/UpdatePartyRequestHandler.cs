@@ -12,16 +12,16 @@ using TheRiceMill.Persistence;
 
 namespace TheRiceMill.Application.Companies.Commands
 {
-    public class UpdateCompanyRequestHandler : IRequestHandler<UpdateCompanyRequestModel, ResponseViewModel>
+    public class UpdatePartyRequestHandler : IRequestHandler<UpdatePartyRequestModel, ResponseViewModel>
     {
         private readonly TheRiceMillDbContext _context;
 
-        public UpdateCompanyRequestHandler(TheRiceMillDbContext context)
+        public UpdatePartyRequestHandler(TheRiceMillDbContext context)
         {
             _context = context;
         }
 
-        public async Task<ResponseViewModel> Handle(UpdateCompanyRequestModel request, CancellationToken cancellationToken)
+        public async Task<ResponseViewModel> Handle(UpdatePartyRequestModel request, CancellationToken cancellationToken)
         {
             var company = await _context.Parties.FindAsync(request.Id);
             if (company == null)
@@ -43,7 +43,7 @@ namespace TheRiceMill.Application.Companies.Commands
             company.PhoneNumber = request.PhoneNumber;
             _context.Parties.Update(company);
             await _context.SaveChangesAsync(cancellationToken);
-            return new ResponseViewModel().CreateOk(new CompanyInfoResponseModel()
+            return new ResponseViewModel().CreateOk(new PartyInfoResponseModel()
             {
                 Name = company.Name,
                 Id = company.Id,

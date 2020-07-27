@@ -14,8 +14,8 @@ namespace TheRiceMill.Application.GatePasses.Models
         /// The Type of the GatePass 1 = GetOut and 2 = GetIn
         /// </summary>
         public GatePassType Type { get; set; }
-        public int CompanyId { get; set; }
-        public CompanyRequestModel Company { get; set; }
+        public int PartyId { get; set; }
+        public PartyRequestModel Party { get; set; }
         public int VehicleId { get; set; }
         public VehicleRequestModel Vehicle { get; set; }
         /// <summary>
@@ -49,7 +49,7 @@ namespace TheRiceMill.Application.GatePasses.Models
         public string Name { get; set; }
         public string PlateNo { get; set; }
     }
-    public class CompanyRequestModel
+    public class PartyRequestModel
     {
         public string Name { get; set; }
         public string PhoneNumber { get; set; }
@@ -77,7 +77,7 @@ namespace TheRiceMill.Application.GatePasses.Models
         public CreateGatePassRequestModelValidator()
         {
             RuleFor(p => p.Type).IsInEnum().WithMessage(Messages.IncorrectValue);
-            RuleFor(p => p.CompanyId).Must(p => p > 0).When(p => p.Company == null).WithMessage(Messages.IncorrectValue);
+            RuleFor(p => p.PartyId).Must(p => p > 0).When(p => p.Party == null).WithMessage(Messages.IncorrectValue);
             RuleFor(p => p.ProductId).Must(p => p > 0).When(p => p.Product == null).WithMessage(Messages.IncorrectValue);
             RuleFor(p => p.VehicleId).Must(p => p > 0).When(p => p.Vehicle == null).WithMessage(Messages.IncorrectValue);
             RuleFor(p => p.WeightPerBag).GreaterThan(0).WithMessage(Messages.LessThan(1));

@@ -9,7 +9,7 @@ namespace TheRiceMill.Application.BankTransactions.Commands.UpdateBankTransactio
     public class UpdateBankTransactionRequestModel : IRequest<ResponseViewModel>
     {
         public int Id { get; set; }
-        public int CompanyId { get; set; }
+        public int PartyId { get; set; }
         public TransactionType TransactionType { get; set; }
         public double TransactionAmount { get; set; }
         public DateTime TransactionDate { get; set; }

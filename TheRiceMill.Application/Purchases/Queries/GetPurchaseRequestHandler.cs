@@ -45,13 +45,13 @@ namespace TheRiceMill.Application.Purchases.Queries
                         Price = p.Product.Price,
                         Type = (ProductType)p.Product.Type
                     },
-                    Company = new CompanyRequestModel()
+                    Party = new PartyRequestModel()
                     {
                         Address = p.Party.Address,
                         Name = p.Party.Name,
                         PhoneNumber = p.Party.PhoneNumber
                     },
-                    CompanyId = p.PartyId,
+                    PartyId = p.PartyId,
                     VehicleId = p.Vehicle.Id,
                     ProductId = p.Product.Id,
                     BagQuantity = p.BagQuantity,

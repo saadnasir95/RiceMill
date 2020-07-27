@@ -8,8 +8,8 @@ namespace TheRiceMill.Application.Sale.Shared
     {
         public int Id { get; set; }
         public string CheckOut { get; set; }
-        public CompanyRequestModel Company { get; set; }
-        public int CompanyId { get; set; }
+        public PartyRequestModel Party { get; set; }
+        public int PartyId { get; set; }
         public int ProductId { get; set; }
         public int VehicleId { get; set; }
         public VehicleRequestModel Vehicle { get; set; }

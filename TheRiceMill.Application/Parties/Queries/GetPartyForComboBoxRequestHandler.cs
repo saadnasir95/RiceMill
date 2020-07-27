@@ -9,19 +9,19 @@ using TheRiceMill.Persistence.Extensions;
 
 namespace TheRiceMill.Application.Companies.Queries
 {
-    public class GetCompanyForComboBoxRequestHandler : IRequestHandler<GetCompanyForComboBoxRequestModel, ResponseViewModel>
+    public class GetPartyForComboBoxRequestHandler : IRequestHandler<GetPartyForComboBoxRequestModel, ResponseViewModel>
     {
         private readonly TheRiceMillDbContext _context;
 
-        public GetCompanyForComboBoxRequestHandler(TheRiceMillDbContext context)
+        public GetPartyForComboBoxRequestHandler(TheRiceMillDbContext context)
         {
             _context = context;
         }
 
-        public Task<ResponseViewModel> Handle(GetCompanyForComboBoxRequestModel request, CancellationToken cancellationToken)
+        public Task<ResponseViewModel> Handle(GetPartyForComboBoxRequestModel request, CancellationToken cancellationToken)
         {
             var list = _context.Parties.GetMany(p => p.Name.Contains(request.Search), p => p.Name, 1,
-                request.PageSize, true).Select(company => new CompanyInfoComboBoxResponseModel()
+                request.PageSize, true).Select(company => new PartyInfoComboBoxResponseModel()
             {
                 Name = company.Name,
                 Id = company.Id,

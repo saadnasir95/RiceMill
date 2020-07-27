@@ -11,20 +11,20 @@ using TheRiceMill.Persistence.Extensions;
 
 namespace TheRiceMill.Application.Companies.Queries
 {
-    public class GetCompanyRequestHandler : IRequestHandler<GetCompanyRequestModel, ResponseViewModel>
+    public class GetPartyRequestHandler : IRequestHandler<GetPartyRequestModel, ResponseViewModel>
     {
         private readonly TheRiceMillDbContext _context;
 
-        public GetCompanyRequestHandler(TheRiceMillDbContext context)
+        public GetPartyRequestHandler(TheRiceMillDbContext context)
         {
             _context = context;
         }
 
-        public Task<ResponseViewModel> Handle(GetCompanyRequestModel request, CancellationToken cancellationToken)
+        public Task<ResponseViewModel> Handle(GetPartyRequestModel request, CancellationToken cancellationToken)
         {
             request.SetDefaultValue();
             var list = _context.Parties.GetMany(p => p.Name.Contains(request.Search), request.OrderBy, request.Page,
-                request.PageSize, request.IsDescending).Select(company => new CompanyInfoResponseModel()
+                request.PageSize, request.IsDescending).Select(company => new PartyInfoResponseModel()
             {
                 Name = company.Name,
                 Id = company.Id,

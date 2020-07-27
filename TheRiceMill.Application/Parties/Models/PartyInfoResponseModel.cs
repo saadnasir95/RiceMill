@@ -1,6 +1,6 @@
 ﻿namespace TheRiceMill.Application.Companies.Models
 {
-    public class CompanyInfoResponseModel
+    public class PartyInfoResponseModel
     {
         public string Name { get; set; }
         public string PhoneNumber { get; set; }

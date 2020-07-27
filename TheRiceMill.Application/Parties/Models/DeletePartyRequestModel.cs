@@ -6,14 +6,14 @@ using TheRiceMill.Common.Response;
 
 namespace TheRiceMill.Application.Companies.Models
 {
-    public class DeleteCompanyRequestModel : IRequest<ResponseViewModel>
+    public class DeletePartyRequestModel : IRequest<ResponseViewModel>
     {
         public int Id { get; set; }
     }
 
-    public class DeleteCompanyRequestModelValidator : AbstractValidator<DeleteCompanyRequestModel>
+    public class DeletePartyRequestModelValidator : AbstractValidator<DeletePartyRequestModel>
     {
-        public DeleteCompanyRequestModelValidator()
+        public DeletePartyRequestModelValidator()
         {
             RuleFor(p => p.Id).GreaterThan(0).WithMessage(Messages.LessThan(0));
         }
