@@ -21,13 +21,13 @@ namespace TheRiceMill.Application.Companies.Commands
 
         public Task<ResponseViewModel> Handle(DeleteCompanyRequestModel request, CancellationToken cancellationToken)
         {
-            var canDelete = _context.Parties.Any(p => p.Id == request.Id && !p.GatePasses.Any() && !p.Sales.Any());
+            var canDelete = _context.Companies.Any(p => p.Id == request.Id && !p.GatePasses.Any() && !p.Sales.Any());
             if (!canDelete)
             {
-                throw new CannotDeleteException(nameof(Party), request.Id);
+                throw new CannotDeleteException(nameof(Company), request.Id);
             }
 
-            _context.Parties.Remove(new Party()
+            _context.Companies.Remove(new Company()
             {
                 Id = request.Id
             });

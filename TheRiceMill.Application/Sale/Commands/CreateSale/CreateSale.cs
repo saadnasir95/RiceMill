@@ -31,31 +31,31 @@ namespace TheRiceMill.Application.Sale.Commands.CreateSale
         {
             var sale = new Domain.Entities.Sale();
             request.Copy(sale);
-            Party company;
+            Company company;
             Vehicle vehicle;
             Product product;
             if (!string.IsNullOrEmpty(request.Company?.Name))
             {
-                company = _context.Parties.GetBy(p => p.NormalizedName.Equals(request.Company.Name.ToUpper()));
+                company = _context.Companies.GetBy(p => p.NormalizedName.Equals(request.Company.Name.ToUpper()));
                 if (company == null)
                 {
-                    sale.Party = new Party()
+                    sale.Company = new Company()
                     {
                         Name = request.Company.Name,
                         NormalizedName = request.Company.Name.ToUpper(),
                         PhoneNumber = request.Company.PhoneNumber,
                         Address = request.Company.Address
                     };
-                    company = sale.Party;
+                    company = sale.Company;
                 }
                 else
                 {
-                    sale.PartyId = company.Id;
+                    sale.CompanyId = company.Id;
                 }
             }
             else
             {
-                company = _context.Parties.GetBy(p => p.Id == request.CompanyId);
+                company = _context.Companies.GetBy(p => p.Id == request.CompanyId);
             }
             if (!string.IsNullOrEmpty(request.Vehicle?.PlateNo))
             {
@@ -123,7 +123,7 @@ namespace TheRiceMill.Application.Sale.Commands.CreateSale
             await _context.SaveChangesAsync(cancellationToken);
             var ledger = new Domain.Entities.Ledger()
             {
-                PartyId = company.Id,
+                CompanyId = company.Id,
                 Debit = request.TotalPrice,
                 Credit = 0,
                 Description = "",

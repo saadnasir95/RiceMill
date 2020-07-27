@@ -7,11 +7,11 @@ namespace TheRiceMill.Domain.Entities
         /// <summary>
         /// Id of Company
         /// </summary>
-        public int PartyId { get; set; }
+        public int CompanyId { get; set; }
         /// <summary>
         /// Navigation Property of Company
         /// </summary>
-        public Party Party { get; set; }
+        public Company Company { get; set; }
 
         public int Direction { get; set; }
         /// <summary>

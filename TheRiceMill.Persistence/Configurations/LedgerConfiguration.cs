@@ -9,9 +9,9 @@ namespace TheRiceMill.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Ledger> builder)
         {
-            builder.HasOne(p => p.Party)
+            builder.HasOne(p => p.Company)
                 .WithMany(b => b.Ledgers)
-                .HasForeignKey(p => p.PartyId);
+                .HasForeignKey(p => p.CompanyId);
 
             builder.HasKey(p => new {p.LedgerType, p.TransactionId});
         }

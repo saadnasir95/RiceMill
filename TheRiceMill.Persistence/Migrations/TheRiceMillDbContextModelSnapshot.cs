@@ -262,6 +262,8 @@ namespace TheRiceMill.Persistence.Migrations
 
                     b.Property<string>("ChequeNumber");
 
+                    b.Property<int>("CompanyId");
+
                     b.Property<string>("CreatedBy");
 
                     b.Property<DateTime>("CreatedDate");
@@ -269,8 +271,6 @@ namespace TheRiceMill.Persistence.Migrations
                     b.Property<double>("Credit");
 
                     b.Property<double>("Debit");
-
-                    b.Property<int>("PartyId");
 
                     b.Property<int>("PaymentType");
 
@@ -286,7 +286,7 @@ namespace TheRiceMill.Persistence.Migrations
 
                     b.HasIndex("BankAccountId");
 
-                    b.HasIndex("PartyId");
+                    b.HasIndex("CompanyId");
 
                     b.ToTable("BankTransactions");
                 });
@@ -328,91 +328,7 @@ namespace TheRiceMill.Persistence.Migrations
                     b.ToTable("Charges");
                 });
 
-            modelBuilder.Entity("TheRiceMill.Domain.Entities.GatePass", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<double>("BagQuantity");
-
-                    b.Property<double>("BoriQuantity");
-
-                    b.Property<string>("Broker");
-
-                    b.Property<string>("CreatedBy");
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<DateTime>("DateTime");
-
-                    b.Property<double>("Maund");
-
-                    b.Property<double>("NetWeight");
-
-                    b.Property<int>("PartyId");
-
-                    b.Property<int>("ProductId");
-
-                    b.Property<int?>("PurchaseId");
-
-                    b.Property<int?>("SaleId");
-
-                    b.Property<int>("Type");
-
-                    b.Property<string>("UpdatedBy");
-
-                    b.Property<DateTime>("UpdatedDate");
-
-                    b.Property<int>("VehicleId");
-
-                    b.Property<double>("WeightPerBag");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PartyId");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("PurchaseId");
-
-                    b.HasIndex("SaleId");
-
-                    b.HasIndex("VehicleId");
-
-                    b.ToTable("GatePasses");
-                });
-
-            modelBuilder.Entity("TheRiceMill.Domain.Entities.Ledger", b =>
-                {
-                    b.Property<int>("LedgerType");
-
-                    b.Property<int>("TransactionId");
-
-                    b.Property<string>("CreatedBy");
-
-                    b.Property<DateTime>("CreatedDate");
-
-                    b.Property<double>("Credit");
-
-                    b.Property<double>("Debit");
-
-                    b.Property<string>("Description");
-
-                    b.Property<int>("PartyId");
-
-                    b.Property<string>("UpdatedBy");
-
-                    b.Property<DateTime>("UpdatedDate");
-
-                    b.HasKey("LedgerType", "TransactionId");
-
-                    b.HasIndex("PartyId");
-
-                    b.ToTable("Ledgers");
-                });
-
-            modelBuilder.Entity("TheRiceMill.Domain.Entities.Party", b =>
+            modelBuilder.Entity("TheRiceMill.Domain.Entities.Company", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -442,7 +358,91 @@ namespace TheRiceMill.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Parties");
+                    b.ToTable("Companies");
+                });
+
+            modelBuilder.Entity("TheRiceMill.Domain.Entities.GatePass", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<double>("BagQuantity");
+
+                    b.Property<double>("BoriQuantity");
+
+                    b.Property<string>("Broker");
+
+                    b.Property<int>("CompanyId");
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<DateTime>("DateTime");
+
+                    b.Property<double>("Maund");
+
+                    b.Property<double>("NetWeight");
+
+                    b.Property<int>("ProductId");
+
+                    b.Property<int?>("PurchaseId");
+
+                    b.Property<int?>("SaleId");
+
+                    b.Property<int>("Type");
+
+                    b.Property<string>("UpdatedBy");
+
+                    b.Property<DateTime>("UpdatedDate");
+
+                    b.Property<int>("VehicleId");
+
+                    b.Property<double>("WeightPerBag");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
+
+                    b.HasIndex("ProductId");
+
+                    b.HasIndex("PurchaseId");
+
+                    b.HasIndex("SaleId");
+
+                    b.HasIndex("VehicleId");
+
+                    b.ToTable("GatePasses");
+                });
+
+            modelBuilder.Entity("TheRiceMill.Domain.Entities.Ledger", b =>
+                {
+                    b.Property<int>("LedgerType");
+
+                    b.Property<int>("TransactionId");
+
+                    b.Property<int>("CompanyId");
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<DateTime>("CreatedDate");
+
+                    b.Property<double>("Credit");
+
+                    b.Property<double>("Debit");
+
+                    b.Property<string>("Description");
+
+                    b.Property<string>("UpdatedBy");
+
+                    b.Property<DateTime>("UpdatedDate");
+
+                    b.HasKey("LedgerType", "TransactionId");
+
+                    b.HasIndex("CompanyId");
+
+                    b.ToTable("Ledgers");
                 });
 
             modelBuilder.Entity("TheRiceMill.Domain.Entities.Product", b =>
@@ -494,6 +494,8 @@ namespace TheRiceMill.Persistence.Migrations
 
                     b.Property<double>("Commission");
 
+                    b.Property<int>("CompanyId");
+
                     b.Property<string>("CreatedBy");
 
                     b.Property<DateTime>("CreatedDate");
@@ -505,8 +507,6 @@ namespace TheRiceMill.Persistence.Migrations
                     b.Property<double>("ExpectedEmptyBagWeight");
 
                     b.Property<double>("KandaWeight");
-
-                    b.Property<int>("PartyId");
 
                     b.Property<double>("PercentCommission");
 
@@ -536,7 +536,7 @@ namespace TheRiceMill.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PartyId");
+                    b.HasIndex("CompanyId");
 
                     b.HasIndex("ProductId");
 
@@ -609,6 +609,8 @@ namespace TheRiceMill.Persistence.Migrations
 
                     b.Property<double>("Commission");
 
+                    b.Property<int>("CompanyId");
+
                     b.Property<string>("CreatedBy");
 
                     b.Property<DateTime>("CreatedDate");
@@ -618,8 +620,6 @@ namespace TheRiceMill.Persistence.Migrations
                     b.Property<double>("ExpectedEmptyBagWeight");
 
                     b.Property<double>("KandaWeight");
-
-                    b.Property<int>("PartyId");
 
                     b.Property<double>("PercentCommission");
 
@@ -647,7 +647,7 @@ namespace TheRiceMill.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PartyId");
+                    b.HasIndex("CompanyId");
 
                     b.HasIndex("ProductId");
 
@@ -851,9 +851,9 @@ namespace TheRiceMill.Persistence.Migrations
                         .HasForeignKey("BankAccountId")
                         .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("TheRiceMill.Domain.Entities.Party", "Party")
+                    b.HasOne("TheRiceMill.Domain.Entities.Company", "Company")
                         .WithMany("BankTransactions")
-                        .HasForeignKey("PartyId")
+                        .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
@@ -870,9 +870,9 @@ namespace TheRiceMill.Persistence.Migrations
 
             modelBuilder.Entity("TheRiceMill.Domain.Entities.GatePass", b =>
                 {
-                    b.HasOne("TheRiceMill.Domain.Entities.Party", "Party")
+                    b.HasOne("TheRiceMill.Domain.Entities.Company", "Company")
                         .WithMany("GatePasses")
-                        .HasForeignKey("PartyId")
+                        .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("TheRiceMill.Domain.Entities.Product", "Product")
@@ -896,17 +896,17 @@ namespace TheRiceMill.Persistence.Migrations
 
             modelBuilder.Entity("TheRiceMill.Domain.Entities.Ledger", b =>
                 {
-                    b.HasOne("TheRiceMill.Domain.Entities.Party", "Party")
+                    b.HasOne("TheRiceMill.Domain.Entities.Company", "Company")
                         .WithMany("Ledgers")
-                        .HasForeignKey("PartyId")
+                        .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("TheRiceMill.Domain.Entities.Purchase", b =>
                 {
-                    b.HasOne("TheRiceMill.Domain.Entities.Party", "Party")
+                    b.HasOne("TheRiceMill.Domain.Entities.Company", "Company")
                         .WithMany()
-                        .HasForeignKey("PartyId")
+                        .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("TheRiceMill.Domain.Entities.Product", "Product")
@@ -930,9 +930,9 @@ namespace TheRiceMill.Persistence.Migrations
 
             modelBuilder.Entity("TheRiceMill.Domain.Entities.Sale", b =>
                 {
-                    b.HasOne("TheRiceMill.Domain.Entities.Party", "Party")
+                    b.HasOne("TheRiceMill.Domain.Entities.Company", "Company")
                         .WithMany("Sales")
-                        .HasForeignKey("PartyId")
+                        .HasForeignKey("CompanyId")
                         .OnDelete(DeleteBehavior.Cascade);
 
                     b.HasOne("TheRiceMill.Domain.Entities.Product", "Product")

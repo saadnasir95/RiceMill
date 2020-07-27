@@ -11,8 +11,8 @@ namespace TheRiceMill.Domain.Entities
         public DateTime TransactionDate { get; set; }
         public int BankAccountId { get; set; }
         public BankAccount BankAccount { get; set; }
-        public int PartyId { get; set; }
-        public Party Party { get; set; }
+        public int CompanyId { get; set; }
+        public Company Company { get; set; }
         public string ChequeNumber { get; set; }
     }
 }

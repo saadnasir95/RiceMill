@@ -43,31 +43,31 @@ namespace TheRiceMill.Application.Purchases.Commands.UpdatePurchase
             }
             request.Copy(purchase);
             purchase.Direction = request.Direction.ToInt();
-            Party company;
+            Company company;
             Vehicle vehicle;
             Product product;
             if (!string.IsNullOrEmpty(request.Company?.Name))
             {
-                company = _context.Parties.GetBy(p => p.NormalizedName.Equals(request.Company.Name.ToUpper()));
+                company = _context.Companies.GetBy(p => p.NormalizedName.Equals(request.Company.Name.ToUpper()));
                 if (company == null)
                 {
-                    purchase.Party = new Party()
+                    purchase.Company = new Company()
                     {
                         Name = request.Company.Name,
                         NormalizedName = request.Company.Name.ToUpper(),
                         PhoneNumber = request.Company.PhoneNumber,
                         Address = request.Company.Address
                     };
-                    company = purchase.Party;
+                    company = purchase.Company;
                 }
                 else
                 {
-                    purchase.PartyId = company.Id;
+                    purchase.CompanyId = company.Id;
                 }
             }
             else
             {
-                company = _context.Parties.GetBy(p => p.Id == request.CompanyId);
+                company = _context.Companies.GetBy(p => p.Id == request.CompanyId);
             }
             if (!string.IsNullOrEmpty(request.Vehicle?.PlateNo))
             {
@@ -139,7 +139,7 @@ namespace TheRiceMill.Application.Purchases.Commands.UpdatePurchase
                 }
             }
             _context.Purchases.Update(purchase);
-            ledger.PartyId = company.Id;
+            ledger.CompanyId = company.Id;
             ledger.Credit = request.TotalPrice;
             ledger.Debit = 0;
             _context.Ledgers.Update(ledger);

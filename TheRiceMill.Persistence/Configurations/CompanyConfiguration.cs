@@ -4,9 +4,9 @@ using TheRiceMill.Domain.Entities;
 
 namespace TheRiceMill.Persistence.Configurations
 {
-    public class CompanyConfiguration : IEntityTypeConfiguration<Party>
+    public class CompanyConfiguration : IEntityTypeConfiguration<Company>
     {
-        public void Configure(EntityTypeBuilder<Party> builder)
+        public void Configure(EntityTypeBuilder<Company> builder)
         {
             builder.Property(p => p.Name).IsRequired().HasMaxLength(50);
             builder.Property(p => p.NormalizedName).IsRequired().HasMaxLength(50);

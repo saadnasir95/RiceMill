@@ -8,9 +8,9 @@ namespace TheRiceMill.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<GatePass> builder)
         {
-            builder.HasOne(p => p.Party)
+            builder.HasOne(p => p.Company)
                 .WithMany(b => b.GatePasses)
-                .HasForeignKey(p => p.PartyId);
+                .HasForeignKey(p => p.CompanyId);
             builder.HasOne(p => p.Vehicle)
                 .WithMany(b => b.GatePasses)
                 .HasForeignKey(p => p.VehicleId);

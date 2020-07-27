@@ -31,7 +31,7 @@ namespace TheRiceMill.Application.Purchases.Queries
                     p => p.Product.Name.Contains(request.Search),
                     request.OrderBy, request.Page, request.PageSize, request.IsDescending,
                     p => p.Include(pr => pr.Product).Include(pr => pr.Vehicle)
-                        .Include(pr => pr.Party).Include(pr => pr.Charges))
+                        .Include(pr => pr.Company).Include(pr => pr.Charges))
                 .Select(p => new
                 {
                     Vehicle = new VehicleRequestModel()
@@ -47,11 +47,11 @@ namespace TheRiceMill.Application.Purchases.Queries
                     },
                     Company = new CompanyRequestModel()
                     {
-                        Address = p.Party.Address,
-                        Name = p.Party.Name,
-                        PhoneNumber = p.Party.PhoneNumber
+                        Address = p.Company.Address,
+                        Name = p.Company.Name,
+                        PhoneNumber = p.Company.PhoneNumber
                     },
-                    CompanyId = p.PartyId,
+                    CompanyId = p.CompanyId,
                     VehicleId = p.Vehicle.Id,
                     ProductId = p.Product.Id,
                     BagQuantity = p.BagQuantity,
@@ -87,7 +87,7 @@ namespace TheRiceMill.Application.Purchases.Queries
                     PercentCommission = p.PercentCommission
                 }).ToList();
             var count = _context.Purchases.Count(p =>
-                p.Product.Name.Contains(request.Search) || p.Party.Name.Contains(request.Search));
+                p.Product.Name.Contains(request.Search) || p.Company.Name.Contains(request.Search));
             return Task.FromResult(new ResponseViewModel().CreateOk(purchase, count));
         }
     }

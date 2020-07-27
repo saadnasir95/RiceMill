@@ -33,31 +33,31 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
             var purchase = new Purchase();
             request.Copy(purchase);
             purchase.Direction = request.Direction.ToInt();
-            Party company;
+            Company company;
             Vehicle vehicle;
             Product product;
             if (!string.IsNullOrEmpty(request.Company?.Name))
             {
-                company = _context.Parties.GetBy(p => p.NormalizedName.Equals(request.Company.Name.ToUpper()));
+                company = _context.Companies.GetBy(p => p.NormalizedName.Equals(request.Company.Name.ToUpper()));
                 if (company == null)
                 {
-                    purchase.Party = new Party()
+                    purchase.Company = new Company()
                     {
                         Name = request.Company.Name,
                         NormalizedName = request.Company.Name.ToUpper(),
                         PhoneNumber = request.Company.PhoneNumber,
                         Address = request.Company.Address
                     };
-                    company = purchase.Party;
+                    company = purchase.Company;
                 }
                 else
                 {
-                    purchase.PartyId = company.Id;
+                    purchase.CompanyId = company.Id;
                 }
             }
             else
             {
-                company = _context.Parties.GetBy(p => p.Id == request.CompanyId);
+                company = _context.Companies.GetBy(p => p.Id == request.CompanyId);
             }
             if (!string.IsNullOrEmpty(request.Vehicle?.PlateNo))
             {
@@ -126,7 +126,7 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
             await _context.SaveChangesAsync(cancellationToken);
             var ledger = new Domain.Entities.Ledger()
             {
-                PartyId = company.Id,
+                CompanyId = company.Id,
                 Credit = request.TotalPrice,
                 Debit = 0,
                 Description = "",

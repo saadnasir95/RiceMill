@@ -34,22 +34,22 @@ namespace TheRiceMill.Application.Ledger.Queries.GetLedgers
         public async Task<ResponseViewModel> Handle(GetLedgersRequestModel request, CancellationToken cancellationToken)
         {
             request.SetDefaultValue();
-            Expression<Func<Domain.Entities.Ledger, bool>> query = p => p.PartyId == request.CompanyId;
+            Expression<Func<Domain.Entities.Ledger, bool>> query = p => p.CompanyId == request.CompanyId;
 
             //PrevBalance = 10000
 
             var dateConverter = new DateConverter();
             var list = await _context.Ledgers
                 .GetManyReadOnly(query, "CreatedDate", request.Page, request.PageSize, false,
-                    p => p.Include(pr => pr.Party)).Select(p =>
+                    p => p.Include(pr => pr.Company)).Select(p =>
                     new LedgerResponse()
                     {
-                        CompanyId = p.PartyId,
+                        CompanyId = p.CompanyId,
                         LedgerType = p.LedgerType,
                         Credit = p.Credit,
                         Debit = p.Debit,
                         Description = p.Description,
-                        CompanyName = p.Party.Name,
+                        CompanyName = p.Company.Name,
                         CreatedDate = dateConverter.ConvertToDateTimeIso(p.CreatedDate),
                         TransactionId = p.TransactionId,
                     }).ToListAsync(cancellationToken);
@@ -62,7 +62,7 @@ namespace TheRiceMill.Application.Ledger.Queries.GetLedgers
             {
                 var firstDate = DateTime.Parse(firstLedger.CreatedDate);
                 previousBalance = await _context.Ledgers.SumAsync(
-                    p => p.PartyId == request.CompanyId && p.CreatedDate < firstDate, p => p.Credit - p.Debit,
+                    p => p.CompanyId == request.CompanyId && p.CreatedDate < firstDate, p => p.Credit - p.Debit,
                     cancellationToken);
             }
             return new ResponseViewModel().CreateOk(new Response()

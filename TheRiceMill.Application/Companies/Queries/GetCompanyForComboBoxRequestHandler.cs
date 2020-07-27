@@ -20,7 +20,7 @@ namespace TheRiceMill.Application.Companies.Queries
 
         public Task<ResponseViewModel> Handle(GetCompanyForComboBoxRequestModel request, CancellationToken cancellationToken)
         {
-            var list = _context.Parties.GetMany(p => p.Name.Contains(request.Search), p => p.Name, 1,
+            var list = _context.Companies.GetMany(p => p.Name.Contains(request.Search), p => p.Name, 1,
                 request.PageSize, true).Select(company => new CompanyInfoComboBoxResponseModel()
             {
                 Name = company.Name,

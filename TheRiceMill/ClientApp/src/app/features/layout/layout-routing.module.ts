@@ -15,7 +15,7 @@ const routes: Routes = [
       { path: 'purchase', loadChildren: '../purchase/purchase.module#PurchaseModule', data: { role: ['Administrator'] } },
       { path: 'sale', loadChildren: '../sale/sale.module#SaleModule', data: { role: ['Administrator'] } },
       { path: 'vehicle', loadChildren: '../vehicle/vehicle.module#VehicleModule', data: { role: ['Administrator'] } },
-      { path: 'party', loadChildren: '../company/company.module#CompanyModule', data: { role: ['Administrator'] } },
+      { path: 'company', loadChildren: '../company/company.module#CompanyModule', data: { role: ['Administrator'] } },
       { path: 'settings', loadChildren: '../setting/setting.module#SettingModule', data: { role: ['Administrator', 'GateKeeper'] } },
       { path: 'product', loadChildren: '../product/product.module#ProductModule', data: { role: ['Administrator'] } },
       { path: 'company-ledger', loadChildren: '../company-ledger/company-ledger.module#CompanyLedgerModule', data: { role: ['Administrator'] } },

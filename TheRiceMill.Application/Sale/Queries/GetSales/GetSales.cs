@@ -30,11 +30,11 @@ namespace TheRiceMill.Application.Sale.Queries.GetSales
         {
             request.SetDefaultValue();
             Expression<Func<Domain.Entities.Sale, bool>> searchQuery = p =>
-                p.Party.Name.Contains(request.Search) || p.Product.Name.Contains(request.Search) ||
+                p.Company.Name.Contains(request.Search) || p.Product.Name.Contains(request.Search) ||
                 p.Vehicle.PlateNo.Contains(request.Search);
             var list = _context.Sales.GetMany(searchQuery, request.OrderBy, request.Page,
                     request.PageSize, request.IsDescending,
-                    p => p.Include(pr => pr.Party).Include(pr => pr.Product).Include(pr => pr.Vehicle))
+                    p => p.Include(pr => pr.Company).Include(pr => pr.Product).Include(pr => pr.Vehicle))
                 .Select(sale => new SaleResponseViewModel()
                 {
                     Vehicle = new VehicleRequestModel()
@@ -44,9 +44,9 @@ namespace TheRiceMill.Application.Sale.Queries.GetSales
                     },
                     Company = new CompanyRequestModel()
                     {
-                        Name = sale.Party.Name,
-                        Address = sale.Party.Address,
-                        PhoneNumber = sale.Party.PhoneNumber,
+                        Name = sale.Company.Name,
+                        Address = sale.Company.Address,
+                        PhoneNumber = sale.Company.PhoneNumber,
                     },
                     Product = new ProductRequestModel()
                     {
@@ -54,7 +54,7 @@ namespace TheRiceMill.Application.Sale.Queries.GetSales
                         Price = sale.Product.Price,
                         Type = (ProductType)sale.Product.Type
                     },
-                    CompanyId = sale.Party.Id,
+                    CompanyId = sale.Company.Id,
                     VehicleId = sale.Vehicle.Id,
                     ProductId = sale.Product.Id,
                     BagQuantity = sale.BagQuantity,

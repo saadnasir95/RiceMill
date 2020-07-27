@@ -23,7 +23,7 @@ namespace TheRiceMill.Application.Companies.Queries
         public Task<ResponseViewModel> Handle(GetCompanyRequestModel request, CancellationToken cancellationToken)
         {
             request.SetDefaultValue();
-            var list = _context.Parties.GetMany(p => p.Name.Contains(request.Search), request.OrderBy, request.Page,
+            var list = _context.Companies.GetMany(p => p.Name.Contains(request.Search), request.OrderBy, request.Page,
                 request.PageSize, request.IsDescending).Select(company => new CompanyInfoResponseModel()
             {
                 Name = company.Name,
@@ -32,7 +32,7 @@ namespace TheRiceMill.Application.Companies.Queries
                 PhoneNumber = company.PhoneNumber,
                 CreatedDate = new DateConverter().ConvertToDateTimeIso(company.CreatedDate),
             }).ToList();
-            var count = _context.Parties.Count(p => p.Name.Contains(request.Search));
+            var count = _context.Companies.Count(p => p.Name.Contains(request.Search));
             return Task.FromResult(new ResponseViewModel().CreateOk(list, count));
         }
     }
