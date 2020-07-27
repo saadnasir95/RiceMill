@@ -41,31 +41,31 @@ namespace TheRiceMill.Application.Sale.Commands.UpdateSale
                 throw new NotFoundException(nameof(Domain.Entities.Ledger),request.Id);
             }
             request.Copy(sale);
-            Company company;
+            Party company;
             Vehicle vehicle;
             Product product;
             if (!string.IsNullOrEmpty(request.Company?.Name))
             {
-                company = _context.Companies.GetBy(p => p.NormalizedName.Equals(request.Company.Name.ToUpper()));
+                company = _context.Parties.GetBy(p => p.NormalizedName.Equals(request.Company.Name.ToUpper()));
                 if (company == null)
                 {
-                    sale.Company = new Company()
+                    sale.Party = new Party()
                     {
                         Name = request.Company.Name,
                         NormalizedName = request.Company.Name.ToUpper(),
                         PhoneNumber = request.Company.PhoneNumber,
                         Address = request.Company.Address
                     };
-                    company = sale.Company;
+                    company = sale.Party;
                 }
                 else
                 {
-                    sale.CompanyId = company.Id;
+                    sale.PartyId = company.Id;
                 }
             }
             else
             {
-                company = _context.Companies.GetBy(p => p.Id == request.CompanyId);
+                company = _context.Parties.GetBy(p => p.Id == request.CompanyId);
             }
             if (!string.IsNullOrEmpty(request.Vehicle?.PlateNo))
             {
@@ -137,7 +137,7 @@ namespace TheRiceMill.Application.Sale.Commands.UpdateSale
                 }
             }
             _context.Sales.Update(sale);
-            ledger.CompanyId = company.Id;
+            ledger.PartyId = company.Id;
             ledger.Debit = request.TotalPrice;
             ledger.Credit = 0;
             _context.Ledgers.Update(ledger);
