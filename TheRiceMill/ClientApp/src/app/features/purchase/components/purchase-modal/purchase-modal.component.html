@@ -41,7 +41,7 @@
                 [matChipInputFor]="chipList"
                 [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
                 [matChipInputAddOnBlur]="addOnBlur"
-                (matChipInputTokenEnd)="add($event)">
+                >
             </mat-chip-list>
             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
               <mat-option class="custom-height" *ngFor="let gatepass of filteredGatepasses" [value]="gatepass">
@@ -54,25 +54,6 @@
           </mat-form-field>
         </div>
       </div>
-
-      <div class="row">
-        <div class="col-6">
-          <mat-form-field class="w-100">
-            <input type="number" matInput placeholder="Enter Credit" formControlName="credit">
-            <mat-error *ngIf="purchaseForm.get('credit').hasError('min')">
-              Credit must be greater than 0</mat-error>
-          </mat-form-field>
-        </div>
-
-        <div class="col-6">
-          <mat-form-field class="w-100">
-            <input type="number" matInput placeholder="Enter Debit" formControlName="debit">
-            <mat-error *ngIf="purchaseForm.get('debit').hasError('min')">
-              Debit must be greater than 0</mat-error>
-          </mat-form-field>
-        </div>
-      </div>
-
 
       <!---------------------->
       <!-- Old Modal Fields -->
@@ -159,9 +140,9 @@
             <mat-error *ngIf="purchaseForm.get('direction').hasError('required')">Direction is required</mat-error>
           </mat-form-field>
         </div>
-      </div>
+      </div> -->
       <div class="row" formGroupName="weightPriceGroup">
-        <div class="col-md-4">
+        <!-- <div class="col-md-4">
           <mat-form-field>
             <input type="number" matInput placeholder="Enter Bag Quantity" formControlName="bagQuantity">
             <mat-error *ngIf="purchaseForm.get('weightPriceGroup.bagQuantity').hasError('required')">
@@ -276,7 +257,7 @@
             <mat-error *ngIf="purchaseForm.get('weightPriceGroup.totalActualBagWeight').hasError('min')">
               Total Actual bag weight must be greater than 0</mat-error>
           </mat-form-field>
-        </div>
+        </div> -->
         <div class="col-md-4">
           <mat-form-field>
             <input type="number" matInput placeholder="Maund Weight" formControlName="totalMaund" readonly>
@@ -297,7 +278,7 @@
               Maund Price must be greater than 0</mat-error>
           </mat-form-field>
         </div>
-        <div class="col-md-4">
+        <!-- <div class="col-md-4">
           <mat-form-field>
             <input type="number" matInput placeholder="Kg Price" formControlName="ratePerKg" readonly>
             <mat-error *ngIf="purchaseForm.get('weightPriceGroup.ratePerKg').hasError('required')">
@@ -306,7 +287,7 @@
             <mat-error *ngIf="purchaseForm.get('weightPriceGroup.ratePerKg').hasError('min')">
               Kg Price must be greater than 0</mat-error>
           </mat-form-field>
-        </div>
+        </div> -->
         <div class="col-md-4">
           <mat-form-field>
             <input type="number" matInput placeholder="Total Price" formControlName="totalPrice" readonly>
@@ -337,9 +318,27 @@
               Commission must be greater than 0</mat-error>
           </mat-form-field>
         </div>
-      </div> -->
+      </div> 
       <!---------------------->
       <!-- Old Modal Fields -->
+
+      <div class="row">
+        <div class="col-6">
+          <mat-form-field class="w-100">
+            <input type="number" matInput placeholder="Enter Credit" formControlName="credit">
+            <mat-error *ngIf="purchaseForm.get('credit').hasError('min')">
+              Credit must be greater than 0</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-6">
+          <mat-form-field class="w-100">
+            <input type="number" matInput placeholder="Enter Debit" formControlName="debit">
+            <mat-error *ngIf="purchaseForm.get('debit').hasError('min')">
+              Debit must be greater than 0</mat-error>
+          </mat-form-field>
+        </div>
+      </div>
 
       <mat-divider class="mb-2"></mat-divider>
       <div formArrayName="additionalCharges">

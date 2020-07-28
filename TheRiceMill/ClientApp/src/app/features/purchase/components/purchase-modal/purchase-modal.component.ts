@@ -70,25 +70,25 @@ export class PurchaseModalComponent implements OnInit {
   //     price: new FormControl(null, [Validators.required, Validators.min(0)]),
   //     type: new FormControl(+ProductType.Purchase, Validators.required)
   //   }),
-  //   weightPriceGroup: new FormGroup({
-  //     bagQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
-  //     bagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
-  //     kandaWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
-  //     expectedBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
-  //     totalExpectedBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
-  //     emptyBagWeight: new FormControl(0, [Validators.required, Validators.min(0), Validators.max(2)]),
-  //     totalEmptyBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
-  //     actualBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
-  //     totalActualBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
-  //     totalMaund: new FormControl(0, [Validators.required, Validators.min(0)]),
-  //     vibration: new FormControl(0, [Validators.required, Validators.min(0)]),
-  //     ratePerKg: new FormControl(0, [Validators.required, Validators.min(0)]),
-  //     ratePerMaund: new FormControl(0, [Validators.required, Validators.min(0)]),
-  //     commission: new FormControl(0, [Validators.required, Validators.min(0)]),
-  //     percentCommission: new FormControl(0, [Validators.required, Validators.min(0)]),
-  //     totalPrice: new FormControl(0, [Validators.required, Validators.min(0)]),
-  //     actualBags: new FormControl(0, [Validators.required, Validators.min(0)]),
-  //   })
+    weightPriceGroup: new FormGroup({
+      // bagQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
+      // bagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
+      // kandaWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
+      // expectedBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
+      // totalExpectedBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
+      // emptyBagWeight: new FormControl(0, [Validators.required, Validators.min(0), Validators.max(2)]),
+      // totalEmptyBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
+      // actualBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
+      // totalActualBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
+      totalMaund: new FormControl(0, [Validators.required, Validators.min(0)]),
+      // vibration: new FormControl(0, [Validators.required, Validators.min(0)]),
+      // ratePerKg: new FormControl(0, [Validators.required, Validators.min(0)]),
+      ratePerMaund: new FormControl(0, [Validators.required, Validators.min(0)]),
+      commission: new FormControl(0, [Validators.required, Validators.min(0)]),
+      percentCommission: new FormControl(0, [Validators.required, Validators.min(0)]),
+      totalPrice: new FormControl(0, [Validators.required, Validators.min(0)]),
+      // actualBags: new FormControl(0, [Validators.required, Validators.min(0)]),
+    })
   });
   public GateinDirectionTypes = [
     { text: 'Milling', value: +GateinDirection.Milling },
@@ -407,7 +407,7 @@ export class PurchaseModalComponent implements OnInit {
   add(event: MatChipInputEvent): void {
     const input = event.input;
     const value = event.value;
-
+    debugger
     // Add our gatepass
     if ((value || '').trim()) {
       this.gatepasses.push(value.trim());
