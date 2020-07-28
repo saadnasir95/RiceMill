@@ -15,14 +15,15 @@ export class GatepassService {
 
   constructor(private http: HttpClient, private tokenService: TokenService) { }
 
-  getGatepassList(pageSize: number, pageIndex: number, search = '', sortDirection = 'false', orderBy = '')
+  getGatepassList(pageSize: number, pageIndex: number, search = '', sortDirection = 'false', orderBy = '', InvoicePendingGatePass = false)
     : Observable<GatepassResponse> {
     const params = new HttpParams()
       .set('Page', (pageIndex + 1).toString())
       .set('PageSize', pageSize.toString())
       .set('search', search + '')
       .set('isDescending', sortDirection)
-      .set('orderBy', orderBy + '');
+      .set('orderBy', orderBy + '')
+      .set('InvoicePendingGatePass', InvoicePendingGatePass.toString());
     return this.http.get<GatepassResponse>(this.apiUrl, { headers: this.tokenService.getHeaders(), params: params });
   }
 

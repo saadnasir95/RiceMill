@@ -21,16 +21,16 @@
   <div class="invoice-content row px-5 pt-5">
     <div class="col-3">
       <h5 class="gray-ish">Invoiced to:</h5>
-      <p class="gray-ish">{{gatepass.company.name}}</p>
-      <p class="gray-ish">{{gatepass.company.address}}</p>
-      <p class="gray-ish">{{gatepass.company.phoneNumber}}</p>
+      <p class="gray-ish">{{gatepass.party.name}}</p>
+      <p class="gray-ish">{{gatepass.party.address}}</p>
+      <p class="gray-ish">{{gatepass.party.phoneNumber}}</p>
     </div>
     <div class="col-3">
       <h5 class="gray-ish">Gatepass number:</h5>
       <p class="gray-ish">{{gatepass.id}}</p>
 
       <h5 class="gray-ish">Gatepass Date</h5>
-      <p class="gray-ish">{{gatepass.checkDateTime | localDatetime}}</p>
+      <p class="gray-ish">{{gatepass.dateTime | localDatetime}}</p>
 
     </div>
     <div class="col-6 text-right total-field">
@@ -48,9 +48,10 @@
             <th scope="col gray-ish">Plate No</th>
             <th scope="col gray-ish">Product</th>
             <th scope="col gray-ish">Bag Qty</th>
-            <th scope="col gray-ish">Bag Weight</th>
-            <th scope="col gray-ish">Kanda Weight</th>
-            <th scope="col gray-ish">Total Maund</th>
+            <th scope="col gray-ish">Bori Qty</th>
+            <th scope="col gray-ish">Weight Per Bag</th>
+            <th scope="col gray-ish">Net Weight</th>
+            <th scope="col gray-ish">Maund</th>
           </tr>
         </thead>
         <tbody>
@@ -59,9 +60,10 @@
             <td>{{gatepass.vehicle.plateNo}}</td>
             <td>{{gatepass.product.name}}</td>
             <td>{{gatepass.bagQuantity}}</td>
-            <td>{{gatepass.bagWeight}}</td>
-            <td>{{gatepass.kandaWeight}}</td>
-            <td>{{gatepass.totalMaund}}</td>
+            <td>{{gatepass.boriQuantity}}</td>
+            <td>{{gatepass.weightPerBag}}</td>
+            <td>{{gatepass.netWeight}}</td>
+            <td>{{gatepass.maund}}</td>
           </tr>
         </tbody>
       </table>

@@ -30,12 +30,24 @@ namespace TheRiceMill.Application.GatePasses.Queries
         {
             request.SetDefaultValue();
             var converter = new DateConverter();
-            Expression<Func<GatePass, bool>> searchQuery = p => p.Party.Name.Contains(request.Search) ||
+            Expression<Func<GatePass, bool>> query = null;
+            if (request.InvoicePendingGatePass)
+            {
+                query = p => (p.PurchaseId == null && p.SaleId == null) && (p.Party.Name.Contains(request.Search) ||
                                     (p.Id + "" == request.Search) ||
                                     p.Vehicle.PlateNo.Contains(request.Search) ||
-                                    p.Product.Name.Contains(request.Search);
+                                    p.Product.Name.Contains(request.Search));
+            }
+            else
+            {
+                query = p => (p.Party.Name.Contains(request.Search) ||
+                                    (p.Id + "" == request.Search) ||
+                                    p.Vehicle.PlateNo.Contains(request.Search) ||
+                                    p.Product.Name.Contains(request.Search));
+            }
+
             List<GatePassResponseModel> gatePasses = _context.GatePasses
-                .GetMany(searchQuery,
+                .GetMany(query,
                 request.OrderBy, request.Page,
                 request.PageSize, request.IsDescending,
                 p => p.Include(pr => pr.Party).Include(pr => pr.Vehicle).Include(pr => pr.Product))
@@ -73,7 +85,7 @@ namespace TheRiceMill.Application.GatePasses.Queries
                     PurchaseId = p.PurchaseId,
                     SaleId = p.SaleId
                 }).ToList();
-            var count = await _context.GatePasses.CountAsync(searchQuery, cancellationToken);
+            var count = await _context.GatePasses.CountAsync(query, cancellationToken);
             return new ResponseViewModel().CreateOk(gatePasses, count);
         }
     }

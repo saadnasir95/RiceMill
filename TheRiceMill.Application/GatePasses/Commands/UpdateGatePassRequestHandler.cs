@@ -33,6 +33,7 @@ namespace TheRiceMill.Application.GatePasses.Commands
                 throw new NotFoundException(nameof(GatePass), request.Id);
             }
             request.Copy(gatePass);
+            gatePass.Type = request.Type.ToInt();
             Party party;
             Vehicle vehicle;
             Product product;
@@ -109,7 +110,7 @@ namespace TheRiceMill.Application.GatePasses.Commands
             await _context.SaveChangesAsync(cancellationToken);
             return new ResponseViewModel().CreateOk(new GatePassResponseModel()
             {
-                Type = request.Type,
+                Type = (GatePassType)request.Type,
                 BagQuantity = request.BagQuantity,
                 BoriQuantity = request.BoriQuantity,
                 WeightPerBag = request.WeightPerBag,

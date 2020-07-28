@@ -4,14 +4,14 @@ import { ProductType } from '../../../../shared/model/enums';
 import { MatDialogRef, MatAutocompleteSelectedEvent } from '@angular/material';
 import { Vehicle } from '../../../../shared/model/vehicle.model';
 import { Product } from '../../../../shared/model/product.model';
-import { Company } from '../../../../shared/model/company.model';
-import { CompanyService } from '../../../../shared/services/company.service';
+import { Party } from '../../../../shared/model/party.model';
+import { PartyService } from '../../../../shared/services/party.service';
 import { VehicleService } from '../../../../shared/services/vehicle.service';
 import { ProductService } from '../../../../shared/services/product.service';
 import { Sale } from '../../../../shared/model/sale.model';
 import { SaleService } from '../../../../shared/services/sale.service';
 import { AdditionalCharges } from '../../../../shared/model/additionalcharges.model';
-import { CompanyResponse } from '../../../../shared/model/company-response.model';
+import { PartyResponse } from '../../../../shared/model/party-response.model';
 import { ProductResponse } from '../../../../shared/model/product-response.model';
 import { VehicleResponse } from '../../../../shared/model/vehicle-response.model';
 import * as moment from 'moment';
@@ -26,7 +26,7 @@ import { SpinnerService } from '../../../../shared/services/spinner.service';
 })
 export class SaleModalComponent implements OnInit {
   vehicleSuggestions: Vehicle[];
-  companySuggestions: Company[];
+  partySuggestions: Party[];
   productSuggestions: Product[];
   additionalCharges = 0;
   commission = 0;
@@ -36,7 +36,7 @@ export class SaleModalComponent implements OnInit {
     biltyNumber: new FormControl(null, Validators.required),
     additionalCharges: new FormArray([]),
     // commissions: new FormArray([]),
-    companyGroup: new FormGroup({
+    partyGroup: new FormGroup({
       name: new FormControl('', Validators.required),
       address: new FormControl('', Validators.required),
       phoneNumber: new FormControl(null, [Validators.required, Validators.maxLength(12)])
@@ -74,7 +74,7 @@ export class SaleModalComponent implements OnInit {
   private sale: Sale;
   constructor(
     private saleService: SaleService,
-    private companyService: CompanyService,
+    private partyService: PartyService,
     private vehicleService: VehicleService,
     private productService: ProductService,
     private notificationService: NotificationService,
@@ -105,21 +105,21 @@ export class SaleModalComponent implements OnInit {
         this.saleForm.get('productGroup.price').setValue(+value.ratePerMaund);
       }
     );
-    this.saleForm.get('companyGroup.name').valueChanges.subscribe(
+    this.saleForm.get('partyGroup.name').valueChanges.subscribe(
       (value: string) => {
         if (this.sale === undefined || this.sale === null) {
           this.sale = new Sale();
         }
-        if (this.sale.company === undefined || this.sale.company === null) {
-          this.sale.company = new Company();
+        if (this.sale.party === undefined || this.sale.party === null) {
+          this.sale.party = new Party();
         }
-        this.sale.companyId = 0;
-        this.saleForm.get('companyGroup.phoneNumber').reset();
-        this.saleForm.get('companyGroup.address').reset();
+        this.sale.partyId = 0;
+        this.saleForm.get('partyGroup.phoneNumber').reset();
+        this.saleForm.get('partyGroup.address').reset();
         if (value) {
-          this.companyService.getCompanies(5, 0, value).subscribe(
-            (response: CompanyResponse) => {
-              this.companySuggestions = response.data;
+          this.partyService.getParties(5, 0, value).subscribe(
+            (response: PartyResponse) => {
+              this.partySuggestions = response.data;
             },
             (error) => console.log(error)
           );
@@ -221,10 +221,10 @@ export class SaleModalComponent implements OnInit {
         price: sale.product.price,
         type: sale.product.price
       },
-      companyGroup: {
-        name: sale.company.name,
-        address: sale.company.address,
-        phoneNumber: sale.company.phoneNumber
+      partyGroup: {
+        name: sale.party.name,
+        address: sale.party.address,
+        phoneNumber: sale.party.phoneNumber
       },
       weightPriceGroup: {
         bagQuantity: sale.bagQuantity,
@@ -295,8 +295,8 @@ export class SaleModalComponent implements OnInit {
       if (this.sale === undefined || this.sale === null) {
         this.sale = new Sale();
       }
-      if (this.sale.company === undefined || this.sale.company === null) {
-        this.sale.company = new Company();
+      if (this.sale.party === undefined || this.sale.party === null) {
+        this.sale.party = new Party();
       }
       if (this.sale.product === undefined || this.sale.product === null) {
         this.sale.product = new Product();
@@ -326,12 +326,12 @@ export class SaleModalComponent implements OnInit {
       this.sale.vehicle.plateNo = this.saleForm.get('vehicleGroup').value.plateNo;
       this.sale.vehicle.createdDate = moment.utc().format();
 
-      // this.sale.companyId = +this.sale.companyId;
-      this.sale.company.id = +this.sale.companyId;
-      this.sale.company.name = this.saleForm.get('companyGroup').value.name;
-      this.sale.company.phoneNumber = this.saleForm.get('companyGroup').value.phoneNumber;
-      this.sale.company.address = this.saleForm.get('companyGroup').value.address;
-      this.sale.company.createdDate = moment.utc().format();
+      // this.sale.partyId = +this.sale.partyId;
+      this.sale.party.id = +this.sale.partyId;
+      this.sale.party.name = this.saleForm.get('partyGroup').value.name;
+      this.sale.party.phoneNumber = this.saleForm.get('partyGroup').value.phoneNumber;
+      this.sale.party.address = this.saleForm.get('partyGroup').value.address;
+      this.sale.party.createdDate = moment.utc().format();
 
       this.sale.bagQuantity = this.saleForm.get('weightPriceGroup').value.bagQuantity;
       this.sale.bagWeight = this.saleForm.get('weightPriceGroup').value.bagWeight;
@@ -391,8 +391,8 @@ export class SaleModalComponent implements OnInit {
     }
   }
 
-  selectedCompany(event: MatAutocompleteSelectedEvent) {
-    this.saleForm.get('companyGroup').setValue({
+  selectedParty(event: MatAutocompleteSelectedEvent) {
+    this.saleForm.get('partyGroup').setValue({
       name: event.option.value.name,
       phoneNumber: event.option.value.phoneNumber,
       address: event.option.value.address
@@ -400,11 +400,11 @@ export class SaleModalComponent implements OnInit {
     if (this.sale === undefined || this.sale === null) {
       this.sale = new Sale();
     }
-    if (this.sale.company === undefined || this.sale.company === null) {
-      this.sale.company = new Company();
+    if (this.sale.party === undefined || this.sale.party === null) {
+      this.sale.party = new Party();
     }
-    this.sale.companyId = event.option.value.id;
-    this.sale.company = event.option.value;
+    this.sale.partyId = event.option.value.id;
+    this.sale.party = event.option.value;
   }
 
   selectedProduct(event: MatAutocompleteSelectedEvent) {

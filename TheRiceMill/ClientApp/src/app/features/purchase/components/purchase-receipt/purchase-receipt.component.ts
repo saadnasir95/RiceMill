@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Purchase } from '../../../../shared/model/purchase.model';
-import { Company } from '../../../../shared/model/company.model';
+import { Party } from '../../../../shared/model/party.model';
 import { Vehicle } from '../../../../shared/model/vehicle.model';
 import { Product } from '../../../../shared/model/product.model';
 
@@ -15,7 +15,7 @@ export class PurchaseReceiptComponent implements OnInit {
 
   ngOnInit() {
     this.purchase = new Purchase();
-    this.purchase.company = new Company();
+    this.purchase.party = new Party();
     this.purchase.vehicle = new Vehicle();
     this.purchase.product = new Product();
     this.purchase.additionalCharges = [];
