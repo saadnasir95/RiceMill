@@ -4,7 +4,7 @@ using TheRiceMill.Domain.Entities;
 
 namespace TheRiceMill.Persistence.Configurations
 {
-    public class CompanyConfiguration : IEntityTypeConfiguration<Party>
+    public class PartyConfiguration : IEntityTypeConfiguration<Party>
     {
         public void Configure(EntityTypeBuilder<Party> builder)
         {

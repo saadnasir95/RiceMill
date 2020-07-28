@@ -3,9 +3,9 @@ using TheRiceMill.Common.Response;
 
 namespace TheRiceMill.Application.Companies.Models
 {
-    public class GetCompanyForComboBoxRequestModel : IRequest<ResponseViewModel>
+    public class GetPartyForComboBoxRequestModel : IRequest<ResponseViewModel>
     {
-        public GetCompanyForComboBoxRequestModel()
+        public GetPartyForComboBoxRequestModel()
         {
             Search = "";
         }

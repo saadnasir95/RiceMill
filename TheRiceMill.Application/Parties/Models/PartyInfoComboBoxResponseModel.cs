@@ -1,6 +1,6 @@
 ﻿namespace TheRiceMill.Application.Companies.Models
 {
-    public class CompanyInfoComboBoxResponseModel
+    public class PartyInfoComboBoxResponseModel
     {
         public string Name { get; set; }
         public int Id { get; set; }

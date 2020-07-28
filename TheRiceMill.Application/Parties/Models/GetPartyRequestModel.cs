@@ -6,7 +6,7 @@ using TheRiceMill.Common.Response;
 
 namespace TheRiceMill.Application.Companies.Models
 {
-    public class GetCompanyRequestModel : IRequest<ResponseViewModel>
+    public class GetPartyRequestModel : IRequest<ResponseViewModel>
     {
         public void SetDefaultValue()
         {
@@ -27,9 +27,9 @@ namespace TheRiceMill.Application.Companies.Models
         public string OrderBy { get; set; }
     }
 
-    public class GetCompanyRequestModelValidator : AbstractValidator<GetCompanyRequestModel>
+    public class GetPartyRequestModelValidator : AbstractValidator<GetPartyRequestModel>
     {
-        public GetCompanyRequestModelValidator()
+        public GetPartyRequestModelValidator()
         {
             RuleFor(p => p.Page).GreaterThan(0).WithMessage(Messages.LessThan(0));
             RuleFor(p => p.PageSize).GreaterThan(0).WithMessage(Messages.LessThan(0));

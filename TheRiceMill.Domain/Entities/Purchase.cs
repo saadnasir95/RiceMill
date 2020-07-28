@@ -5,11 +5,11 @@ namespace TheRiceMill.Domain.Entities
     public class Purchase : Base
     {
         /// <summary>
-        /// Id of Company
+        /// Id of Party
         /// </summary>
         public int PartyId { get; set; }
         /// <summary>
-        /// Navigation Property of Company
+        /// Navigation Property of Party
         /// </summary>
         public Party Party { get; set; }
 

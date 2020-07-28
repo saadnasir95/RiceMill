@@ -5,11 +5,11 @@ namespace TheRiceMill.Domain.Entities
     public class Party : Base
     {
         /// <summary>
-        /// Name of the Company e.g "Apple"
+        /// Name of the Party e.g "Apple"
         /// </summary>
         public string Name { get; set; }
         /// <summary>
-        /// NormalizedName of the Company e.g "APPLE"
+        /// NormalizedName of the Party e.g "APPLE"
         /// </summary>
         public string NormalizedName { get; set; }
 

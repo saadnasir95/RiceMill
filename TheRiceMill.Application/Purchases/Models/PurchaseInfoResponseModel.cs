@@ -3,7 +3,7 @@
     public class PurchaseInfoResponseModel
     {
         public string CreatedDate { get; set; }
-        public string Company { get; set; }
+        public string Party { get; set; }
         public int BagQuantity { get; set; }
         /// <summary>
         /// Expected Weight of Bags (60-65)

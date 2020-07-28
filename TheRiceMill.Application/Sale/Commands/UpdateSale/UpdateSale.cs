@@ -41,31 +41,31 @@ namespace TheRiceMill.Application.Sale.Commands.UpdateSale
                 throw new NotFoundException(nameof(Domain.Entities.Ledger),request.Id);
             }
             request.Copy(sale);
-            Party company;
+            Party party;
             Vehicle vehicle;
             Product product;
-            if (!string.IsNullOrEmpty(request.Company?.Name))
+            if (!string.IsNullOrEmpty(request.Party?.Name))
             {
-                company = _context.Parties.GetBy(p => p.NormalizedName.Equals(request.Company.Name.ToUpper()));
-                if (company == null)
+                party = _context.Parties.GetBy(p => p.NormalizedName.Equals(request.Party.Name.ToUpper()));
+                if (party == null)
                 {
                     sale.Party = new Party()
                     {
-                        Name = request.Company.Name,
-                        NormalizedName = request.Company.Name.ToUpper(),
-                        PhoneNumber = request.Company.PhoneNumber,
-                        Address = request.Company.Address
+                        Name = request.Party.Name,
+                        NormalizedName = request.Party.Name.ToUpper(),
+                        PhoneNumber = request.Party.PhoneNumber,
+                        Address = request.Party.Address
                     };
-                    company = sale.Party;
+                    party = sale.Party;
                 }
                 else
                 {
-                    sale.PartyId = company.Id;
+                    sale.PartyId = party.Id;
                 }
             }
             else
             {
-                company = _context.Parties.GetBy(p => p.Id == request.CompanyId);
+                party = _context.Parties.GetBy(p => p.Id == request.PartyId);
             }
             if (!string.IsNullOrEmpty(request.Vehicle?.PlateNo))
             {
@@ -137,7 +137,7 @@ namespace TheRiceMill.Application.Sale.Commands.UpdateSale
                 }
             }
             _context.Sales.Update(sale);
-            ledger.PartyId = company.Id;
+            ledger.PartyId = party.Id;
             ledger.Debit = request.TotalPrice;
             ledger.Credit = 0;
             _context.Ledgers.Update(ledger);
@@ -150,11 +150,11 @@ namespace TheRiceMill.Application.Sale.Commands.UpdateSale
                     Name   = vehicle.Name,
                     PlateNo = vehicle.PlateNo
                 },
-                Company = new CompanyRequestModel()
+                Party = new PartyRequestModel()
                 {
-                    Name = company.Name,
-                    Address = company.Address,
-                    PhoneNumber = company.PhoneNumber,
+                    Name = party.Name,
+                    Address = party.Address,
+                    PhoneNumber = party.PhoneNumber,
                 },
                 Product = new ProductRequestModel()
                 {
@@ -162,7 +162,7 @@ namespace TheRiceMill.Application.Sale.Commands.UpdateSale
                     Price = product.Price,
                     Type = (ProductType)product.Type
                 },
-                CompanyId = company.Id,
+                PartyId = party.Id,
                 VehicleId = vehicle.Id,
                 ProductId = product.Id,
                 BagQuantity = request.BagQuantity,

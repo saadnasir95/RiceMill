@@ -33,31 +33,31 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
             var purchase = new Purchase();
             request.Copy(purchase);
             purchase.Direction = request.Direction.ToInt();
-            Party company;
+            Party party;
             Vehicle vehicle;
             Product product;
-            if (!string.IsNullOrEmpty(request.Company?.Name))
+            if (!string.IsNullOrEmpty(request.Party?.Name))
             {
-                company = _context.Parties.GetBy(p => p.NormalizedName.Equals(request.Company.Name.ToUpper()));
-                if (company == null)
+                party = _context.Parties.GetBy(p => p.NormalizedName.Equals(request.Party.Name.ToUpper()));
+                if (party == null)
                 {
                     purchase.Party = new Party()
                     {
-                        Name = request.Company.Name,
-                        NormalizedName = request.Company.Name.ToUpper(),
-                        PhoneNumber = request.Company.PhoneNumber,
-                        Address = request.Company.Address
+                        Name = request.Party.Name,
+                        NormalizedName = request.Party.Name.ToUpper(),
+                        PhoneNumber = request.Party.PhoneNumber,
+                        Address = request.Party.Address
                     };
-                    company = purchase.Party;
+                    party = purchase.Party;
                 }
                 else
                 {
-                    purchase.PartyId = company.Id;
+                    purchase.PartyId = party.Id;
                 }
             }
             else
             {
-                company = _context.Parties.GetBy(p => p.Id == request.CompanyId);
+                party = _context.Parties.GetBy(p => p.Id == request.PartyId);
             }
             if (!string.IsNullOrEmpty(request.Vehicle?.PlateNo))
             {
@@ -126,7 +126,7 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
             await _context.SaveChangesAsync(cancellationToken);
             var ledger = new Domain.Entities.Ledger()
             {
-                PartyId = company.Id,
+                PartyId = party.Id,
                 Credit = request.TotalPrice,
                 Debit = 0,
                 Description = "",
@@ -148,11 +148,11 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
                     Price = product.Price,
                     Type = (ProductType)product.Type
                 },
-                Company = new CompanyRequestModel()
+                Party = new PartyRequestModel()
                 {
-                    Name = company.Name,
-                    Address = company.Address,
-                    PhoneNumber = company.PhoneNumber
+                    Name = party.Name,
+                    Address = party.Address,
+                    PhoneNumber = party.PhoneNumber
                 },
                 VehicleId = vehicle.Id,
                 ProductId = product.Id,

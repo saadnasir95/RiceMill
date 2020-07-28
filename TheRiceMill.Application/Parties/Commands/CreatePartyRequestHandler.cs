@@ -13,16 +13,16 @@ using TheRiceMill.Persistence;
 
 namespace TheRiceMill.Application.Companies.Commands
 {
-    public class CreateCompanyRequestHandler : IRequestHandler<CreateCompanyRequestModel, ResponseViewModel>
+    public class CreatePartyRequestHandler : IRequestHandler<CreatePartyRequestModel, ResponseViewModel>
     {
         private readonly TheRiceMillDbContext _context;
 
-        public CreateCompanyRequestHandler(TheRiceMillDbContext context)
+        public CreatePartyRequestHandler(TheRiceMillDbContext context)
         {
             _context = context;
         }
 
-        public async Task<ResponseViewModel> Handle(CreateCompanyRequestModel request, CancellationToken cancellationToken)
+        public async Task<ResponseViewModel> Handle(CreatePartyRequestModel request, CancellationToken cancellationToken)
         {
             if (_context.Parties.Any(p => p.NormalizedName.Equals(request.Name.ToUpper())))
             {
@@ -37,7 +37,7 @@ namespace TheRiceMill.Application.Companies.Commands
             };
             _context.Add(company);
             await _context.SaveChangesAsync(cancellationToken);
-            return new ResponseViewModel().CreateOk(new CompanyInfoResponseModel()
+            return new ResponseViewModel().CreateOk(new PartyInfoResponseModel()
             {
                 Name = company.Name,
                 Id = company.Id,

@@ -29,7 +29,7 @@ namespace TheRiceMill.Application.GatePasses.Commands
             var gatePass = new GatePass()
             {
                 Type = request.Type.ToInt(),
-                PartyId = request.CompanyId,
+                PartyId = request.PartyId,
                 VehicleId = request.VehicleId,
                 DateTime = request.DateTime,
                 ProductId = request.ProductId,
@@ -40,34 +40,34 @@ namespace TheRiceMill.Application.GatePasses.Commands
                 Maund = request.Maund,
                 Broker = request.Broker,
             };
-            Party company;
+            Party party;
             Vehicle vehicle;
             Product product;
-            if (!string.IsNullOrEmpty(request.Company?.Name))
+            if (!string.IsNullOrEmpty(request.Party?.Name))
             {
-                company = _context.Parties.GetBy(p => p.NormalizedName.Equals(request.Company.Name.ToUpper()));
-                if (company == null)
+                party = _context.Parties.GetBy(p => p.NormalizedName.Equals(request.Party.Name.ToUpper()));
+                if (party == null)
                 {
                     gatePass.Party = new Party()
                     {
-                        Name = request.Company.Name,
-                        NormalizedName = request.Company.Name.ToUpper(),
-                        PhoneNumber = request.Company.PhoneNumber,
-                        Address = request.Company.Address
+                        Name = request.Party.Name,
+                        NormalizedName = request.Party.Name.ToUpper(),
+                        PhoneNumber = request.Party.PhoneNumber,
+                        Address = request.Party.Address
                     };
-                    company = gatePass.Party;
+                    party = gatePass.Party;
                 }
                 else
                 {
-                    gatePass.PartyId = company.Id;
+                    gatePass.PartyId = party.Id;
                 }
             }
             else
             {
-                company = _context.Parties.GetBy(p => p.Id == request.CompanyId);
-                if (company == null)
+                party = _context.Parties.GetBy(p => p.Id == request.PartyId);
+                if (party == null)
                 {
-                    throw new NotFoundException(nameof(Party), request.CompanyId);
+                    throw new NotFoundException(nameof(Party), request.PartyId);
                 }
             }
             if (!string.IsNullOrEmpty(request.Vehicle?.PlateNo))
@@ -137,11 +137,11 @@ namespace TheRiceMill.Application.GatePasses.Commands
                 Maund = request.Maund,
                 DateTime = request.DateTime,
                 Id = gatePass.Id,
-                Company = new CompanyRequestModel()
+                Party = new PartyRequestModel()
                 {
-                    Address = company.Address,
-                    Name = company.Name,
-                    PhoneNumber = company.PhoneNumber
+                    Address = party.Address,
+                    Name = party.Name,
+                    PhoneNumber = party.PhoneNumber
                 },
                 Product = new ProductRequestModel()
                 {
@@ -154,7 +154,7 @@ namespace TheRiceMill.Application.GatePasses.Commands
                     PlateNo = vehicle.PlateNo,
                     Name = vehicle.Name,
                 },
-                CompanyId = company.Id,
+                PartyId = party.Id,
                 ProductId = product.Id,
                 VehicleId = vehicle.Id
             });
