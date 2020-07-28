@@ -40,7 +40,7 @@ namespace TheRiceMill.Application.GatePasses.Queries
             }
             else
             {
-                query = p => (p.Company.Name.Contains(request.Search) ||
+                query = p => (p.Party.Name.Contains(request.Search) ||
                                     (p.Id + "" == request.Search) ||
                                     p.Vehicle.PlateNo.Contains(request.Search) ||
                                     p.Product.Name.Contains(request.Search));

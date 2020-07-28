@@ -1,4 +1,4 @@
-export class Company {
+export class Party {
   id: number;
   name: string;
   phoneNumber: string;

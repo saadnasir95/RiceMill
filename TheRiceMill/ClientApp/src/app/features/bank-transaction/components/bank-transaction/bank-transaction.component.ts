@@ -15,7 +15,7 @@ import { BankAccount } from '../../../../shared/model/bank-account.model';
   styleUrls: ['./bank-transaction.component.scss']
 })
 export class BankTransactionComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['transactionDate', 'company.Name', 'transactionType', 'paymentType', 'credit', 'debit', 'balance', 'Action'];
+  displayedColumns: string[] = ['transactionDate', 'party.Name', 'transactionType', 'paymentType', 'credit', 'debit', 'balance', 'Action'];
   dataSource: MatTableDataSource<BankTransaction>;
   transactionList: BankTransaction[];
   bankAccountList: BankAccount[];

@@ -1,4 +1,4 @@
-import { Company } from './company.model';
+import { Party } from './party.model';
 import { BankAccount } from './bank-account.model';
 
 export class BankTransaction {
@@ -10,8 +10,8 @@ export class BankTransaction {
   bankAccountId: string;
   chequeNumber: string;
   transactionDate: string;
-  companyId: number;
-  company: Company;
+  partyId: number;
+  party: Party;
   credit: number;
   debit: number;
   balance: number;

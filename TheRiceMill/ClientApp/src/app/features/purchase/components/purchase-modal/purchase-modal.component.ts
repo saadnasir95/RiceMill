@@ -4,14 +4,14 @@ import { GateinDirection, ProductType } from '../../../../shared/model/enums';
 import { MatDialogRef, MatAutocompleteSelectedEvent } from '@angular/material';
 import { Vehicle } from '../../../../shared/model/vehicle.model';
 import { Product } from '../../../../shared/model/product.model';
-import { Company } from '../../../../shared/model/company.model';
-import { CompanyService } from '../../../../shared/services/company.service';
+import { Party } from '../../../../shared/model/party.model';
+import { PartyService } from '../../../../shared/services/party.service';
 import { VehicleService } from '../../../../shared/services/vehicle.service';
 import { ProductService } from '../../../../shared/services/product.service';
 import { Purchase } from '../../../../shared/model/purchase.model';
 import { PurchaseService } from '../../../../shared/services/purchase.service';
 import { AdditionalCharges } from '../../../../shared/model/additionalcharges.model';
-import { CompanyResponse } from '../../../../shared/model/company-response.model';
+import { PartyResponse } from '../../../../shared/model/party-response.model';
 import { ProductResponse } from '../../../../shared/model/product-response.model';
 import { VehicleResponse } from '../../../../shared/model/vehicle-response.model';
 import * as moment from 'moment';
@@ -26,7 +26,7 @@ import { SpinnerService } from '../../../../shared/services/spinner.service';
 })
 export class PurchaseModalComponent implements OnInit {
   vehicleSuggestions: Vehicle[];
-  companySuggestions: Company[];
+  partySuggestions: Party[];
   productSuggestions: Product[];
   additionalCharges = 0;
   commission = 0;
@@ -35,7 +35,7 @@ export class PurchaseModalComponent implements OnInit {
     checkIn: new FormControl(moment.tz('Asia/Karachi').format().slice(0, 16), Validators.required),
     direction: new FormControl(null, Validators.required),
     additionalCharges: new FormArray([]),
-    companyGroup: new FormGroup({
+    partyGroup: new FormGroup({
       name: new FormControl('', Validators.required),
       address: new FormControl('', Validators.required),
       phoneNumber: new FormControl(null, [Validators.required, Validators.maxLength(12)])
@@ -80,7 +80,7 @@ export class PurchaseModalComponent implements OnInit {
   private purchase: Purchase;
   constructor(
     private purchaseService: PurchaseService,
-    private companyService: CompanyService,
+    private partyService: PartyService,
     private vehicleService: VehicleService,
     private productService: ProductService,
     private notificationService: NotificationService,
@@ -283,21 +283,21 @@ export class PurchaseModalComponent implements OnInit {
       }
     );
 
-    this.purchaseForm.get('companyGroup.name').valueChanges.subscribe(
+    this.purchaseForm.get('partyGroup.name').valueChanges.subscribe(
       (value: string) => {
         if (this.purchase === undefined || this.purchase === null) {
           this.purchase = new Purchase();
         }
-        if (this.purchase.company === undefined || this.purchase.company === null) {
-          this.purchase.company = new Company();
+        if (this.purchase.party === undefined || this.purchase.party === null) {
+          this.purchase.party = new Party();
         }
-        this.purchase.companyId = 0;
-        this.purchaseForm.get('companyGroup.phoneNumber').reset();
-        this.purchaseForm.get('companyGroup.address').reset();
+        this.purchase.partyId = 0;
+        this.purchaseForm.get('partyGroup.phoneNumber').reset();
+        this.purchaseForm.get('partyGroup.address').reset();
         if (value) {
-          this.companyService.getCompanies(5, 0, value).subscribe(
-            (response: CompanyResponse) => {
-              this.companySuggestions = response.data;
+          this.partyService.getParties(5, 0, value).subscribe(
+            (response: PartyResponse) => {
+              this.partySuggestions = response.data;
             },
             (error) => console.log(error)
           );
@@ -369,10 +369,10 @@ export class PurchaseModalComponent implements OnInit {
         price: purchase.product.price,
         type: purchase.product.price
       },
-      companyGroup: {
-        name: purchase.company.name,
-        address: purchase.company.address,
-        phoneNumber: purchase.company.phoneNumber
+      partyGroup: {
+        name: purchase.party.name,
+        address: purchase.party.address,
+        phoneNumber: purchase.party.phoneNumber
       },
       weightPriceGroup: {
         bagQuantity: purchase.bagQuantity,
@@ -444,8 +444,8 @@ export class PurchaseModalComponent implements OnInit {
       if (this.purchase === undefined || this.purchase === null) {
         this.purchase = new Purchase();
       }
-      if (this.purchase.company === undefined || this.purchase.company === null) {
-        this.purchase.company = new Company();
+      if (this.purchase.party === undefined || this.purchase.party === null) {
+        this.purchase.party = new Party();
       }
       if (this.purchase.product === undefined || this.purchase.product === null) {
         this.purchase.product = new Product();
@@ -473,12 +473,12 @@ export class PurchaseModalComponent implements OnInit {
       this.purchase.vehicle.plateNo = this.purchaseForm.get('vehicleGroup').value.plateNo;
       this.purchase.vehicle.createdDate = moment.utc().format();
 
-      // this.purchase.companyId = +this.purchase.companyId;
-      this.purchase.company.id = +this.purchase.companyId;
-      this.purchase.company.name = this.purchaseForm.get('companyGroup').value.name;
-      this.purchase.company.phoneNumber = this.purchaseForm.get('companyGroup').value.phoneNumber;
-      this.purchase.company.address = this.purchaseForm.get('companyGroup').value.address;
-      this.purchase.company.createdDate = moment.utc().format();
+      // this.purchase.partyId = +this.purchase.partyId;
+      this.purchase.party.id = +this.purchase.partyId;
+      this.purchase.party.name = this.purchaseForm.get('partyGroup').value.name;
+      this.purchase.party.phoneNumber = this.purchaseForm.get('partyGroup').value.phoneNumber;
+      this.purchase.party.address = this.purchaseForm.get('partyGroup').value.address;
+      this.purchase.party.createdDate = moment.utc().format();
 
       this.purchase.bagQuantity = this.purchaseForm.get('weightPriceGroup').value.bagQuantity;
       this.purchase.bagWeight = this.purchaseForm.get('weightPriceGroup').value.bagWeight;
@@ -541,8 +541,8 @@ export class PurchaseModalComponent implements OnInit {
     }
   }
 
-  selectedCompany(event: MatAutocompleteSelectedEvent) {
-    this.purchaseForm.get('companyGroup').setValue({
+  selectedParty(event: MatAutocompleteSelectedEvent) {
+    this.purchaseForm.get('partyGroup').setValue({
       name: event.option.value.name,
       phoneNumber: event.option.value.phoneNumber,
       address: event.option.value.address
@@ -550,11 +550,11 @@ export class PurchaseModalComponent implements OnInit {
     if (this.purchase === undefined || this.purchase === null) {
       this.purchase = new Purchase();
     }
-    if (this.purchase.company === undefined || this.purchase.company === null) {
-      this.purchase.company = new Company();
+    if (this.purchase.party === undefined || this.purchase.party === null) {
+      this.purchase.party = new Party();
     }
-    this.purchase.companyId = event.option.value.id;
-    this.purchase.company = event.option.value;
+    this.purchase.partyId = event.option.value.id;
+    this.purchase.party = event.option.value;
   }
 
   selectedProduct(event: MatAutocompleteSelectedEvent) {

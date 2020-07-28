@@ -4,13 +4,13 @@ import { ProductType, GatePassType } from '../../../../shared/model/enums';
 import { MatDialogRef, MatAutocompleteSelectedEvent } from '@angular/material';
 import { Vehicle } from '../../../../shared/model/vehicle.model';
 import { Product } from '../../../../shared/model/product.model';
-import { Company } from '../../../../shared/model/company.model';
-import { CompanyService } from '../../../../shared/services/company.service';
+import { Party } from '../../../../shared/model/party.model';
+import { PartyService } from '../../../../shared/services/party.service';
 import { VehicleService } from '../../../../shared/services/vehicle.service';
 import { ProductService } from '../../../../shared/services/product.service';
 import { Gatepass } from '../../../../shared/model/gatepass.model';
 import { GatepassService } from '../../../../shared/services/gatepass.service';
-import { CompanyResponse } from '../../../../shared/model/company-response.model';
+import { PartyResponse } from '../../../../shared/model/party-response.model';
 import { VehicleResponse } from '../../../../shared/model/vehicle-response.model';
 import { ProductResponse } from '../../../../shared/model/product-response.model';
 import * as moment from 'moment';
@@ -25,14 +25,14 @@ import { SpinnerService } from '../../../../shared/services/spinner.service';
 })
 export class GatepassModalComponent implements OnInit {
   vehicleSuggestions: Vehicle[];
-  companySuggestions: Company[];
+  partySuggestions: Party[];
   productSuggestions: Product[];
   isGatein = true;
   gatepassForm: FormGroup = new FormGroup({
     dateTime: new FormControl(moment.tz('Asia/Karachi').format().slice(0, 16), Validators.required),
     type: new FormControl(+GatePassType.InwardGatePass, Validators.required),
     broker: new FormControl(''),
-    companyGroup: new FormGroup({
+    partyGroup: new FormGroup({
       name: new FormControl('', Validators.required),
       address: new FormControl('', Validators.required),
       phoneNumber: new FormControl(null, [Validators.required, Validators.maxLength(12)])
@@ -60,7 +60,7 @@ export class GatepassModalComponent implements OnInit {
   private gatepass: Gatepass;
   constructor(
     private gatepassService: GatepassService,
-    private companyService: CompanyService,
+    private partyService: PartyService,
     private vehicleService: VehicleService,
     private productService: ProductService,
     private notificationService: NotificationService,
@@ -112,21 +112,21 @@ export class GatepassModalComponent implements OnInit {
       }
     );
 
-    this.gatepassForm.get('companyGroup.name').valueChanges.subscribe(
+    this.gatepassForm.get('partyGroup.name').valueChanges.subscribe(
       (value: string) => {
         if (this.gatepass === undefined || this.gatepass === null) {
           this.gatepass = new Gatepass();
         }
-        if (this.gatepass.company === undefined || this.gatepass.company === null) {
-          this.gatepass.company = new Company();
+        if (this.gatepass.party === undefined || this.gatepass.party === null) {
+          this.gatepass.party = new Party();
         }
-        this.gatepass.companyId = 0;
-        this.gatepassForm.get('companyGroup.phoneNumber').reset();
-        this.gatepassForm.get('companyGroup.address').reset();
+        this.gatepass.partyId = 0;
+        this.gatepassForm.get('partyGroup.phoneNumber').reset();
+        this.gatepassForm.get('partyGroup.address').reset();
         if (value) {
-          this.companyService.getCompanies(5, 0, value).subscribe(
-            (response: CompanyResponse) => {
-              this.companySuggestions = response.data;
+          this.partyService.getParties(5, 0, value).subscribe(
+            (response: PartyResponse) => {
+              this.partySuggestions = response.data;
             },
             (error) => console.log(error)
           );
@@ -193,10 +193,10 @@ export class GatepassModalComponent implements OnInit {
         price: gatepass.product.price,
         type: gatepass.product.price
       },
-      companyGroup: {
-        name: gatepass.company.name,
-        address: gatepass.company.address,
-        phoneNumber: gatepass.company.phoneNumber
+      partyGroup: {
+        name: gatepass.party.name,
+        address: gatepass.party.address,
+        phoneNumber: gatepass.party.phoneNumber
       },
       weightPriceGroup: {
         bagQuantity: gatepass.bagQuantity,
@@ -236,9 +236,9 @@ export class GatepassModalComponent implements OnInit {
       if (this.gatepass === undefined || this.gatepass === null) {
         this.gatepass = new Gatepass();
       }
-      if (this.gatepass.company === undefined || this.gatepass.company === null) {
-        this.gatepass.company = new Company();
-        this.gatepass.companyId = 0;
+      if (this.gatepass.party === undefined || this.gatepass.party === null) {
+        this.gatepass.party = new Party();
+        this.gatepass.partyId = 0;
       }
       if (this.gatepass.product === undefined || this.gatepass.product === null) {
         this.gatepass.product = new Product();
@@ -262,11 +262,11 @@ export class GatepassModalComponent implements OnInit {
       this.gatepass.vehicle.plateNo = this.gatepassForm.get('vehicleGroup').value.plateNo;
       this.gatepass.vehicle.createdDate = moment.utc().format();
 
-      this.gatepass.company.id = +this.gatepass.companyId;
-      this.gatepass.company.name = this.gatepassForm.get('companyGroup').value.name;
-      this.gatepass.company.phoneNumber = this.gatepassForm.get('companyGroup').value.phoneNumber;
-      this.gatepass.company.address = this.gatepassForm.get('companyGroup').value.address;
-      this.gatepass.company.createdDate = moment.utc().format();
+      this.gatepass.party.id = +this.gatepass.partyId;
+      this.gatepass.party.name = this.gatepassForm.get('partyGroup').value.name;
+      this.gatepass.party.phoneNumber = this.gatepassForm.get('partyGroup').value.phoneNumber;
+      this.gatepass.party.address = this.gatepassForm.get('partyGroup').value.address;
+      this.gatepass.party.createdDate = moment.utc().format();
 
       this.gatepass.bagQuantity = this.gatepassForm.get('weightPriceGroup').value.bagQuantity;
       this.gatepass.boriQuantity = this.gatepassForm.get('weightPriceGroup').value.boriQuantity;
@@ -304,8 +304,8 @@ export class GatepassModalComponent implements OnInit {
     }
   }
 
-  selectedCompany(event: MatAutocompleteSelectedEvent) {
-    this.gatepassForm.get('companyGroup').setValue({
+  selectedParty(event: MatAutocompleteSelectedEvent) {
+    this.gatepassForm.get('partyGroup').setValue({
       name: event.option.value.name,
       phoneNumber: event.option.value.phoneNumber,
       address: event.option.value.address
@@ -313,11 +313,11 @@ export class GatepassModalComponent implements OnInit {
     if (this.gatepass === undefined || this.gatepass === null) {
       this.gatepass = new Gatepass();
     }
-    if (this.gatepass.company === undefined || this.gatepass.company === null) {
-      this.gatepass.company = new Company();
+    if (this.gatepass.party === undefined || this.gatepass.party === null) {
+      this.gatepass.party = new Party();
     }
-    this.gatepass.companyId = event.option.value.id;
-    this.gatepass.company = event.option.value;
+    this.gatepass.partyId = event.option.value.id;
+    this.gatepass.party = event.option.value;
   }
 
   selectedProduct(event: MatAutocompleteSelectedEvent) {

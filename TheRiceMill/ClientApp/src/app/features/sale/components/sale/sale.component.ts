@@ -14,7 +14,7 @@ import { SaleReceiptComponent } from '../sale-receipt/sale-receipt.component';
   styleUrls: ['./sale.component.scss']
 })
 export class SaleComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['Id', 'company.name', 'product.name', 'bagQuantity', 'kandaWeight', 'totalActualBagWeight', 'totalMaund', 'ratePerMaund', 'totalPrice', 'createdDate', 'Action'];
+  displayedColumns: string[] = ['Id', 'party.name', 'product.name', 'bagQuantity', 'kandaWeight', 'totalActualBagWeight', 'totalMaund', 'ratePerMaund', 'totalPrice', 'createdDate', 'Action'];
   dataSource: MatTableDataSource<Sale>;
   saleList: Sale[];
   isLoadingData: Boolean = false;
