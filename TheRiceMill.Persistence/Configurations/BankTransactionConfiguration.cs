@@ -9,9 +9,9 @@ namespace TheRiceMill.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<BankTransaction> builder)
         {
-            builder.HasOne(p => p.Company)
+            builder.HasOne(p => p.Party)
                 .WithMany(b => b.BankTransactions)
-                .HasForeignKey(p => p.CompanyId);
+                .HasForeignKey(p => p.PartyId);
             builder.HasOne(p => p.BankAccount)
                 .WithMany(b => b.BankTransactions)
                 .HasForeignKey(p => p.BankAccountId);

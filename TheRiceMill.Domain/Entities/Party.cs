@@ -2,7 +2,7 @@
 
 namespace TheRiceMill.Domain.Entities
 {
-    public class Company : Base
+    public class Party : Base
     {
         /// <summary>
         /// Name of the Company e.g "Apple"

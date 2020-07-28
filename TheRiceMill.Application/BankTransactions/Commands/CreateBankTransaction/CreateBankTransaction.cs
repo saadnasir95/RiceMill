@@ -32,16 +32,16 @@ namespace TheRiceMill.Application.BankTransactions.Commands.CreateBankTransactio
             {
                 throw new NotFoundException(nameof(Domain.Entities.Bank), request.BankAccountId);
             }
-            var company = _context.Companies.GetByReadOnly(p => p.Id == request.CompanyId);
+            var company = _context.Parties.GetByReadOnly(p => p.Id == request.CompanyId);
             if (company == null)
             {
-                throw new NotFoundException(nameof(Domain.Entities.Company), request.CompanyId);
+                throw new NotFoundException(nameof(Domain.Entities.Party), request.CompanyId);
             }
 
             var bankTransaction = new BankTransaction()
             {
                 BankAccountId = request.BankAccountId,
-                CompanyId = request.CompanyId,
+                PartyId = request.CompanyId,
                 Credit = request.TransactionType == TransactionType.Debit ? request.TransactionAmount : 0,
                 Debit = request.TransactionType == TransactionType.Credit ? request.TransactionAmount : 0,
                 TransactionDate = request.TransactionDate,
@@ -53,7 +53,7 @@ namespace TheRiceMill.Application.BankTransactions.Commands.CreateBankTransactio
             await _context.SaveChangesAsync(cancellationToken);
             var ledger = new Domain.Entities.Ledger()
             {
-                CompanyId = request.CompanyId,
+                PartyId = request.CompanyId,
                 Credit = request.TransactionType == TransactionType.Credit ? request.TransactionAmount : 0,
                 Debit = request.TransactionType == TransactionType.Debit ? request.TransactionAmount : 0,
                 LedgerType = (int) LedgerType.BankTransaction,

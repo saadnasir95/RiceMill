@@ -29,7 +29,7 @@ namespace TheRiceMill.Application.GatePasses.Commands
             var gatePass = new GatePass()
             {
                 Type = request.Type.ToInt(),
-                CompanyId = request.CompanyId,
+                PartyId = request.CompanyId,
                 VehicleId = request.VehicleId,
                 DateTime = request.DateTime,
                 ProductId = request.ProductId,
@@ -40,34 +40,34 @@ namespace TheRiceMill.Application.GatePasses.Commands
                 Maund = request.Maund,
                 Broker = request.Broker,
             };
-            Company company;
+            Party company;
             Vehicle vehicle;
             Product product;
             if (!string.IsNullOrEmpty(request.Company?.Name))
             {
-                company = _context.Companies.GetBy(p => p.NormalizedName.Equals(request.Company.Name.ToUpper()));
+                company = _context.Parties.GetBy(p => p.NormalizedName.Equals(request.Company.Name.ToUpper()));
                 if (company == null)
                 {
-                    gatePass.Company = new Company()
+                    gatePass.Party = new Party()
                     {
                         Name = request.Company.Name,
                         NormalizedName = request.Company.Name.ToUpper(),
                         PhoneNumber = request.Company.PhoneNumber,
                         Address = request.Company.Address
                     };
-                    company = gatePass.Company;
+                    company = gatePass.Party;
                 }
                 else
                 {
-                    gatePass.CompanyId = company.Id;
+                    gatePass.PartyId = company.Id;
                 }
             }
             else
             {
-                company = _context.Companies.GetBy(p => p.Id == request.CompanyId);
+                company = _context.Parties.GetBy(p => p.Id == request.CompanyId);
                 if (company == null)
                 {
-                    throw new NotFoundException(nameof(Company), request.CompanyId);
+                    throw new NotFoundException(nameof(Party), request.CompanyId);
                 }
             }
             if (!string.IsNullOrEmpty(request.Vehicle?.PlateNo))

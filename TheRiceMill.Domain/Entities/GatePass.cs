@@ -7,8 +7,8 @@ namespace TheRiceMill.Domain.Entities
     {
         public DateTime DateTime { get; set; }
         public int Type { get; set; }
-        public int CompanyId { get; set; }
-        public Company Company { get; set; }
+        public int PartyId { get; set; }
+        public Party Party { get; set; }
         public int VehicleId { get; set; }
         public Vehicle Vehicle { get; set; }
         public int ProductId { get; set; }
