@@ -4,9 +4,9 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { BankTransactionService } from '../../../../shared/services/bank-transaction.service';
 import { BankTransaction } from '../../../../shared/model/bank-transaction.model';
 import { TransactionType, Bank, PaymentType } from '../../../../shared/model/enums';
-import { Company } from '../../../../shared/model/company.model';
-import { CompanyService } from '../../../../shared/services/company.service';
-import { CompanyResponse } from '../../../../shared/model/company-response.model';
+import { Party } from '../../../../shared/model/party.model';
+import { PartyService } from '../../../../shared/services/party.service';
+import { PartyResponse } from '../../../../shared/model/party-response.model';
 import * as moment from 'moment';
 import 'moment-timezone';
 import { NotificationService } from '../../../../shared/services/notification.service';
@@ -22,7 +22,7 @@ import { SpinnerService } from '../../../../shared/services/spinner.service';
 })
 export class BankTransactionModalComponent implements OnInit {
   isCash = false;
-  companyList: Company[];
+  partyList: Party[];
   bankAccountList: BankAccount[];
   public bankTransactionForm: FormGroup = new FormGroup({
     transactionType: new FormControl(+TransactionType.Credit, [Validators.required]),
@@ -31,7 +31,7 @@ export class BankTransactionModalComponent implements OnInit {
     transactionDate: new FormControl(moment.tz('Asia/Karachi').format().slice(0, 16), [Validators.required]),
     bankAccountId: new FormControl(null, Validators.required),
     chequeNumber: new FormControl(null, Validators.required),
-    companyId: new FormControl(null, Validators.required)
+    partyId: new FormControl(null, Validators.required)
   });
   public modalRef: MatDialogRef<BankTransactionModalComponent>;
   public isNew = true;
@@ -39,15 +39,15 @@ export class BankTransactionModalComponent implements OnInit {
   private transaction: BankTransaction;
   constructor(
     private bankService: BankTransactionService,
-    private companyService: CompanyService,
+    private partyService: PartyService,
     private bankAccountService: BankAccountService,
     private notificationService: NotificationService,
     public spinner: SpinnerService) { }
 
   ngOnInit() {
-    this.companyService.getCompanies(100, 0).subscribe(
-      (response: CompanyResponse) => {
-        this.companyList = response.data;
+    this.partyService.getParties(100, 0).subscribe(
+      (response: PartyResponse) => {
+        this.partyList = response.data;
       }
     );
     this.bankAccountService.getBankAccounts(100, 0).subscribe(
@@ -84,7 +84,7 @@ export class BankTransactionModalComponent implements OnInit {
       transactionAmount: transaction.transactionAmount,
       bankAccountId: transaction.bankAccountId,
       chequeNumber: transaction.chequeNumber,
-      companyId: transaction.companyId,
+      partyId: transaction.partyId,
       transactionDate: moment.utc(transaction.transactionDate).tz('Asia/Karachi').format().slice(0, 16)
     });
     if (this.transaction.paymentType === PaymentType.Cash) {
@@ -119,7 +119,7 @@ export class BankTransactionModalComponent implements OnInit {
         this.transaction = new BankTransaction();
         this.transaction.transactionType = +this.bankTransactionForm.value.transactionType;
         this.transaction.paymentType = +this.bankTransactionForm.value.paymentType;
-        this.transaction.companyId = +this.bankTransactionForm.value.companyId;
+        this.transaction.partyId = +this.bankTransactionForm.value.partyId;
         this.transaction.transactionAmount = +this.bankTransactionForm.value.transactionAmount;
         this.transaction.bankAccountId = this.bankTransactionForm.value.bankAccountId;
         this.transaction.chequeNumber = this.bankTransactionForm.value.chequeNumber;
@@ -140,7 +140,7 @@ export class BankTransactionModalComponent implements OnInit {
       } else {
         this.transaction.transactionType = +this.bankTransactionForm.value.transactionType;
         this.transaction.paymentType = +this.bankTransactionForm.value.paymentType;
-        this.transaction.companyId = +this.bankTransactionForm.value.companyId;
+        this.transaction.partyId = +this.bankTransactionForm.value.partyId;
         this.transaction.transactionAmount = +this.bankTransactionForm.value.transactionAmount;
         this.transaction.bankAccountId = this.bankTransactionForm.value.bankAccountId;
         this.transaction.chequeNumber = this.bankTransactionForm.value.chequeNumber;

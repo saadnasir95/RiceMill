@@ -34,7 +34,7 @@ namespace TheRiceMill.Application.Ledger.Queries.GetLedgers
         public async Task<ResponseViewModel> Handle(GetLedgersRequestModel request, CancellationToken cancellationToken)
         {
             request.SetDefaultValue();
-            Expression<Func<Domain.Entities.Ledger, bool>> query = p => p.PartyId == request.CompanyId;
+            Expression<Func<Domain.Entities.Ledger, bool>> query = p => p.PartyId == request.PartyId;
 
             //PrevBalance = 10000
 
@@ -44,12 +44,12 @@ namespace TheRiceMill.Application.Ledger.Queries.GetLedgers
                     p => p.Include(pr => pr.Party)).Select(p =>
                     new LedgerResponse()
                     {
-                        CompanyId = p.PartyId,
+                        PartyId = p.PartyId,
                         LedgerType = p.LedgerType,
                         Credit = p.Credit,
                         Debit = p.Debit,
                         Description = p.Description,
-                        CompanyName = p.Party.Name,
+                        PartyName = p.Party.Name,
                         CreatedDate = dateConverter.ConvertToDateTimeIso(p.CreatedDate),
                         TransactionId = p.TransactionId,
                     }).ToListAsync(cancellationToken);
@@ -62,7 +62,7 @@ namespace TheRiceMill.Application.Ledger.Queries.GetLedgers
             {
                 var firstDate = DateTime.Parse(firstLedger.CreatedDate);
                 previousBalance = await _context.Ledgers.SumAsync(
-                    p => p.PartyId == request.CompanyId && p.CreatedDate < firstDate, p => p.Credit - p.Debit,
+                    p => p.PartyId == request.PartyId && p.CreatedDate < firstDate, p => p.Credit - p.Debit,
                     cancellationToken);
             }
             return new ResponseViewModel().CreateOk(new Response()
@@ -86,8 +86,8 @@ namespace TheRiceMill.Application.Ledger.Queries.GetLedgers
             public double Debit { get; set; }
             public double Credit { get; set; }
             public string Description { get; set; }
-            public int CompanyId { get; set; }
-            public string CompanyName { get; set; }
+            public int PartyId { get; set; }
+            public string PartyName { get; set; }
             public int LedgerType { get; set; }
             public string CreatedDate { get; set; }
             public int TransactionId { get; set; }

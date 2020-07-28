@@ -19,8 +19,8 @@ namespace TheRiceMill.Application.GatePasses.Models
         /// <summary>
         /// The Direction of the GatePass 1. Milling/2. Stockpile/3. Outside
         /// </summary>
-        public int CompanyId { get; set; }
-        public CompanyRequestModel Company { get; set; }
+        public int PartyId { get; set; }
+        public PartyRequestModel Party { get; set; }
         public int VehicleId { get; set; }
         public VehicleRequestModel Vehicle { get; set; }
         public double BagQuantity { get; set; }
@@ -48,7 +48,7 @@ namespace TheRiceMill.Application.GatePasses.Models
         public UpdateGatePassRequestModelValidator()
         {
             RuleFor(p => p.Type).IsInEnum().WithMessage(Messages.IncorrectValue);
-            RuleFor(p => p.CompanyId).Must(p => p > 0).When(p => p.Company == null).WithMessage(Messages.IncorrectValue);
+            RuleFor(p => p.PartyId).Must(p => p > 0).When(p => p.Party == null).WithMessage(Messages.IncorrectValue);
             RuleFor(p => p.ProductId).Must(p => p > 0).When(p => p.Product == null).WithMessage(Messages.IncorrectValue);
             RuleFor(p => p.VehicleId).Must(p => p > 0).When(p => p.Vehicle == null).WithMessage(Messages.IncorrectValue);
             RuleFor(p => p.WeightPerBag).GreaterThan(0).WithMessage(Messages.LessThan(1));

@@ -10,8 +10,8 @@ namespace TheRiceMill.Application.GatePasses.Models
         /// The Type of the GatePass 1 = OutwardGatePass and 2 = InwardGatePass
         /// </summary>
         public GatePassType Type { get; set; }
-        public int CompanyId { get; set; }
-        public CompanyRequestModel Company { get; set; }
+        public int PartyId { get; set; }
+        public PartyRequestModel Party { get; set; }
         public int VehicleId { get; set; }
         public VehicleRequestModel Vehicle { get; set; }
         public int ProductId { get; set; }

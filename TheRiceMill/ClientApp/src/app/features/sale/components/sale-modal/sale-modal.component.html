@@ -19,32 +19,32 @@
           </mat-form-field>
         </div>
       </div>
-      <div class="row" formGroupName="companyGroup">
+      <div class="row" formGroupName="partyGroup">
         <div class="col-md-4">
           <mat-form-field class="w-100">
-            <input type="text" matInput placeholder="Enter Company Name" formControlName="name" autocomplete="off"
-              [matAutocomplete]="companyAutoComplete">
-            <mat-autocomplete #companyAutoComplete="matAutocomplete" (optionSelected)="selectedCompany($event)">
-              <mat-option *ngFor="let company of companySuggestions" [value]="company">
-                {{company.name + ' -- ' + company.address}}</mat-option>
+            <input type="text" matInput placeholder="Enter Party Name" formControlName="name" autocomplete="off"
+              [matAutocomplete]="partyAutoComplete">
+            <mat-autocomplete #partyAutoComplete="matAutocomplete" (optionSelected)="selectedParty($event)">
+              <mat-option *ngFor="let party of partySuggestions" [value]="party">
+                {{party.name + ' -- ' + party.address}}</mat-option>
             </mat-autocomplete>
-            <mat-error *ngIf="saleForm.get('companyGroup.name').hasError('required')">Company Name is required
+            <mat-error *ngIf="saleForm.get('partyGroup.name').hasError('required')">Party Name is required
             </mat-error>
           </mat-form-field>
         </div>
         <div class="col-md-4">
           <mat-form-field class="w-100">
             <input type="text" matInput placeholder="Enter Phone Number" formControlName="phoneNumber">
-            <mat-error *ngIf="saleForm.get('companyGroup.phoneNumber').hasError('required')">Company Name is required
+            <mat-error *ngIf="saleForm.get('partyGroup.phoneNumber').hasError('required')">Party Name is required
             </mat-error>
-            <mat-error *ngIf="saleForm.get('companyGroup.phoneNumber').hasError('maxlength')">
+            <mat-error *ngIf="saleForm.get('partyGroup.phoneNumber').hasError('maxlength')">
               Phone number must be less than 13 digits</mat-error>
           </mat-form-field>
         </div>
         <div class="col-md-4">
           <mat-form-field class="w-100">
-            <input type="text" matInput placeholder="Enter Company Address" formControlName="address">
-            <mat-error *ngIf="saleForm.get('companyGroup.address').hasError('required')">Company address is required
+            <input type="text" matInput placeholder="Enter Party Address" formControlName="address">
+            <mat-error *ngIf="saleForm.get('partyGroup.address').hasError('required')">Party address is required
             </mat-error>
           </mat-form-field>
         </div>

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { Gatepass } from '../../../../shared/model/gatepass.model';
-import { Company } from '../../../../shared/model/company.model';
+import { Party } from '../../../../shared/model/party.model';
 import { Vehicle } from '../../../../shared/model/vehicle.model';
 import { Product } from '../../../../shared/model/product.model';
 
@@ -15,7 +15,7 @@ export class GatepassReceiptComponent implements OnInit {
 
   ngOnInit() {
     this.gatepass = new Gatepass();
-    this.gatepass.company = new Company();
+    this.gatepass.party = new Party();
     this.gatepass.vehicle = new Vehicle();
     this.gatepass.product = new Product();
   }

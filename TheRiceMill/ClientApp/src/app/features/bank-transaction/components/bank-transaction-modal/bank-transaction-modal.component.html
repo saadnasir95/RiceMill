@@ -47,13 +47,13 @@
         </div>
         <div class="col-5">
           <mat-form-field>
-            <mat-label>Select Company</mat-label>
-            <mat-select formControlName="companyId">
-              <mat-option *ngFor="let company of companyList" [value]="company.id">
-                {{company.name}}
+            <mat-label>Select Party</mat-label>
+            <mat-select formControlName="partyId">
+              <mat-option *ngFor="let party of partyList" [value]="party.id">
+                {{party.name}}
               </mat-option>
             </mat-select>
-            <mat-error *ngIf="bankTransactionForm.get('companyId').hasError('required')">Company name is required
+            <mat-error *ngIf="bankTransactionForm.get('partyId').hasError('required')">Party name is required
             </mat-error>
           </mat-form-field>
         </div>

@@ -11,8 +11,8 @@ namespace TheRiceMill.Application.Sale.Commands.CreateSale
 //    export class Sale {
 //    id: number;
 //    checkOut: string;
-//    companyId: number;
-//    company: Company;
+//    partyId: number;
+//    party: Party;
 //    vehicleId: number;
 //    vehicle: Vehicle;
 //    productId: number;
@@ -39,8 +39,8 @@ namespace TheRiceMill.Application.Sale.Commands.CreateSale
     public class CreateSaleRequestModel : IRequest<ResponseViewModel>
     {
         public DateTime CheckOut { get; set; }
-        public int CompanyId { get; set; }
-        public CompanyRequestModel Company { get; set; }
+        public int PartyId { get; set; }
+        public PartyRequestModel Party { get; set; }
         public int VehicleId { get; set; }
         public VehicleRequestModel Vehicle { get; set; }
         public int ProductId { get; set; }

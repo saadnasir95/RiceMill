@@ -8,7 +8,7 @@ namespace TheRiceMill.Application.Purchases.Models
     {
         public CreatePurchaseRequestModelValidator()
         {
-            RuleFor(p => p.CompanyId).Must(p => p > 0).When(p => p.Company == null).WithMessage(Messages.IncorrectValue);
+            RuleFor(p => p.PartyId).Must(p => p > 0).When(p => p.Party == null).WithMessage(Messages.IncorrectValue);
             RuleFor(p => p.ProductId).Must(p => p > 0).When(p => p.Product == null).WithMessage(Messages.IncorrectValue);
             RuleFor(p => p.VehicleId).Must(p => p > 0).When(p => p.Vehicle == null).WithMessage(Messages.IncorrectValue);
             RuleFor(p => p.BagWeight).Required();

@@ -1,4 +1,4 @@
-import { Company } from './company.model';
+import { Party } from './party.model';
 import { Vehicle } from './vehicle.model';
 import { Product } from './product.model';
 import { AdditionalCharges } from './additionalcharges.model';
@@ -6,8 +6,8 @@ import { AdditionalCharges } from './additionalcharges.model';
 export class Sale {
   id: number;
   checkOut: string;
-  companyId: number;
-  company: Company;
+  partyId: number;
+  party: Party;
   vehicleId: number;
   vehicle: Vehicle;
   productId: number;

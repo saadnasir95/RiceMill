@@ -14,7 +14,7 @@ import { NotificationService } from '../../../../shared/services/notification.se
   styleUrls: ['./purchase.component.scss']
 })
 export class PurchaseComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['Id', 'company.name', 'product.name', 'bagQuantity', 'kandaWeight', 'totalActualBagWeight', 'totalMaund', 'ratePerMaund', 'totalPrice', 'createdDate', 'Action'];
+  displayedColumns: string[] = ['Id', 'party.name', 'product.name', 'bagQuantity', 'kandaWeight', 'totalActualBagWeight', 'totalMaund', 'ratePerMaund', 'totalPrice', 'createdDate', 'Action'];
   dataSource: MatTableDataSource<Purchase>;
   purchaseList: Purchase[];
   isLoadingData: Boolean = false;

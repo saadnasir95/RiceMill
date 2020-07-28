@@ -1,4 +1,4 @@
-import { Company } from './company.model';
+import { Party } from './party.model';
 import { Vehicle } from './vehicle.model';
 import { Product } from './product.model';
 
@@ -7,8 +7,8 @@ export class Gatepass {
   dateTime: string;
   type: number;
   broker: string;
-  companyId: number;
-  company: Company;
+  partyId: number;
+  party: Party;
   vehicleId: number;
   vehicle: Vehicle;
   productId: number;

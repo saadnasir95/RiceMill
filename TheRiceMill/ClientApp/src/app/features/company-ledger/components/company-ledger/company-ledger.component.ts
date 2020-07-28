@@ -3,9 +3,9 @@ import { MatTableDataSource, MatPaginator } from '@angular/material';
 import { CompanyLedgerService } from '../../../../shared/services/company-ledger.service';
 import { CompanyLedger } from '../../../../shared/model/company-ledger.model';
 import { CompanyLedgerResponse, CompanyLedgerData } from '../../../../shared/model/company-ledger-response.model';
-import { Company } from '../../../../shared/model/company.model';
-import { CompanyResponse } from '../../../../shared/model/company-response.model';
-import { CompanyService } from '../../../../shared/services/company.service';
+import { Party } from '../../../../shared/model/party.model';
+// import { CompanyResponse } from '../../../../shared/model/company-response.model';
+// import { CompanyService } from '../../../../shared/services/company.service';
 import { trigger, state, transition, animate, style } from '@angular/animations';
 import { LedgerType } from '../../../../shared/model/enums';
 import { LedgerInfo } from '../../../../shared/model/ledger-info.model';
@@ -39,27 +39,29 @@ export class CompanyLedgerComponent implements OnInit {
     chequeNumber: '',
     paymentType: 1
   };
-  companyList: Company[];
+  companyList: Party[];
   selectedCompanyID = 0;
   displayedColumns: string[] = ['createdDate', 'ledgerType', 'credit', 'debit', 'balance'];
   dataSource: MatTableDataSource<CompanyLedger>;
   ledgerData: CompanyLedgerData;
   isLoadingData: Boolean = false;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  constructor(private ledgerService: CompanyLedgerService, private companyService: CompanyService) { }
+  constructor(private ledgerService: CompanyLedgerService
+    // private companyService: CompanyService
+    ) { }
 
   ngOnInit() {
     this.dataSource = new MatTableDataSource();
     this.paginator.pageSize = 25;
-    this.companyService.getCompanies(100, 0).subscribe(
-      (response: CompanyResponse) => {
-        this.companyList = response.data;
-        if (this.companyList.length > 0) {
-          this.selectedCompanyID = this.companyList[0].id;
-          this.getLedgerList();
-        }
-      }
-    );
+    // this.companyService.getCompanies(100, 0).subscribe(
+    //   (response: CompanyResponse) => {
+    //     this.companyList = response.data;
+    //     if (this.companyList.length > 0) {
+    //       this.selectedCompanyID = this.companyList[0].id;
+    //       this.getLedgerList();
+    //     }
+    //   }
+    // );
   }
   onCompanyChange() {
     this.getLedgerList();

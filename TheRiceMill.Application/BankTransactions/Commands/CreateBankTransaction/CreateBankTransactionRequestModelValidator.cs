@@ -7,7 +7,7 @@ namespace TheRiceMill.Application.BankTransactions.Commands.CreateBankTransactio
     {
         public CreateBankTransactionRequestModelValidator()
         {
-            RuleFor(p => p.CompanyId).Required();
+            RuleFor(p => p.PartyId).Required();
             RuleFor(p => p.TransactionAmount).Required();
             RuleFor(p => p.BankAccountId).Required();
             RuleFor(p => p.TransactionType).IsInEnum();

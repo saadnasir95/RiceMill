@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Sale } from '../../../../shared/model/sale.model';
-import { Company } from '../../../../shared/model/company.model';
+import { Party } from '../../../../shared/model/party.model';
 import { Vehicle } from '../../../../shared/model/vehicle.model';
 import { Product } from '../../../../shared/model/product.model';
 
@@ -15,7 +15,7 @@ export class SaleReceiptComponent implements OnInit {
 
   ngOnInit() {
     this.sale = new Sale();
-    this.sale.company = new Company();
+    this.sale.party = new Party();
     this.sale.vehicle = new Vehicle();
     this.sale.product = new Product();
   }

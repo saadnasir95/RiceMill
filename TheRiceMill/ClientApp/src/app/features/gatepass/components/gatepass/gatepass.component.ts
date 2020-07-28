@@ -16,7 +16,7 @@ import { NotificationService } from '../../../../shared/services/notification.se
 export class GatepassComponent implements OnInit, OnDestroy {
 
   // tslint:disable-next-line: max-line-length
-  displayedColumns: string[] = ['Id', 'Type', 'Company.Name', 'Vehicle.PlateNo', 'Product.Name', 'BagQuantity', 'BoriQuantity', 'WeightPerBag', 'NetWeight', 'Maund', 'DateTime', 'Action'];
+  displayedColumns: string[] = ['Id', 'Type', 'Party.Name', 'Vehicle.PlateNo', 'Product.Name', 'BagQuantity', 'BoriQuantity', 'WeightPerBag', 'NetWeight', 'Maund', 'DateTime', 'Action'];
   dataSource: MatTableDataSource<Gatepass>;
   gatepassList: Gatepass[];
   isLoadingData: Boolean = false;

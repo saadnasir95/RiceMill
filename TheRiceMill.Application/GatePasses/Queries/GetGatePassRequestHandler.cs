@@ -30,14 +30,17 @@ namespace TheRiceMill.Application.GatePasses.Queries
         {
             request.SetDefaultValue();
             var converter = new DateConverter();
-            Expression<Func<GatePass, bool>> searchQuery = p => p.Party.Name.Contains(request.Search) ||
+            Expression<Func<GatePass, bool>> query = null;
+            if (request.InvoicePendingGatePass)
+            {
+                query = p => (p.PurchaseId == null && p.SaleId == null) && (p.Party.Name.Contains(request.Search) ||
                                     (p.Id + "" == request.Search) ||
                                     p.Vehicle.PlateNo.Contains(request.Search) ||
                                     p.Product.Name.Contains(request.Search));
             }
             else
             {
-                query = p => (p.Company.Name.Contains(request.Search) ||
+                query = p => (p.Party.Name.Contains(request.Search) ||
                                     (p.Id + "" == request.Search) ||
                                     p.Vehicle.PlateNo.Contains(request.Search) ||
                                     p.Product.Name.Contains(request.Search));
@@ -59,7 +62,7 @@ namespace TheRiceMill.Application.GatePasses.Queries
                     DateTime = p.DateTime,
                     Broker = p.Broker,
                     Id = p.Id,
-                    Company = new CompanyRequestModel()
+                    Party = new PartyRequestModel()
                     {
                         Address = p.Party.Address,
                         Name = p.Party.Name,
@@ -76,7 +79,7 @@ namespace TheRiceMill.Application.GatePasses.Queries
                         PlateNo = p.Vehicle.PlateNo,
                         Name = p.Vehicle.Name,
                     },
-                    CompanyId = p.PartyId,
+                    PartyId = p.PartyId,
                     ProductId = p.ProductId,
                     VehicleId = p.VehicleId,
                     PurchaseId = p.PurchaseId,
