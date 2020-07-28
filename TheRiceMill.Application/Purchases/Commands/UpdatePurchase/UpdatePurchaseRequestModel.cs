@@ -13,8 +13,8 @@ namespace TheRiceMill.Application.Purchases.Commands.UpdatePurchase
         public int Id { get; set; }
         public DateTime CheckIn { get; set; }
         public Direction Direction { get; set; }
-        public int CompanyId { get; set; }
-        public CompanyRequestModel Company { get; set; }
+        public int PartyId { get; set; }
+        public PartyRequestModel Party { get; set; }
         public int VehicleId { get; set; }
         public VehicleRequestModel Vehicle { get; set; }
         public int ProductId { get; set; }

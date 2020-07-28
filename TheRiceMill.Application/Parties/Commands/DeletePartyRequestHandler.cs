@@ -10,16 +10,16 @@ using TheRiceMill.Persistence;
 
 namespace TheRiceMill.Application.Companies.Commands
 {
-    public class DeleteCompanyRequestHandler : IRequestHandler<DeleteCompanyRequestModel, ResponseViewModel>
+    public class DeletePartyRequestHandler : IRequestHandler<DeletePartyRequestModel, ResponseViewModel>
     {
         private readonly TheRiceMillDbContext _context;
 
-        public DeleteCompanyRequestHandler(TheRiceMillDbContext context)
+        public DeletePartyRequestHandler(TheRiceMillDbContext context)
         {
             _context = context;
         }
 
-        public Task<ResponseViewModel> Handle(DeleteCompanyRequestModel request, CancellationToken cancellationToken)
+        public Task<ResponseViewModel> Handle(DeletePartyRequestModel request, CancellationToken cancellationToken)
         {
             var canDelete = _context.Parties.Any(p => p.Id == request.Id && !p.GatePasses.Any() && !p.Sales.Any());
             if (!canDelete)

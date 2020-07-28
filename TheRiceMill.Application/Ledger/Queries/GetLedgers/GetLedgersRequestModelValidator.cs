@@ -9,7 +9,7 @@ namespace TheRiceMill.Application.Ledger.Queries.GetLedgers
         {
             RuleFor(p => p.Page).Required();
             RuleFor(p => p.PageSize).Required();
-            RuleFor(p => p.CompanyId).Required();
+            RuleFor(p => p.PartyId).Required();
         }
     }
 }

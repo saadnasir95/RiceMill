@@ -62,7 +62,7 @@ namespace TheRiceMill.Application.GatePasses.Queries
                     DateTime = p.DateTime,
                     Broker = p.Broker,
                     Id = p.Id,
-                    Company = new CompanyRequestModel()
+                    Party = new PartyRequestModel()
                     {
                         Address = p.Party.Address,
                         Name = p.Party.Name,
@@ -79,7 +79,7 @@ namespace TheRiceMill.Application.GatePasses.Queries
                         PlateNo = p.Vehicle.PlateNo,
                         Name = p.Vehicle.Name,
                     },
-                    CompanyId = p.PartyId,
+                    PartyId = p.PartyId,
                     ProductId = p.ProductId,
                     VehicleId = p.VehicleId,
                     PurchaseId = p.PurchaseId,

@@ -7,24 +7,24 @@ using TheRiceMill.Common.Constants;
 namespace TheRiceMill.Presentation.Controllers.Api.V1
 {
     [Authorize(Roles = RoleNames.Admin)]
-    public class CompanyController : BaseController
+    public class PartyController : BaseController
     {
         [HttpPost]
-        public async Task<IActionResult> CreateCompany(CreateCompanyRequestModel model)
+        public async Task<IActionResult> CreateParty(CreatePartyRequestModel model)
         {
             var response = await Mediator.Send(model);
             return StatusCode(response.Status, response.Response);
         }
 
         [HttpPut]
-        public async Task<IActionResult> UpdateCompany(UpdateCompanyRequestModel model)
+        public async Task<IActionResult> UpdateParty(UpdatePartyRequestModel model)
         {
             var response = await Mediator.Send(model);
             return StatusCode(response.Status, response.Response);
         }
 
         [HttpGet]
-        public async Task<IActionResult> GetCompany([FromQuery]GetCompanyRequestModel model)
+        public async Task<IActionResult> GetParty([FromQuery]GetPartyRequestModel model)
         {
             var response = await Mediator.Send(model);
             return StatusCode(response.Status, response.Response);
@@ -32,7 +32,7 @@ namespace TheRiceMill.Presentation.Controllers.Api.V1
 
 
         [HttpDelete("{Id}")]
-        public async Task<IActionResult> DeleteCompany([FromRoute]DeleteCompanyRequestModel model)
+        public async Task<IActionResult> DeleteParty([FromRoute]DeletePartyRequestModel model)
         {
             var response = await Mediator.Send(model);
             return StatusCode(response.Status, response.Response);
@@ -40,7 +40,7 @@ namespace TheRiceMill.Presentation.Controllers.Api.V1
 
         [HttpGet("comboBox")]
         [Authorize]
-        public async Task<IActionResult> GetCompanyForComboBox([FromQuery]GetCompanyForComboBoxRequestModel model)
+        public async Task<IActionResult> GetPartyForComboBox([FromQuery]GetPartyForComboBoxRequestModel model)
         {
             var response = await Mediator.Send(model);
             return StatusCode(response.Status, response.Response);

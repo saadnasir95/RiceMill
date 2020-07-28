@@ -42,7 +42,7 @@ namespace TheRiceMill.Application.Sale.Queries.GetSales
                         Name = sale.Vehicle.Name,
                         PlateNo = sale.Vehicle.PlateNo
                     },
-                    Company = new CompanyRequestModel()
+                    Party = new PartyRequestModel()
                     {
                         Name = sale.Party.Name,
                         Address = sale.Party.Address,
@@ -54,7 +54,7 @@ namespace TheRiceMill.Application.Sale.Queries.GetSales
                         Price = sale.Product.Price,
                         Type = (ProductType)sale.Product.Type
                     },
-                    CompanyId = sale.Party.Id,
+                    PartyId = sale.Party.Id,
                     VehicleId = sale.Vehicle.Id,
                     ProductId = sale.Product.Id,
                     BagQuantity = sale.BagQuantity,

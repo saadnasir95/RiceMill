@@ -29,10 +29,10 @@ namespace TheRiceMill.Application.BankTransactions.Commands.UpdateBankTransactio
             {
                 throw new NotFoundException(nameof(Domain.Entities.BankAccount), request.BankAccountId);
             }
-            var company = _context.Parties.GetByReadOnly(p => p.Id == request.CompanyId);
-            if (company == null)
+            var party = _context.Parties.GetByReadOnly(p => p.Id == request.PartyId);
+            if (party == null)
             {
-                throw new NotFoundException(nameof(Party), request.CompanyId);
+                throw new NotFoundException(nameof(Party), request.PartyId);
             }
 
             var bankTransaction = _context.BankTransactions.GetBy(p => p.Id == request.Id);
@@ -48,14 +48,14 @@ namespace TheRiceMill.Application.BankTransactions.Commands.UpdateBankTransactio
             }
             
             bankTransaction.BankAccountId = request.BankAccountId;
-            bankTransaction.PartyId = request.CompanyId;
+            bankTransaction.PartyId = request.PartyId;
             bankTransaction.Credit = request.TransactionType == TransactionType.Debit ? request.TransactionAmount : 0;
             bankTransaction.Debit = request.TransactionType == TransactionType.Credit ? request.TransactionAmount : 0;
             bankTransaction.TransactionDate = request.TransactionDate;
             bankTransaction.TransactionType = (int) request.TransactionType;
             bankTransaction.ChequeNumber = request.ChequeNumber;
             bankTransaction.PaymentType = (int) request.PaymentType;
-            ledger.PartyId = request.CompanyId;
+            ledger.PartyId = request.PartyId;
             ledger.Credit = request.TransactionType == TransactionType.Credit ? request.TransactionAmount : 0;
             ledger.Debit = request.TransactionType == TransactionType.Debit ? request.TransactionAmount : 0;
             ledger.LedgerType = (int) LedgerType.BankTransaction;
@@ -69,11 +69,11 @@ namespace TheRiceMill.Application.BankTransactions.Commands.UpdateBankTransactio
             {
                 BankAccountId = request.BankAccountId,
                 AccountNumber = bankAccount.AccountNumber,
-                CompanyId = request.CompanyId,
+                PartyId = request.PartyId,
                 TransactionAmount = request.TransactionAmount,
                 TransactionDate = dateConverter.ConvertToDateTimeIso(request.TransactionDate),
                 TransactionType = (int) request.TransactionType,
-                CompanyName = company.Name,
+                PartyName = party.Name,
                 CreatedDate = dateConverter.ConvertToDateTimeIso(bankTransaction.CreatedDate),
                 BankName = bankAccount.Bank.Name
             });
@@ -87,8 +87,8 @@ namespace TheRiceMill.Application.BankTransactions.Commands.UpdateBankTransactio
             public int TransactionType { get; set; }
             public string TransactionDate { get; set; }
             public string AccountNumber { get; set; }
-            public int CompanyId { get; set; }
-            public string CompanyName { get; set; }
+            public int PartyId { get; set; }
+            public string PartyName { get; set; }
             public string CreatedDate { get; set; }
         }
     }

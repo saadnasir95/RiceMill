@@ -8,7 +8,7 @@ namespace TheRiceMill.Application.BankTransactions.Commands.CreateBankTransactio
 
     public class CreateBankTransactionRequestModel : IRequest<ResponseViewModel>
     {
-        public int CompanyId { get; set; }
+        public int PartyId { get; set; }
         public TransactionType TransactionType { get; set; }
         public PaymentType PaymentType { get; set; }
         public double TransactionAmount { get; set; }

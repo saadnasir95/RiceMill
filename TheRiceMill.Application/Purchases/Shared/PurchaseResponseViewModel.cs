@@ -11,7 +11,7 @@ namespace TheRiceMill.Application.Purchases.Shared
         public int ProductId { get; set; }
         public VehicleRequestModel Vehicle { get; set; }
         public ProductRequestModel Product { get; set; }
-        public CompanyRequestModel Company { get; set; }
+        public PartyRequestModel Party { get; set; }
         public double BagQuantity { get; set; }
         public double BagWeight { get; set; }
         public double ExpectedBagWeight { get; set; }
