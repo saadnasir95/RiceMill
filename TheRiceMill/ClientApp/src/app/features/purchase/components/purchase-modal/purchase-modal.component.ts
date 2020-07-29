@@ -40,7 +40,7 @@ export class PurchaseModalComponent implements OnInit {
   addOnBlur = false;
   separatorKeysCodes: number[] = [ENTER, COMMA];
   filteredGatepasses: Gatepass[];
-  gatepasses: string[] = [];
+  gatepasses: Gatepass[] = [];
   allGatepasses: string[] = ['Gatepass1', 'Gatepass2', 'Gatepass3', 'Gatepass4', 'Gatepass5'];
 
   vehicleSuggestions: Vehicle[];
@@ -53,8 +53,10 @@ export class PurchaseModalComponent implements OnInit {
     checkIn: new FormControl(moment.tz('Asia/Karachi').format().slice(0, 16), Validators.required),
     additionalCharges: new FormArray([]),
     gatepass: new FormControl(),
-    credit: new FormControl(0, [Validators.required, Validators.min(0)]),
-    debit: new FormControl(0, [Validators.required, Validators.min(0)]),
+    // Credit Debit Form Control
+    // credit: new FormControl(0, [Validators.required, Validators.min(0)]),
+    // debit: new FormControl(0, [Validators.required, Validators.min(0)]),
+
   //   direction: new FormControl(null, Validators.required),
   //   companyGroup: new FormGroup({
   //     name: new FormControl('', Validators.required),
@@ -85,7 +87,7 @@ export class PurchaseModalComponent implements OnInit {
       // ratePerKg: new FormControl(0, [Validators.required, Validators.min(0)]),
       ratePerMaund: new FormControl(0, [Validators.required, Validators.min(0)]),
       commission: new FormControl(0, [Validators.required, Validators.min(0)]),
-      percentCommission: new FormControl(0, [Validators.required, Validators.min(0)]),
+      // percentCommission: new FormControl(0, [Validators.required, Validators.min(0)]),
       totalPrice: new FormControl(0, [Validators.required, Validators.min(0)]),
       // actualBags: new FormControl(0, [Validators.required, Validators.min(0)]),
     })
@@ -334,33 +336,51 @@ export class PurchaseModalComponent implements OnInit {
               this.additionalCharges -= +value[i].total;
             }
           }
+
           this.purchaseForm.get('additionalCharges').setValue(value, { emitEvent: false });
+          // this.purchaseForm.get('weightPriceGroup.totalPrice').setValue(
+          //   this.purchaseForm.get('weightPriceGroup.totalPrice').value
+          // )
         }
-        const netPrice = +this.basePrice + +this.additionalCharges + +this.commission;
-        this.purchaseForm.get('weightPriceGroup.totalPrice').setValue(netPrice, { eventEmit: false, onlySelf: true });
+        // const netPrice = +this.basePrice + +this.additionalCharges + +this.commission;
+        // this.purchaseForm.get('weightPriceGroup.totalPrice').setValue(netPrice, { eventEmit: false, onlySelf: true });
       }
     );
 
-    this.purchaseForm.get('partyGroup.name').valueChanges.subscribe(
-      (value: string) => {
-        if (this.purchase === undefined || this.purchase === null) {
-          this.purchase = new Purchase();
-        }
-        if (this.purchase.party === undefined || this.purchase.party === null) {
-          this.purchase.party = new Party();
-        }
-        this.purchase.partyId = 0;
-        this.purchaseForm.get('partyGroup.phoneNumber').reset();
-        this.purchaseForm.get('partyGroup.address').reset();
-        if (value) {
-          this.partyService.getParties(5, 0, value).subscribe(
-            (response: PartyResponse) => {
-              this.partySuggestions = response.data;
-            },
-            (error) => console.log(error)
-          );
-        }
-      });
+    // this.purchaseForm.get('weightPriceGroup.ratePerMaund').valueChanges.subscribe(ratePerMaund => {
+    //   this.purchaseForm.get('weightPriceGroup.totalPrice').setValue(
+    //     this.purchaseForm.get('weightPriceGroup.totalPrice').value + ratePerMaund
+    //   )
+    // }
+    // )
+
+      //  this.purchaseForm.get('weightPriceGroup.commission').valueChanges.subscribe(
+      // (commission) => {
+      //   this.purchaseForm.get('weightPriceGroup.totalPrice').setValue(
+      //     this.purchaseForm.get('weightPriceGroup.totalPrice').value + commission
+      //   ) 
+      // })
+
+    // this.purchaseForm.get('partyGroup.name').valueChanges.subscribe(
+    //   (value: string) => {
+    //     if (this.purchase === undefined || this.purchase === null) {
+    //       this.purchase = new Purchase();
+    //     }
+    //     if (this.purchase.party === undefined || this.purchase.party === null) {
+    //       this.purchase.party = new Party();
+    //     }
+    //     this.purchase.partyId = 0;
+    //     this.purchaseForm.get('partyGroup.phoneNumber').reset();
+    //     this.purchaseForm.get('partyGroup.address').reset();
+    //     if (value) {
+    //       this.partyService.getParties(5, 0, value).subscribe(
+    //         (response: PartyResponse) => {
+    //           this.partySuggestions = response.data;
+    //         },
+    //         (error) => console.log(error)
+    //       );
+    //     }
+    //   });
 
     // this.purchaseForm.get('productGroup.name').valueChanges.subscribe(
     //   (value: string) => {
@@ -407,11 +427,10 @@ export class PurchaseModalComponent implements OnInit {
   add(event: MatChipInputEvent): void {
     const input = event.input;
     const value = event.value;
-    debugger
     // Add our gatepass
-    if ((value || '').trim()) {
-      this.gatepasses.push(value.trim());
-    }
+    // if ((value || '').trim()) {
+    //   this.gatepasses.push(value.trim());
+    // }
 
     // Reset the input value
     if (input) {
@@ -421,19 +440,37 @@ export class PurchaseModalComponent implements OnInit {
     this.purchaseForm.controls['gatepass'].setValue(null);
   }
 
-  remove(gatepass: string): void {
-    const index = this.gatepasses.indexOf(gatepass);
+  remove(gatepass: Gatepass): void {
+    let index = 0     
+    this.gatepasses.find((_gatepass,i) => {
+      if(_gatepass.id == gatepass.id){
+        index = i
+      }
+    })
 
     if (index >= 0) {
       this.gatepasses.splice(index, 1);
+      this.purchaseForm.get('weightPriceGroup.totalMaund').setValue(
+        this.purchaseForm.get('weightPriceGroup.totalMaund').value - gatepass.maund
+      );
     }
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
     console.log("EVENT ===>",event)
-    this.gatepasses.push(event.option.value.id);
+    if(!this.isGatepassExists(event.option.value)){
+      this.gatepasses.push(event.option.value)
+      this.purchaseForm.get('weightPriceGroup.totalMaund').setValue(
+        this.purchaseForm.get('weightPriceGroup.totalMaund').value + event.option.value.maund
+      );
+    };
     this.gatepassInput.nativeElement.value = '';
     this.purchaseForm.controls['gatepass'].setValue(null);
+  }
+
+  isGatepassExists(gatepass: Gatepass): boolean{
+    const findGatePass = this.gatepasses.find(_gatepass => _gatepass.id == gatepass.id)
+    return findGatePass ? true : false 
   }
 
   closeModal() {
