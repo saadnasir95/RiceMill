@@ -25,11 +25,10 @@ namespace TheRiceMill.Application.Vehicles.Queries
         {
             request.SetDefaultValue();
             var list = _context.Vehicles.GetMany(
-                p => p.Name.Contains(request.Search) || p.PlateNo.Contains(request.Search), p => p.Name,
+                p => p.PlateNo.Contains(request.Search), p => p.PlateNo,
                 1,
                 request.PageSize, true).Select(vehicle => new VehicleComboBoxInfoResponseModel()
             {
-                Name = vehicle.Name,
                 Id = vehicle.Id,
                 PlateNo = vehicle.PlateNo,
             }).ToList();

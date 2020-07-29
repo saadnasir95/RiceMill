@@ -67,8 +67,6 @@ namespace TheRiceMill.Application.GatePasses.Commands
                 {
                     gatePass.Vehicle = new Vehicle()
                     {
-                        Name = request.Vehicle.Name,
-                        NormalizedName = request.Vehicle.Name.ToUpper(),
                         PlateNo = request.Vehicle.PlateNo.ToUpper(),
                     };
                     vehicle = gatePass.Vehicle;
@@ -91,9 +89,7 @@ namespace TheRiceMill.Application.GatePasses.Commands
                     gatePass.Product = new Product()
                     {
                         Name = request.Product.Name,
-                        NormalizedName = request.Product.Name.ToUpper(),
-                        Type = request.Product.Type.ToInt(),
-                        Price = request.Product.Price,
+                        NormalizedName = request.Product.Name.ToUpper()
                     };
                     product = gatePass.Product;
                 }
@@ -127,14 +123,11 @@ namespace TheRiceMill.Application.GatePasses.Commands
                 },
                 Product = new ProductRequestModel()
                 {
-                    Name = product.Name,
-                    Price = product.Price,
-                    Type = (ProductType)product.Type,
+                    Name = product.Name
                 },
                 Vehicle = new VehicleRequestModel()
                 {
-                    PlateNo = vehicle.PlateNo,
-                    Name = vehicle.Name,
+                    PlateNo = vehicle.PlateNo
                 },
                 PartyId = party.Id,
                 ProductId = product.Id,

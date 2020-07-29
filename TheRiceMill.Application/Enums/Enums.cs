@@ -1,11 +1,5 @@
 ﻿namespace TheRiceMill.Application.Enums
 {
-    public enum ProductType
-    {
-        Sale = 1,
-        Purchase
-    }
-
     public enum GatePassType
     {
         /// <summary>

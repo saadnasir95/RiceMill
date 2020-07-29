@@ -26,8 +26,7 @@ namespace TheRiceMill.Application.Products.Queries
                 request.PageSize, true).Select(product => new ProductsInfoComboBoxResponseModel()
             {
                 Name = product.Name,
-                Id = product.Id,
-                Price = product.Price,
+                Id = product.Id
             }).ToList();
             return Task.FromResult(new ResponseViewModel().CreateOk(list));
         }

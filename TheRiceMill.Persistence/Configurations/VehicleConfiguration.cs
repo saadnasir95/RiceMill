@@ -8,9 +8,6 @@ namespace TheRiceMill.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Vehicle> builder)
         {
-            builder.Property(p => p.Name).IsRequired().HasMaxLength(50);
-            builder.Property(p => p.NormalizedName).IsRequired().HasMaxLength(50);
-
         }
     }
 }

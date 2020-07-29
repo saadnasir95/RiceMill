@@ -70,14 +70,11 @@ namespace TheRiceMill.Application.GatePasses.Queries
                     },
                     Product = new ProductRequestModel()
                     {
-                        Name = p.Product.Name,
-                        Price = p.Product.Price,
-                        Type = (ProductType)p.Product.Type,
+                        Name = p.Product.Name
                     },
                     Vehicle = new VehicleRequestModel()
                     {
-                        PlateNo = p.Vehicle.PlateNo,
-                        Name = p.Vehicle.Name,
+                        PlateNo = p.Vehicle.PlateNo
                     },
                     PartyId = p.PartyId,
                     ProductId = p.ProductId,

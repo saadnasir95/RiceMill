@@ -27,8 +27,6 @@ namespace TheRiceMill.Application.Products.Queries
             {
                 Name = product.Name,
                 Id = product.Id,
-                Price = product.Price,
-                Type = product.Type,
                 CreatedDate = new DateConverter().ConvertToDateTimeIso(product.CreatedDate),
             }).ToList();
             var count = _context.Products.Count(p => p.Name.Contains(request.Search));

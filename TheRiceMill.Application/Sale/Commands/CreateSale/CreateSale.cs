@@ -64,8 +64,6 @@ namespace TheRiceMill.Application.Sale.Commands.CreateSale
                 {
                     sale.Vehicle = new Vehicle()
                     {
-                        Name = request.Vehicle.Name,
-                        NormalizedName = request.Vehicle.Name.ToUpper(),
                         PlateNo = request.Vehicle.PlateNo.ToUpper(),
                     };
                     vehicle = sale.Vehicle;
@@ -88,9 +86,7 @@ namespace TheRiceMill.Application.Sale.Commands.CreateSale
                     sale.Product = new Product()
                     {
                         Name = request.Product.Name,
-                        NormalizedName = request.Product.Name.ToUpper(),
-                        Type = request.Product.Type.ToInt(),
-                        Price = request.Product.Price,
+                        NormalizedName = request.Product.Name.ToUpper()
                     };
                     product = sale.Product;
                 }
@@ -137,7 +133,6 @@ namespace TheRiceMill.Application.Sale.Commands.CreateSale
             {
                 Vehicle = new VehicleRequestModel()
                 {
-                    Name   = vehicle.Name,
                     PlateNo = vehicle.PlateNo
                 },
                 Party = new PartyRequestModel()
@@ -148,9 +143,7 @@ namespace TheRiceMill.Application.Sale.Commands.CreateSale
                 },
                 Product = new ProductRequestModel()
                 {
-                  Name  = product.Name,
-                  Price = product.Price,
-                  Type = (ProductType)product.Type
+                  Name  = product.Name
                 },
                 PartyId = party.Id,
                 VehicleId = vehicle.Id,

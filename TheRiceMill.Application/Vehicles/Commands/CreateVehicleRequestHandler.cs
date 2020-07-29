@@ -30,15 +30,12 @@ namespace TheRiceMill.Application.Vehicles.Commands
             }
             var vehicle = new Vehicle()
             {
-                Name = request.Name,
-                NormalizedName = request.Name.ToUpper(),
                 PlateNo = request.PlateNo
             };
             _context.Add(vehicle);
             await _context.SaveChangesAsync(cancellationToken);
             return new ResponseViewModel().CreateOk(new VehicleInfoResponseModel()
             {
-                Name = vehicle.Name,
                 Id = vehicle.Id,
                 PlateNo = vehicle.PlateNo,
                 CreatedDate = new DateConverter().ConvertToDateTimeIso(vehicle.CreatedDate),

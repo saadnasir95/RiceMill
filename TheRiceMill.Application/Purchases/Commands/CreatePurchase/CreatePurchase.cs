@@ -66,8 +66,6 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
                 {
                     purchase.Vehicle = new Vehicle()
                     {
-                        Name = request.Vehicle.Name,
-                        NormalizedName = request.Vehicle.Name.ToUpper(),
                         PlateNo = request.Vehicle.PlateNo.ToUpper(),
                     };
                     vehicle = purchase.Vehicle;
@@ -90,9 +88,7 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
                     purchase.Product = new Product()
                     {
                         Name = request.Product.Name,
-                        NormalizedName = request.Product.Name.ToUpper(),
-                        Type = request.Product.Type.ToInt(),
-                        Price = request.Product.Price,
+                        NormalizedName = request.Product.Name.ToUpper()
                     };
                     product = purchase.Product;
                 }
@@ -139,14 +135,11 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
             {
                 Vehicle = new VehicleRequestModel()
                 {
-                    Name = vehicle.Name,
                     PlateNo = vehicle.PlateNo
                 },
                 Product = new ProductRequestModel()
                 {
-                    Name = product.Name,
-                    Price = product.Price,
-                    Type = (ProductType)product.Type
+                    Name = product.Name
                 },
                 Party = new PartyRequestModel()
                 {

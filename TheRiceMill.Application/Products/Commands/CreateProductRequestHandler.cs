@@ -30,9 +30,7 @@ namespace TheRiceMill.Application.Products.Commands
             var product = new Product()
             {
                 Name = request.Name,
-                NormalizedName = request.Name.ToUpper(),
-                Type = (int) request.Type,
-                Price = request.Price,
+                NormalizedName = request.Name.ToUpper()
             };
             _context.Add(product);
             await _context.SaveChangesAsync(cancellationToken);
@@ -40,8 +38,6 @@ namespace TheRiceMill.Application.Products.Commands
             {
                 Name = product.Name,
                 Id = product.Id,
-                Price = product.Price,
-                Type = product.Type,
                 CreatedDate = new DateConverter().ConvertToDateTimeIso(product.CreatedDate),
             });
         }

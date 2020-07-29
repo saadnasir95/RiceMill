@@ -39,16 +39,12 @@ namespace TheRiceMill.Application.Products.Commands
 
             product.Name = request.Name;
             product.NormalizedName = request.Name.ToUpper();
-            product.Price = request.Price;
-            product.Type = (int)request.Type;
             _context.Products.Update(product);
             await _context.SaveChangesAsync(cancellationToken);
             return new ResponseViewModel().CreateOk(new ProductInfoResponseModel()
             {
                 Name = product.Name,
                 Id = product.Id,
-                Price = product.Price,
-                Type = product.Type,
                 CreatedDate = new DateConverter().ConvertToDateTimeIso(product.CreatedDate),
             });
         }

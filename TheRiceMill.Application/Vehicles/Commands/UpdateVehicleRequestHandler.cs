@@ -34,18 +34,15 @@ namespace TheRiceMill.Application.Vehicles.Commands
             {
                 if (_context.Vehicles.Any(p => p.PlateNo.ToUpper().Equals(request.PlateNo.ToUpper())))
                 {
-                    throw new AlreadyExistsException(nameof(Vehicle), nameof(request.Name), request.Name);
+                    throw new AlreadyExistsException(nameof(Vehicle), nameof(request.PlateNo), request.PlateNo);
                 }
             }
 
-            vehicle.Name = request.Name;
-            vehicle.NormalizedName = request.Name.ToUpper();
             vehicle.PlateNo = request.PlateNo.ToUpper();
             _context.Update(vehicle);
             await _context.SaveChangesAsync(cancellationToken);
             return new ResponseViewModel().CreateOk(new VehicleInfoResponseModel()
             {
-                Name = vehicle.Name,
                 Id = vehicle.Id,
                 PlateNo = vehicle.PlateNo,
                 CreatedDate = new DateConverter().ConvertToDateTimeIso(vehicle.CreatedDate),

@@ -11,8 +11,6 @@ namespace TheRiceMill.Application.Products.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public double Price { get; set; }
-        public ProductType Type { get; set; }
     }
 
     public class UpdateProductRequestModelValidator : AbstractValidator<UpdateProductRequestModel>
@@ -21,8 +19,6 @@ namespace TheRiceMill.Application.Products.Models
         {
             RuleFor(p => p.Name).NotEmpty().WithMessage(Messages.EmptyError).MaximumLength(50).WithMessage(Messages.MaxLengthError(50));
             RuleFor(p => p.Id).GreaterThan(0).WithMessage(Messages.LessThan(0));
-            RuleFor(p => p.Price).GreaterThan(0).WithMessage(Messages.LessThan(0));
-            RuleFor(p => p.Type).IsInEnum().WithMessage(Messages.IncorrectValue);
         }
     }
 }

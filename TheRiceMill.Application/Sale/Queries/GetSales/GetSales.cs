@@ -39,7 +39,6 @@ namespace TheRiceMill.Application.Sale.Queries.GetSales
                 {
                     Vehicle = new VehicleRequestModel()
                     {
-                        Name = sale.Vehicle.Name,
                         PlateNo = sale.Vehicle.PlateNo
                     },
                     Party = new PartyRequestModel()
@@ -50,9 +49,7 @@ namespace TheRiceMill.Application.Sale.Queries.GetSales
                     },
                     Product = new ProductRequestModel()
                     {
-                        Name = sale.Product.Name,
-                        Price = sale.Product.Price,
-                        Type = (ProductType)sale.Product.Type
+                        Name = sale.Product.Name
                     },
                     PartyId = sale.Party.Id,
                     VehicleId = sale.Vehicle.Id,

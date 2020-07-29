@@ -36,14 +36,11 @@ namespace TheRiceMill.Application.Purchases.Queries
                 {
                     Vehicle = new VehicleRequestModel()
                     {
-                        Name = p.Vehicle.Name,
                         PlateNo = p.Vehicle.PlateNo
                     },
                     Product = new ProductRequestModel()
                     {
-                        Name = p.Product.Name,
-                        Price = p.Product.Price,
-                        Type = (ProductType)p.Product.Type
+                        Name = p.Product.Name
                     },
                     Party = new PartyRequestModel()
                     {

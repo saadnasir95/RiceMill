@@ -66,11 +66,6 @@ namespace TheRiceMill.Application.GatePasses.Models
         /// Navigation Property for Product
         /// </summary>
         public string Name { get; set; }
-        /// <summary>
-        /// Price of Product PerMaund
-        /// </summary>
-        public double Price { get; set; }
-        public ProductType Type { get; set; }
     }
     public class CreateGatePassRequestModelValidator : AbstractValidator<CreateGatePassRequestModel>
     {

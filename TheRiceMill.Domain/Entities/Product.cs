@@ -15,12 +15,7 @@ namespace TheRiceMill.Domain.Entities
         /// NormalizedName of the Product e.g "APPLE"
         /// </summary>
         public string NormalizedName { get; set; }
-        /// <summary>
-        /// The Type of the Product 1 = Sale and 2 = Purchase
-        /// </summary>
-        public int Type { get; set; }
 
-        public double Price { get; set; }
         public IEnumerable<Purchase> Purchases { get; set; }
         public IEnumerable<GatePass> GatePasses { get; set; }
         public IEnumerable<Sale> Sales { get; set; }

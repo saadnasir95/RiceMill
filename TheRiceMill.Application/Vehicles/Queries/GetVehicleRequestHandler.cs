@@ -26,16 +26,15 @@ namespace TheRiceMill.Application.Vehicles.Queries
         {
             request.SetDefaultValue();
             List<VehicleInfoResponseModel> list = _context.Vehicles.GetMany(
-                p => p.Name.Contains(request.Search) || p.PlateNo.Contains(request.Search), request.OrderBy,
+                p => p.PlateNo.Contains(request.Search), request.OrderBy,
                 request.Page,
                 request.PageSize, request.IsDescending).Select(vehicle => new VehicleInfoResponseModel()
             {
-                Name = vehicle.Name,
                 Id = vehicle.Id,
                 PlateNo = vehicle.PlateNo,
                 CreatedDate = new DateConverter().ConvertToDateTimeIso(vehicle.CreatedDate),
             }).ToList();
-            var count = _context.Vehicles.Count(p => p.Name.Contains(request.Search) || p.PlateNo.Contains(request.Search));
+            var count = _context.Vehicles.Count(p => p.PlateNo.Contains(request.Search));
             return Task.FromResult(new ResponseViewModel().CreateOk(list, count));
         }
     }
