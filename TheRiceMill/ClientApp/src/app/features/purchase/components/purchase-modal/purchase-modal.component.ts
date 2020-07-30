@@ -41,13 +41,10 @@ export class PurchaseModalComponent implements OnInit {
       phoneNumber: new FormControl(null, [Validators.required, Validators.maxLength(12)])
     }),
     vehicleGroup: new FormGroup({
-      name: new FormControl(null, Validators.required),
       plateNo: new FormControl(null, Validators.required)
     }),
     productGroup: new FormGroup({
       name: new FormControl(null, Validators.required),
-      price: new FormControl(null, [Validators.required, Validators.min(0)]),
-      type: new FormControl(+ProductType.Purchase, Validators.required)
     }),
     weightPriceGroup: new FormGroup({
       bagQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
@@ -113,7 +110,7 @@ export class PurchaseModalComponent implements OnInit {
           totalPrice: this.basePrice + +this.additionalCharges + this.commission,
           actualBags: Math.round(totalActualBagWeight / (bagWeight === 0 ? 1 : bagWeight))
         }, { emitEvent: false });
-        this.purchaseForm.get('productGroup.price').setValue(ratePerMaund);
+
       }
     );
 
@@ -142,7 +139,7 @@ export class PurchaseModalComponent implements OnInit {
           totalPrice: this.basePrice + +this.additionalCharges + this.commission,
           actualBags: Math.round(totalActualBagWeight / (bagWeight === 0 ? 1 : bagWeight))
         }, { emitEvent: false });
-        this.purchaseForm.get('productGroup.price').setValue(ratePerMaund);
+
       }
     );
 
@@ -169,7 +166,6 @@ export class PurchaseModalComponent implements OnInit {
           totalPrice: this.basePrice + +this.additionalCharges + this.commission,
           actualBags: Math.round(totalActualBagWeight / (bagWeight === 0 ? 1 : bagWeight))
         }, { emitEvent: false });
-        this.purchaseForm.get('productGroup.price').setValue(ratePerMaund);
       }
     );
 
@@ -194,7 +190,7 @@ export class PurchaseModalComponent implements OnInit {
           totalPrice: this.basePrice + +this.additionalCharges + this.commission,
           actualBags: Math.round(totalActualBagWeight / (bagWeight === 0 ? 1 : bagWeight))
         }, { emitEvent: false });
-        this.purchaseForm.get('productGroup.price').setValue(ratePerMaund);
+
       }
     );
 
@@ -210,7 +206,6 @@ export class PurchaseModalComponent implements OnInit {
           commission: this.commission,
           totalPrice: this.basePrice + +this.additionalCharges + this.commission,
         }, { emitEvent: false });
-        this.purchaseForm.get('productGroup.price').setValue(+value);
       }
     );
 
@@ -260,7 +255,7 @@ export class PurchaseModalComponent implements OnInit {
           totalPrice: this.basePrice + +this.additionalCharges + this.commission,
           actualBags: Math.round(totalActualBagWeight / (+value === 0 ? 1 : +value))
         }, { emitEvent: false });
-        this.purchaseForm.get('productGroup.price').setValue(ratePerMaund);
+
       }
     );
 
@@ -313,8 +308,6 @@ export class PurchaseModalComponent implements OnInit {
           this.purchase.product = new Product();
         }
         this.purchase.productId = 0;
-        this.purchaseForm.get('productGroup.price').reset(0);
-        this.purchaseForm.get('weightPriceGroup.ratePerMaund').reset(0);
         if (value) {
           this.productService.getProducts(5, 0, value).subscribe(
             (response: ProductResponse) => {
@@ -325,7 +318,7 @@ export class PurchaseModalComponent implements OnInit {
         }
       });
 
-    this.purchaseForm.get('vehicleGroup.name').valueChanges.subscribe(
+    this.purchaseForm.get('vehicleGroup.plateNo').valueChanges.subscribe(
       (value: string) => {
         if (this.purchase === undefined || this.purchase === null) {
           this.purchase = new Purchase();
@@ -334,7 +327,6 @@ export class PurchaseModalComponent implements OnInit {
           this.purchase.vehicle = new Vehicle();
         }
         this.purchase.vehicleId = 0;
-        this.purchaseForm.get('vehicleGroup.plateNo').reset();
         if (value) {
           this.vehicleService.getVehicles(5, 0, value).subscribe(
             (response: VehicleResponse) => {
@@ -361,13 +353,10 @@ export class PurchaseModalComponent implements OnInit {
       checkIn: moment.utc(purchase.checkIn).tz('Asia/Karachi').format().slice(0, 16),
       direction: purchase.direction,
       vehicleGroup: {
-        name: purchase.vehicle.name,
         plateNo: purchase.vehicle.plateNo
       },
       productGroup: {
         name: purchase.product.name,
-        price: purchase.product.price,
-        type: purchase.product.price
       },
       partyGroup: {
         name: purchase.party.name,
@@ -463,13 +452,10 @@ export class PurchaseModalComponent implements OnInit {
       // this.purchase.productId = +this.purchase.product.id;
       this.purchase.product.id = +this.purchase.productId;
       this.purchase.product.name = this.purchaseForm.get('productGroup').value.name;
-      this.purchase.product.price = +this.purchaseForm.get('productGroup').value.price;
-      this.purchase.product.type = +ProductType.Purchase;
       this.purchase.product.createdDate = moment.utc().format();
 
       // this.purchase.vehicleId = +this.purchase.vehicle.id;
       this.purchase.vehicle.id = +this.purchase.vehicleId;
-      this.purchase.vehicle.name = this.purchaseForm.get('vehicleGroup').value.name;
       this.purchase.vehicle.plateNo = this.purchaseForm.get('vehicleGroup').value.plateNo;
       this.purchase.vehicle.createdDate = moment.utc().format();
 
@@ -560,8 +546,6 @@ export class PurchaseModalComponent implements OnInit {
   selectedProduct(event: MatAutocompleteSelectedEvent) {
     this.purchaseForm.get('productGroup').setValue({
       name: event.option.value.name,
-      price: event.option.value.price,
-      type: event.option.value.type
     }, { emitEvent: false });
     this.purchaseForm.get('weightPriceGroup.ratePerMaund').setValue(event.option.value.price);
     if (this.purchase === undefined || this.purchase === null) {
@@ -575,7 +559,6 @@ export class PurchaseModalComponent implements OnInit {
   }
   selectedVehicle(event: MatAutocompleteSelectedEvent) {
     this.purchaseForm.get('vehicleGroup').setValue({
-      name: event.option.value.name,
       plateNo: event.option.value.plateNo
     }, { emitEvent: false });
     if (this.purchase === undefined || this.purchase === null) {

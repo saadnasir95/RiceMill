@@ -42,13 +42,10 @@ export class SaleModalComponent implements OnInit {
       phoneNumber: new FormControl(null, [Validators.required, Validators.maxLength(12)])
     }),
     vehicleGroup: new FormGroup({
-      name: new FormControl(null, Validators.required),
       plateNo: new FormControl(null, Validators.required)
     }),
     productGroup: new FormGroup({
       name: new FormControl(null, Validators.required),
-      price: new FormControl(null, [Validators.required, Validators.min(0)]),
-      type: new FormControl(+ProductType.Sale, Validators.required)
     }),
     weightPriceGroup: new FormGroup({
       bagQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
@@ -102,7 +99,7 @@ export class SaleModalComponent implements OnInit {
           commission: this.commission,
           totalPrice: this.basePrice + this.additionalCharges - this.commission,
         }, { emitEvent: false });
-        this.saleForm.get('productGroup.price').setValue(+value.ratePerMaund);
+
       }
     );
     this.saleForm.get('partyGroup.name').valueChanges.subscribe(
@@ -134,8 +131,6 @@ export class SaleModalComponent implements OnInit {
           this.sale.product = new Product();
         }
         this.sale.productId = 0;
-        this.saleForm.get('productGroup.price').reset(0);
-        this.saleForm.get('weightPriceGroup.ratePerMaund').reset(0);
         if (value) {
           this.productService.getProducts(5, 0, value).subscribe(
             (response: ProductResponse) => {
@@ -145,7 +140,7 @@ export class SaleModalComponent implements OnInit {
           );
         }
       });
-    this.saleForm.get('vehicleGroup.name').valueChanges.subscribe(
+    this.saleForm.get('vehicleGroup.plateNo').valueChanges.subscribe(
       (value: string) => {
         if (this.sale === undefined || this.sale === null) {
           this.sale = new Sale();
@@ -154,7 +149,6 @@ export class SaleModalComponent implements OnInit {
           this.sale.vehicle = new Vehicle();
         }
         this.sale.vehicleId = 0;
-        this.saleForm.get('vehicleGroup.plateNo').reset();
         if (value) {
           this.vehicleService.getVehicles(5, 0, value).subscribe(
             (response: VehicleResponse) => {
@@ -213,13 +207,10 @@ export class SaleModalComponent implements OnInit {
       checkOut: moment.utc(sale.checkOut).tz('Asia/Karachi').format().slice(0, 16),
       biltyNumber: sale.biltyNumber,
       vehicleGroup: {
-        name: sale.vehicle.name,
         plateNo: sale.vehicle.plateNo
       },
       productGroup: {
         name: sale.product.name,
-        price: sale.product.price,
-        type: sale.product.price
       },
       partyGroup: {
         name: sale.party.name,
@@ -316,13 +307,10 @@ export class SaleModalComponent implements OnInit {
       // this.sale.productId = +this.sale.productId;
       this.sale.product.id = +this.sale.productId;
       this.sale.product.name = this.saleForm.get('productGroup').value.name;
-      this.sale.product.price = +this.saleForm.get('productGroup').value.price;
-      this.sale.product.type = +ProductType.Sale;
       this.sale.product.createdDate = moment.utc().format();
 
       // this.sale.vehicleId = +this.sale.vehicleId;
       this.sale.vehicle.id = +this.sale.vehicleId;
-      this.sale.vehicle.name = this.saleForm.get('vehicleGroup').value.name;
       this.sale.vehicle.plateNo = this.saleForm.get('vehicleGroup').value.plateNo;
       this.sale.vehicle.createdDate = moment.utc().format();
 
@@ -410,8 +398,6 @@ export class SaleModalComponent implements OnInit {
   selectedProduct(event: MatAutocompleteSelectedEvent) {
     this.saleForm.get('productGroup').setValue({
       name: event.option.value.name,
-      price: event.option.value.price,
-      type: event.option.value.type
     }, { emitEvent: false });
     this.saleForm.get('weightPriceGroup.ratePerMaund').setValue(event.option.value.price);
     if (this.sale === undefined || this.sale === null) {
@@ -425,7 +411,6 @@ export class SaleModalComponent implements OnInit {
   }
   selectedVehicle(event: MatAutocompleteSelectedEvent) {
     this.saleForm.get('vehicleGroup').setValue({
-      name: event.option.value.name,
       plateNo: event.option.value.plateNo
     }, { emitEvent: false });
     if (this.sale === undefined || this.sale === null) {

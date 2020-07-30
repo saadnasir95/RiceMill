@@ -49,40 +49,33 @@
           </mat-form-field>
         </div>
       </div>
-      <div class="row" formGroupName="vehicleGroup">
+      <div class="row">
         <div class="col-md-6">
-          <mat-form-field class="w-100">
-            <input type="text" matInput placeholder="Enter Vehicle Name" formControlName="name" autocomplete="off"
+          <mat-form-field class="w-100" formGroupName="vehicleGroup">
+            <input type="text" matInput placeholder="Enter Plate Number" formControlName="plateNo" autocomplete="off"
               [matAutocomplete]="vehicleAutoComplete">
             <mat-autocomplete #vehicleAutoComplete="matAutocomplete" (optionSelected)="selectedVehicle($event)">
               <mat-option *ngFor="let vehicle of vehicleSuggestions" [value]="vehicle">
-                {{vehicle.name + ' -- ' + vehicle.plateNo}}</mat-option>
+                {{vehicle.plateNo}}</mat-option>
             </mat-autocomplete>
-            <mat-error *ngIf="saleForm.get('vehicleGroup.name').hasError('required')">Vehicle Name is required
-            </mat-error>
-          </mat-form-field>
-        </div>
-        <div class="col-md-6">
-          <mat-form-field class="w-100">
-            <input type="text" matInput placeholder="Enter Plate Number" formControlName="plateNo">
             <mat-error *ngIf="saleForm.get('vehicleGroup.plateNo').hasError('required')">Plate Number is required
             </mat-error>
           </mat-form-field>
         </div>
-      </div>
-      <div class="row">
         <div class="col-md-6">
           <mat-form-field class="w-100" formGroupName="productGroup">
             <input type="text" matInput placeholder="Enter Product Name" formControlName="name" autocomplete="off"
               [matAutocomplete]="productAutoComplete">
             <mat-autocomplete #productAutoComplete="matAutocomplete" (optionSelected)="selectedProduct($event)">
               <mat-option *ngFor="let product of productSuggestions" [value]="product">
-                {{product.name + ' -- ' + product.price.toString()}}</mat-option>
+                {{product.name}}</mat-option>
             </mat-autocomplete>
             <mat-error *ngIf="saleForm.get('productGroup.name').hasError('required')">Product Name is required
             </mat-error>
           </mat-form-field>
         </div>
+      </div>
+      <div class="row">
         <div class="col-md-6">
           <mat-form-field class="w-100">
             <input type="text" matInput placeholder="Enter Bilty Number" formControlName="biltyNumber">
@@ -249,7 +242,7 @@
       </div>
       <mat-divider class="mb-2"></mat-divider>
       <div formArrayName="additionalCharges">
-        <div *ngFor="let labour of saleForm.get('additionalCharges').controls; index as i" [formGroupName]="i"
+        <div *ngFor="let labour of saleForm.get('additionalCharges')['controls']; index as i" [formGroupName]="i"
           class="row">
           <div class="col-2 d-flex">
             <!-- <label id="addPrice" class="d-block">Add Price</label> -->

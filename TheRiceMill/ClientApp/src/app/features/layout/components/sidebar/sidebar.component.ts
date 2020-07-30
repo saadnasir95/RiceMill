@@ -17,11 +17,11 @@ export class SidebarComponent implements OnInit {
     const administrator = [
       { path: '/admin/gatepass', title: 'Gate Pass', icon: 'fas fa-passport', class: '' },
       { path: '/admin/purchase', title: 'Purchase', icon: 'fa fa-shopping-cart', class: '' },
-      { path: '/admin/sale', title: 'Sale', icon: 'fa fa-shopping-cart', class: '' },
+      // { path: '/admin/sale', title: 'Sale', icon: 'fa fa-shopping-cart', class: '' },
       { path: '/admin/party', title: 'Party', icon: 'fa fa-building', class: '' },
       { path: '/admin/vehicle', title: 'Vehicle', icon: 'fa fa-truck', class: '' },
       { path: '/admin/product', title: 'Product', icon: 'fa fa-shopping-bag', class: '' },
-      { path: '/admin/company-ledger', title: 'Company Ledger', icon: 'fa fa-book', class: '' },
+      // { path: '/admin/company-ledger', title: 'Company Ledger', icon: 'fa fa-book', class: '' },
       // { path: '/admin/bank-transaction', title: 'Bank Transaction', icon: 'fa fa-exchange-alt', class: '' },
       // { path: '/admin/bank-account', title: 'Bank Account', icon: 'fa fa-university', class: '' }
     ];

@@ -13,7 +13,6 @@ import { SpinnerService } from '../../../../shared/services/spinner.service';
 })
 export class VehicleModalComponent implements OnInit {
   public vehicleForm: FormGroup = new FormGroup({
-    name: new FormControl(null, Validators.required),
     plateNo: new FormControl(null, Validators.required)
   });
   public modalRef: MatDialogRef<VehicleModalComponent>;
@@ -37,7 +36,6 @@ export class VehicleModalComponent implements OnInit {
     this.vehicle = new Vehicle();
     Object.assign(this.vehicle, vehicle);
     this.vehicleForm.setValue({
-      name: vehicle.name,
       plateNo: vehicle.plateNo
     });
   }
@@ -67,7 +65,6 @@ export class VehicleModalComponent implements OnInit {
       this.spinner.isLoading = true;
       if (this.isNew) {
         this.vehicle = new Vehicle();
-        this.vehicle.name = this.vehicleForm.value.name;
         this.vehicle.plateNo = this.vehicleForm.value.plateNo;
         this.vehicle.createdDate = moment.utc().format();
         this.vehicleService.addVehicle(this.vehicle).subscribe(
@@ -84,7 +81,6 @@ export class VehicleModalComponent implements OnInit {
           }
         );
       } else {
-        this.vehicle.name = this.vehicleForm.value.name;
         this.vehicle.plateNo = this.vehicleForm.value.plateNo;
         this.vehicleService.updateVehicle(this.vehicle).subscribe(
           (data) => {

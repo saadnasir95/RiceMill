@@ -16,8 +16,6 @@ export class ProductModalComponent implements OnInit {
 
   public productForm: FormGroup = new FormGroup({
     name: new FormControl(null, Validators.required),
-    price: new FormControl(null, [Validators.required, Validators.min(1)]),
-    type: new FormControl(null, Validators.required)
   });
   public productTypes = [
     { text: 'Sale', value: +ProductType.Sale },
@@ -45,8 +43,6 @@ export class ProductModalComponent implements OnInit {
     Object.assign(this.product, product);
     this.productForm.setValue({
       name: product.name,
-      price: product.price,
-      type: product.type
     });
   }
   deleteProduct(product: Product) {
@@ -76,8 +72,6 @@ export class ProductModalComponent implements OnInit {
       if (this.isNew) {
         this.product = new Product();
         this.product.name = this.productForm.value.name;
-        this.product.price = this.productForm.value.price;
-        this.product.type = this.productForm.value.type;
         this.product.createdDate = moment.utc().format();
         this.productService.addProduct(this.product).subscribe(
           (data) => {
@@ -94,8 +88,6 @@ export class ProductModalComponent implements OnInit {
         );
       } else {
         this.product.name = this.productForm.value.name;
-        this.product.price = this.productForm.value.price;
-        this.product.type = this.productForm.value.type;
         this.productService.updateProduct(this.product).subscribe(
           (data) => {
             this.spinner.isLoading = false;

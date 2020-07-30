@@ -14,8 +14,7 @@
       <div class="row">
         <div class="col-md-9 col-sm-12">
           <mat-form-field class="w-100">
-            <input type="datetime-local" matInput placeholder="Choose DateTime"
-              formControlName="dateTime">
+            <input type="datetime-local" matInput placeholder="Choose DateTime" formControlName="dateTime">
             <mat-error *ngIf="gatepassForm.get('dateTime').hasError('required')">
               Datetime is required</mat-error>
           </mat-form-field>
@@ -31,8 +30,8 @@
       <div class="row" formGroupName="partyGroup">
         <div class="col-md-4">
           <mat-form-field class="w-100">
-            <input type="text" matInput placeholder="Enter Party Name" formControlName="name"
-              autocomplete="off" [matAutocomplete]="partyAutoComplete" autocomplete="party">
+            <input type="text" matInput placeholder="Enter Party Name" formControlName="name" autocomplete="off"
+              [matAutocomplete]="partyAutoComplete" autocomplete="party">
             <mat-autocomplete #partyAutoComplete="matAutocomplete" (optionSelected)="selectedParty($event)">
               <mat-option *ngFor="let party of partySuggestions" [value]="party">
                 {{party.name + ' -- ' + party.address}}</mat-option>
@@ -44,8 +43,7 @@
         </div>
         <div class="col-md-4">
           <mat-form-field class="w-100">
-            <input type="text" matInput placeholder="Enter Phone Number"
-              formControlName="phoneNumber">
+            <input type="text" matInput placeholder="Enter Phone Number" formControlName="phoneNumber">
             <mat-error *ngIf="gatepassForm.get('partyGroup.phoneNumber').hasError('required')">
               Phone number is required
             </mat-error>
@@ -55,64 +53,52 @@
         </div>
         <div class="col-md-4">
           <mat-form-field class="w-100">
-            <input type="text" matInput placeholder="Enter Party Address"
-              formControlName="address">
+            <input type="text" matInput placeholder="Enter Party Address" formControlName="address">
             <mat-error *ngIf="gatepassForm.get('partyGroup.address').hasError('required')">
               Party address is required
             </mat-error>
           </mat-form-field>
         </div>
       </div>
-      <div class="row" formGroupName="vehicleGroup">
+      <div class="row">
         <div class="col-md-6">
-          <mat-form-field class="w-100">
-            <input type="text" matInput placeholder="Enter Vehicle Name" formControlName="name"
-              autocomplete="off" [matAutocomplete]="vehicleAutoComplete">
+          <mat-form-field class="w-100" formGroupName="vehicleGroup">
+            <input type="text" matInput placeholder="Enter Plate Number" formControlName="plateNo" autocomplete="off"
+              [matAutocomplete]="vehicleAutoComplete">
             <mat-autocomplete #vehicleAutoComplete="matAutocomplete" (optionSelected)="selectedVehicle($event)">
               <mat-option *ngFor="let vehicle of vehicleSuggestions" [value]="vehicle">
-                {{vehicle.name + ' -- ' + vehicle.plateNo}}</mat-option>
+                {{vehicle.plateNo}}</mat-option>
             </mat-autocomplete>
-            <mat-error *ngIf="gatepassForm.get('vehicleGroup.name').hasError('required')">
-              Vehicle name is required
-            </mat-error>
-          </mat-form-field>
-        </div>
-        <div class="col-md-6">
-          <mat-form-field class="w-100">
-            <input type="text" matInput placeholder="Enter Plate Number"
-              formControlName="plateNo">
             <mat-error *ngIf="gatepassForm.get('vehicleGroup.plateNo').hasError('required')">
               Plate number is required
             </mat-error>
           </mat-form-field>
         </div>
-      </div>
-      <div class="row">
         <div class="col-md-6">
           <mat-form-field class="w-100" formGroupName="productGroup">
-            <input type="text" matInput placeholder="Enter Product Name" formControlName="name"
-              autocomplete="off" [matAutocomplete]="productAutoComplete">
+            <input type="text" matInput placeholder="Enter Product Name" formControlName="name" autocomplete="off"
+              [matAutocomplete]="productAutoComplete">
             <mat-autocomplete #productAutoComplete="matAutocomplete" (optionSelected)="selectedProduct($event)">
               <mat-option *ngFor="let product of productSuggestions" [value]="product">
-                {{product.name + ' -- ' + product.price.toString()}}</mat-option>
+                {{ product.name }}</mat-option>
             </mat-autocomplete>
             <mat-error *ngIf="gatepassForm.get('productGroup.name').hasError('required')">
               Product name is required
             </mat-error>
           </mat-form-field>
         </div>
-        <div class="col-md-6">
+      </div>
+      <div class="row">
+        <div class="col-md-12">
           <mat-form-field class="w-100">
-            <input type="text" matInput placeholder="Enter Broker Name"
-              formControlName="broker">
+            <input type="text" matInput placeholder="Enter Broker Name" formControlName="broker">
           </mat-form-field>
         </div>
       </div>
       <div class="row" formGroupName="weightPriceGroup">
         <div class="col-md-4">
           <mat-form-field>
-            <input type="number" matInput placeholder="Enter Bag Quantity"
-              formControlName="bagQuantity">
+            <input type="number" matInput placeholder="Enter Bag Quantity" formControlName="bagQuantity">
             <mat-error *ngIf="gatepassForm.get('weightPriceGroup.bagQuantity').hasError('required')">
               Bag quantity is required
             </mat-error>
@@ -122,8 +108,7 @@
         </div>
         <div class="col-md-4">
           <mat-form-field>
-            <input type="number" matInput placeholder="Enter Bori Quantity"
-              formControlName="boriQuantity">
+            <input type="number" matInput placeholder="Enter Bori Quantity" formControlName="boriQuantity">
             <mat-error *ngIf="gatepassForm.get('weightPriceGroup.boriQuantity').hasError('required')">
               Bori quantity is required
             </mat-error>
@@ -133,8 +118,7 @@
         </div>
         <div class="col-md-4">
           <mat-form-field>
-            <input type="number" matInput placeholder="Enter Weight Per Bag"
-              formControlName="weightPerBag">
+            <input type="number" matInput placeholder="Enter Weight Per Bag" formControlName="weightPerBag">
             <mat-error *ngIf="gatepassForm.get('weightPriceGroup.weightPerBag').hasError('required')">
               Weight per bag is required
             </mat-error>
@@ -144,8 +128,7 @@
         </div>
         <div class="col-md-6">
           <mat-form-field>
-            <input type="number" matInput placeholder="Enter Net Weight"
-              formControlName="netWeight">
+            <input type="number" matInput placeholder="Enter Net Weight" formControlName="netWeight">
             <mat-error *ngIf="gatepassForm.get('weightPriceGroup.netWeight').hasError('required')">
               Net weight is required
             </mat-error>
@@ -155,8 +138,7 @@
         </div>
         <div class="col-md-6">
           <mat-form-field>
-            <input type="number" matInput placeholder="Enter Maund Weight"
-              formControlName="maund" readonly>
+            <input type="number" matInput placeholder="Enter Maund Weight" formControlName="maund" readonly>
             <mat-error *ngIf="gatepassForm.get('weightPriceGroup.maund').hasError('required')">
               Maund weight is required
             </mat-error>
@@ -180,8 +162,7 @@
           </span>
           Update
         </button>
-        <button mat-raised-button type="button" (click)="closeModal()"
-          class="btn btn-danger">Cancel</button>
+        <button mat-raised-button type="button" (click)="closeModal()" class="btn btn-danger">Cancel</button>
       </div>
     </mat-dialog-actions>
   </form>

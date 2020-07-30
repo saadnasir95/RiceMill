@@ -12,7 +12,7 @@ import { VehicleResponse } from '../../../../shared/model/vehicle-response.model
   styleUrls: ['./vehicle.component.scss']
 })
 export class VehicleComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['Name', 'PlateNo', 'CreatedDate', 'Action'];
+  displayedColumns: string[] = ['Id', 'PlateNo', 'CreatedDate', 'Action'];
   dataSource: MatTableDataSource<Vehicle>;
   vehicles: Vehicle[];
   isLoadingData: Boolean = false;

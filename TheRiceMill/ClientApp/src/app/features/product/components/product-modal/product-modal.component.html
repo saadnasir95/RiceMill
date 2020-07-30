@@ -15,19 +15,6 @@
         <input type="text" matInput placeholder="Name" formControlName="name">
         <mat-error *ngIf="productForm.get('name').hasError('required')">Name is required</mat-error>
       </mat-form-field>
-      <mat-form-field>
-        <input type="number" matInput placeholder="Price" formControlName="price">
-        <mat-error *ngIf="productForm.get('price').hasError('required')">Price is required</mat-error>
-        <mat-error *ngIf="productForm.get('price').hasError('min')">Price must be greater than 0</mat-error>
-      </mat-form-field>
-      <mat-form-field class="d-block w-100 ">
-        <mat-select placeholder="Select Type" formControlName="type">
-          <mat-option *ngFor="let type of productTypes" [value]="type.value">
-            {{ type.text }}
-          </mat-option>
-        </mat-select>
-        <mat-error *ngIf="productForm.get('type').hasError('required')">Type is required</mat-error>
-      </mat-form-field>
     </mat-dialog-content>
     <mat-dialog-actions>
       <div class="row ml-1">

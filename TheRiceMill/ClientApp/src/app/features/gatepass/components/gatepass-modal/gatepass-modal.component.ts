@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { ProductType, GatePassType } from '../../../../shared/model/enums';
+import { GatePassType } from '../../../../shared/model/enums';
 import { MatDialogRef, MatAutocompleteSelectedEvent } from '@angular/material';
 import { Vehicle } from '../../../../shared/model/vehicle.model';
 import { Product } from '../../../../shared/model/product.model';
@@ -38,13 +38,10 @@ export class GatepassModalComponent implements OnInit {
       phoneNumber: new FormControl(null, [Validators.required, Validators.maxLength(12)])
     }),
     vehicleGroup: new FormGroup({
-      name: new FormControl(null, Validators.required),
       plateNo: new FormControl(null, Validators.required)
     }),
     productGroup: new FormGroup({
       name: new FormControl(null, Validators.required),
-      price: new FormControl(0, [Validators.required, Validators.min(0)]),
-      type: new FormControl(+ProductType.Purchase, Validators.required)
     }),
     weightPriceGroup: new FormGroup({
       bagQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
@@ -141,7 +138,6 @@ export class GatepassModalComponent implements OnInit {
           this.gatepass.product = new Product();
         }
         this.gatepass.productId = 0;
-        this.gatepassForm.get('productGroup.price').reset(0);
         if (value) {
           this.productService.getProducts(5, 0, value).subscribe(
             (response: ProductResponse) => {
@@ -151,7 +147,7 @@ export class GatepassModalComponent implements OnInit {
           );
         }
       });
-    this.gatepassForm.get('vehicleGroup.name').valueChanges.subscribe(
+    this.gatepassForm.get('vehicleGroup.plateNo').valueChanges.subscribe(
       (value: string) => {
         if (this.gatepass === undefined || this.gatepass === null) {
           this.gatepass = new Gatepass();
@@ -160,7 +156,6 @@ export class GatepassModalComponent implements OnInit {
           this.gatepass.vehicle = new Vehicle();
         }
         this.gatepass.vehicleId = 0;
-        this.gatepassForm.get('vehicleGroup.plateNo').reset();
         if (value) {
           this.vehicleService.getVehicles(5, 0, value).subscribe(
             (response: VehicleResponse) => {
@@ -185,13 +180,10 @@ export class GatepassModalComponent implements OnInit {
       type: gatepass.type,
       broker: gatepass.broker,
       vehicleGroup: {
-        name: gatepass.vehicle.name,
         plateNo: gatepass.vehicle.plateNo
       },
       productGroup: {
         name: gatepass.product.name,
-        price: gatepass.product.price,
-        type: gatepass.product.price
       },
       partyGroup: {
         name: gatepass.party.name,
@@ -253,12 +245,9 @@ export class GatepassModalComponent implements OnInit {
       this.gatepass.broker = this.gatepassForm.value.broker;
       this.gatepass.product.id = +this.gatepass.productId;
       this.gatepass.product.name = this.gatepassForm.get('productGroup').value.name;
-      this.gatepass.product.price = +this.gatepassForm.get('productGroup').value.price;
-      this.gatepass.product.type = +this.gatepassForm.get('productGroup').value.type;
       this.gatepass.product.createdDate = moment.utc().format();
 
       this.gatepass.vehicle.id = +this.gatepass.vehicleId;
-      this.gatepass.vehicle.name = this.gatepassForm.get('vehicleGroup').value.name;
       this.gatepass.vehicle.plateNo = this.gatepassForm.get('vehicleGroup').value.plateNo;
       this.gatepass.vehicle.createdDate = moment.utc().format();
 
@@ -323,8 +312,6 @@ export class GatepassModalComponent implements OnInit {
   selectedProduct(event: MatAutocompleteSelectedEvent) {
     this.gatepassForm.get('productGroup').setValue({
       name: event.option.value.name,
-      price: event.option.value.price,
-      type: event.option.value.type
     }, { emitEvent: false });
     if (this.gatepass === undefined || this.gatepass === null) {
       this.gatepass = new Gatepass();
@@ -338,7 +325,6 @@ export class GatepassModalComponent implements OnInit {
 
   selectedVehicle(event: MatAutocompleteSelectedEvent) {
     this.gatepassForm.get('vehicleGroup').setValue({
-      name: event.option.value.name,
       plateNo: event.option.value.plateNo
     }, { emitEvent: false });
     if (this.gatepass === undefined || this.gatepass === null) {

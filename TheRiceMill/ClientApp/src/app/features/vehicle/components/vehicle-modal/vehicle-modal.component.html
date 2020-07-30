@@ -12,10 +12,6 @@
   <form [formGroup]="vehicleForm" (ngSubmit)="submit()">
     <mat-dialog-content>
       <mat-form-field class="d-block w-100">
-        <input type="text" matInput placeholder="Name" formControlName="name">
-        <mat-error *ngIf="vehicleForm.get('name').hasError('required')">Name is required</mat-error>
-      </mat-form-field>
-      <mat-form-field class="d-block w-100">
         <input type="text" matInput placeholder="Plate Number" formControlName="plateNo">
         <mat-error *ngIf="vehicleForm.get('plateNo').hasError('required')">Plate number is required</mat-error>
       </mat-form-field>

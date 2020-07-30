@@ -12,7 +12,7 @@ import { ProductResponse } from '../../../../shared/model/product-response.model
   styleUrls: ['./product.component.scss']
 })
 export class ProductComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['Name', 'Price', 'Type', 'CreatedDate', 'Action'];
+  displayedColumns: string[] = ['Id', 'Name', 'CreatedDate', 'Action'];
   dataSource: MatTableDataSource<Product>;
   products: Product[];
   isLoadingData: Boolean = false;
