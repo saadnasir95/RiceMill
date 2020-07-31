@@ -27,14 +27,17 @@ namespace TheRiceMill.Application.Purchases.Commands.DeletePurchase
             {
                 throw new NotFoundException(nameof(Domain.Entities.Purchase),request.PurchaseId);
             }
-            var ledger = _context.Ledgers.GetBy(p => p.TransactionId == request.PurchaseId && p.LedgerType == (int)LedgerType.Purchase);
+            /*var ledger = _context.Ledgers.GetBy(p => p.TransactionId == request.PurchaseId && p.LedgerType == (int)LedgerType.Purchase);
             if (ledger == null)
             {
                 throw new NotFoundException(nameof(Domain.Entities.Ledger),request.PurchaseId);
+            }*/
+            if(purchase.Charges.Count > 0)
+            {
+                _context.Charges.RemoveRange(purchase.Charges);
             }
-            _context.Charges.RemoveRange(purchase.Charges);
             _context.Purchases.Remove(purchase);
-            _context.Ledgers.Remove(ledger);
+            //_context.Ledgers.Remove(ledger);
             await _context.SaveChangesAsync(cancellationToken);
             return new ResponseViewModel().CreateOk();
         }

@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -10,6 +12,7 @@ using TheRiceMill.Application.Purchases.Shared;
 using TheRiceMill.Application.Sale.Commands.CreateSale;
 using TheRiceMill.Common.Response;
 using TheRiceMill.Common.Util;
+using TheRiceMill.Domain.Entities;
 using TheRiceMill.Persistence;
 using TheRiceMill.Persistence.Extensions;
 
@@ -27,52 +30,26 @@ namespace TheRiceMill.Application.Purchases.Queries
         public Task<ResponseViewModel> Handle(GetPurchaseRequestModel request, CancellationToken cancellationToken)
         {
             request.SetDefaultValue();
+            Expression<Func<Purchase, bool>> query = null;
+            if (request.Search.Length > 0)
+            {
+                query = p => p.Id.ToString() == request.Search;
+            }else
+            {
+                query = p => p.Id != 0;
+            }
             var purchase = _context.Purchases.GetMany(
-                    p => p.Product.Name.Contains(request.Search),
-                    request.OrderBy, request.Page, request.PageSize, request.IsDescending,
-                    p => p.Include(pr => pr.Product).Include(pr => pr.Vehicle)
-                        .Include(pr => pr.Party).Include(pr => pr.Charges))
+                    query,
+                    request.OrderBy, request.Page, request.PageSize, request.IsDescending)
                 .Select(p => new
                 {
-                    Vehicle = new VehicleRequestModel()
-                    {
-                        Name = p.Vehicle.Name,
-                        PlateNo = p.Vehicle.PlateNo
-                    },
-                    Product = new ProductRequestModel()
-                    {
-                        Name = p.Product.Name,
-                        Price = p.Product.Price,
-                        Type = (ProductType)p.Product.Type
-                    },
-                    Party = new PartyRequestModel()
-                    {
-                        Address = p.Party.Address,
-                        Name = p.Party.Name,
-                        PhoneNumber = p.Party.PhoneNumber
-                    },
-                    PartyId = p.PartyId,
-                    VehicleId = p.Vehicle.Id,
-                    ProductId = p.Product.Id,
-                    BagQuantity = p.BagQuantity,
-                    ActualBagWeight = p.ActualBagWeight,
-                    RatePerKg = p.RatePerKg,
                     RatePerMaund = p.RatePerMaund,
                     TotalPrice = p.TotalPrice,
-                    ExpectedBagWeight = p.ExpectedBagWeight,
-                    TotalActualBagWeight = p.TotalActualBagWeight,
-                    ExpectedEmptyBagWeight = p.ExpectedEmptyBagWeight,
-                    KandaWeight = p.KandaWeight,
-                    Vibration = p.Vibration,
                     TotalMaund = p.TotalMaund,
-                    TotalExpectedEmptyBagWeight = p.TotalExpectedEmptyBagWeight,
-                    TotalExpectedBagWeight = p.TotalExpectedBagWeight,
-                    Direction = p.Direction,
-                    CheckIn = new DateConverter().ConvertToDateTimeIso(p.CreatedDate),
+                    Gatepasses = p.GatePasses,
                     CreatedDate = new DateConverter().ConvertToDateTimeIso(p.CreatedDate),
                     Commission = p.Commission,
                     Id = p.Id,
-                    ActualBags = p.ActualBags,
                     AdditionalCharges = p.Charges.Select(pr => new ChargeRequestViewModel()
                     {
                         Id = pr.Id,
@@ -81,13 +58,10 @@ namespace TheRiceMill.Application.Purchases.Queries
                         Total = pr.Total,
                         BagQuantity = pr.BagQuantity,
                         AddPrice = pr.AddPrice,
-                    }).ToArray(),
-                    BagWeight = p.BagWeight,
-                    BasePrice = p.BasePrice,
-                    PercentCommission = p.PercentCommission
+                    }).ToArray()
                 }).ToList();
             var count = _context.Purchases.Count(p =>
-                p.Product.Name.Contains(request.Search) || p.Party.Name.Contains(request.Search));
+                p.Id.ToString().Contains(request.Search));
             return Task.FromResult(new ResponseViewModel().CreateOk(purchase, count));
         }
     }

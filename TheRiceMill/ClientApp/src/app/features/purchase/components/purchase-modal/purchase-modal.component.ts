@@ -41,7 +41,6 @@ export class PurchaseModalComponent implements OnInit {
   separatorKeysCodes: number[] = [ENTER, COMMA];
   filteredGatepasses: Gatepass[];
   gatepasses: Gatepass[] = [];
-  allGatepasses: string[] = ['Gatepass1', 'Gatepass2', 'Gatepass3', 'Gatepass4', 'Gatepass5'];
 
   vehicleSuggestions: Vehicle[];
   partySuggestions: Party[];
@@ -50,7 +49,7 @@ export class PurchaseModalComponent implements OnInit {
   commission = 0;
   basePrice = 0;
   purchaseForm: FormGroup = new FormGroup({
-    checkIn: new FormControl(moment.tz('Asia/Karachi').format().slice(0, 16), Validators.required),
+    date: new FormControl(moment.tz('Asia/Karachi').format().slice(0, 16), Validators.required),
     additionalCharges: new FormArray([]),
     gatepass: new FormControl(),
     // Credit Debit Form Control
@@ -445,13 +444,14 @@ export class PurchaseModalComponent implements OnInit {
     this.gatepasses.find((_gatepass,i) => {
       if(_gatepass.id == gatepass.id){
         index = i
+        return true
       }
     })
 
     if (index >= 0) {
       this.gatepasses.splice(index, 1);
       this.purchaseForm.get('weightPriceGroup.totalMaund').setValue(
-        this.purchaseForm.get('weightPriceGroup.totalMaund').value - gatepass.maund
+        (this.purchaseForm.get('weightPriceGroup.totalMaund').value - gatepass.maund).toFixed(2)
       );
     }
   }
@@ -482,42 +482,43 @@ export class PurchaseModalComponent implements OnInit {
     this.purchase = new Purchase();
     Object.assign(this.purchase, purchase);
     this.commission = this.purchase.commission;
-    this.basePrice = this.purchase.basePrice;
+    this.gatepasses = this.purchase.gatepasses;
+    // this.basePrice = this.purchase.basePrice;
 
     this.purchaseForm.patchValue({
-      checkIn: moment.utc(purchase.checkIn).tz('Asia/Karachi').format().slice(0, 16),
-      direction: purchase.direction,
-      vehicleGroup: {
-        name: purchase.vehicle.name,
-        plateNo: purchase.vehicle.plateNo
-      },
-      productGroup: {
-        name: purchase.product.name,
-        price: purchase.product.price,
-        type: purchase.product.price
-      },
-      partyGroup: {
-        name: purchase.party.name,
-        address: purchase.party.address,
-        phoneNumber: purchase.party.phoneNumber
-      },
+      date: moment.utc(purchase.date).tz('Asia/Karachi').format().slice(0, 16),
+      // direction: purchase.direction,
+      // vehicleGroup: {
+      //   name: purchase.vehicle.name,
+      //   plateNo: purchase.vehicle.plateNo
+      // },
+      // productGroup: {
+      //   name: purchase.product.name,
+      //   price: purchase.product.price,
+      //   type: purchase.product.price
+      // },
+      // partyGroup: {
+      //   name: purchase.party.name,
+      //   address: purchase.party.address,
+      //   phoneNumber: purchase.party.phoneNumber
+      // },
       weightPriceGroup: {
-        bagQuantity: purchase.bagQuantity,
-        bagWeight: purchase.bagWeight,
-        kandaWeight: purchase.kandaWeight,
-        emptyBagWeight: purchase.expectedEmptyBagWeight,
-        totalEmptyBagWeight: purchase.totalExpectedEmptyBagWeight,
-        expectedBagWeight: purchase.expectedBagWeight,
-        totalExpectedBagWeight: purchase.totalExpectedBagWeight,
-        actualBagWeight: purchase.actualBagWeight,
-        totalActualBagWeight: purchase.totalActualBagWeight,
-        vibration: purchase.vibration,
+        // bagQuantity: purchase.bagQuantity,
+        // bagWeight: purchase.bagWeight,
+        // kandaWeight: purchase.kandaWeight,
+        // emptyBagWeight: purchase.expectedEmptyBagWeight,
+        // totalEmptyBagWeight: purchase.totalExpectedEmptyBagWeight,
+        // expectedBagWeight: purchase.expectedBagWeight,
+        // totalExpectedBagWeight: purchase.totalExpectedBagWeight,
+        // actualBagWeight: purchase.actualBagWeight,
+        // totalActualBagWeight: purchase.totalActualBagWeight,
+        // vibration: purchase.vibration,
         totalMaund: purchase.totalMaund,
-        ratePerKg: purchase.ratePerKg,
+        // ratePerKg: purchase.ratePerKg,
         ratePerMaund: purchase.ratePerMaund,
         totalPrice: purchase.totalPrice,
-        actualBags: purchase.actualBags,
-        percentCommission: purchase.percentCommission,
+        // actualBags: purchase.actualBags,
+        // percentCommission: purchase.percentCommission,
         commission: purchase.commission
       }
     }, { emitEvent: false });
@@ -565,7 +566,68 @@ export class PurchaseModalComponent implements OnInit {
       });
   }
 
-  submit() {
+  submit(){
+    if (this.purchaseForm.valid) {
+      this.spinner.isLoading = true;
+      if (this.purchase === undefined || this.purchase === null) {
+        this.purchase = new Purchase();
+      }
+     
+      if (this.purchase.additionalCharges === undefined || this.purchase.additionalCharges === null) {
+        this.purchase.additionalCharges = [];
+      }
+
+      this.purchase.date = moment(this.purchaseForm.value.date).utc().format();
+      this.purchase.gatepassIds = this.gatepasses.map(gatepass => gatepass.id);
+      this.purchase.totalMaund = this.purchaseForm.get('weightPriceGroup').value.totalMaund;
+      this.purchase.ratePerMaund = this.purchaseForm.get('weightPriceGroup').value.ratePerMaund;
+      this.purchase.totalPrice = this.purchaseForm.get('weightPriceGroup.ratePerMaund').value * this.purchaseForm.get('weightPriceGroup.totalMaund').value + this.purchaseForm.get('weightPriceGroup.commission').value + this.additionalCharges;
+      this.purchase.commission = this.purchaseForm.get('weightPriceGroup').value.commission;
+
+      if (this.purchase.additionalCharges.length >= 0 && (this.purchaseForm.get('additionalCharges') as FormArray).length >= 0) {
+        for (let i = 0; i < (this.purchaseForm.get('additionalCharges') as FormArray).length; i++) {
+          this.purchase.additionalCharges[i].id = (this.purchaseForm.get('additionalCharges') as FormArray).at(i).value.id;
+          this.purchase.additionalCharges[i].addPrice = (this.purchaseForm.get('additionalCharges') as FormArray).at(i).value.addPrice;
+          this.purchase.additionalCharges[i].task = (this.purchaseForm.get('additionalCharges') as FormArray).at(i).value.task;
+          this.purchase.additionalCharges[i].bagQuantity = (this.purchaseForm.get('additionalCharges') as FormArray).at(i).value.bagQuantity;
+          this.purchase.additionalCharges[i].rate = (this.purchaseForm.get('additionalCharges') as FormArray).at(i).value.rate;
+          this.purchase.additionalCharges[i].total = (this.purchaseForm.get('additionalCharges') as FormArray).at(i).value.total;
+        }
+      }
+
+      if (this.isNew) {
+        this.purchaseService.addPurchase(this.purchase).subscribe(
+          (response: PurchaseResponse) => {
+            this.spinner.isLoading = false;
+            this.notificationService.successNotifcation('Purchase added successfully');
+            this.modalRef.close();
+            this.purchaseService.purchaseEmitter.emit(response.data);
+          },
+          (error) => {
+            console.log(error);
+            this.spinner.isLoading = false;
+            this.notificationService.errorNotifcation('Something went wrong');
+          });
+
+      } else {
+        this.purchaseService.updatePurchase(this.purchase).subscribe(
+          (data) => {
+            this.spinner.isLoading = false;
+            this.notificationService.successNotifcation('Purchase updated successfully');
+            this.purchaseService.purchaseEmitter.emit(true);
+            this.modalRef.close();
+          },
+          (error) => {
+            this.spinner.isLoading = false;
+            console.log(error);
+            this.notificationService.errorNotifcation('Something went wrong');
+          });
+      }
+    }
+  }
+
+
+  oldSubmit() {
     if (this.purchaseForm.valid) {
       this.spinner.isLoading = true;
       if (this.purchase === undefined || this.purchase === null) {
@@ -584,7 +646,7 @@ export class PurchaseModalComponent implements OnInit {
         this.purchase.additionalCharges = [];
       }
 
-      this.purchase.checkIn = moment(this.purchaseForm.value.checkIn).utc().format();
+      this.purchase.date = moment(this.purchaseForm.value.date).utc().format();
       this.purchase.direction = +this.purchaseForm.value.direction;
 
       // this.purchase.productId = +this.purchase.product.id;

@@ -14,8 +14,8 @@
       <div class="row">
         <div class="col-12">
           <mat-form-field class="w-100">
-            <input type="datetime-local" matInput placeholder="Choose Check in DateTime" formControlName="checkIn">
-            <mat-error *ngIf="purchaseForm.get('checkIn').hasError('required')">Check in datetime required</mat-error>
+            <input type="datetime-local" matInput placeholder="Choose DateTime" formControlName="date">
+            <mat-error *ngIf="purchaseForm.get('date').hasError('required')">Datetime required</mat-error>
           </mat-form-field>
         </div>
       </div>
@@ -377,13 +377,15 @@
           </div>
         </div>
         <div class="row">
-          <div class="offset-6 col-md-6">
+          <div class="col-md-6">
+            <button mat-raised-button type="button" class="btn btn-primary" (click)="addCharges()">Add Labour</button>
+          </div>
+          <div class="col-md-6">
             <span class="grand-total"><p class="d-flex justify-content-end"><b> Total:&nbsp;
             </b> {{ additionalCharges |currency:"PKR":"symbol":'1.2-2' }} </p>
             </span>
           </div>
         </div>
-        <button mat-raised-button type="button" class="btn btn-primary" (click)="addCharges()">Add Labour</button>
       </div>
 
       <mat-divider class="mb-2"></mat-divider>

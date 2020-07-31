@@ -8,9 +8,7 @@ namespace TheRiceMill.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Purchase> builder)
         {
-            builder.HasOne(p => p.Product)
-                .WithMany(b => b.Purchases)
-                .HasForeignKey(p => p.ProductId);
+
         }
     }
 }

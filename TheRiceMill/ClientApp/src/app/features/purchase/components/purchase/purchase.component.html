@@ -23,34 +23,9 @@
                 <td mat-cell *matCellDef="let purchase"> {{purchase.id}} </td>
               </ng-container>
 
-              <ng-container matColumnDef="party.name">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Party </th>
-                <td mat-cell *matCellDef="let purchase"> {{purchase.party.name}} </td>
-              </ng-container>
-
-              <ng-container matColumnDef="product.name">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Product</th>
-                <td mat-cell *matCellDef="let purchase"> {{purchase.product.name}} </td>
-              </ng-container>
-
-              <ng-container matColumnDef="bagQuantity">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Bag Qty</th>
-                <td mat-cell *matCellDef="let purchase"> {{purchase.bagQuantity}} </td>
-              </ng-container>
-
-              <ng-container matColumnDef="kandaWeight">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Kanda Weight</th>
-                <td mat-cell *matCellDef="let purchase"> {{purchase.kandaWeight}} </td>
-              </ng-container>
-
-              <ng-container matColumnDef="totalActualBagWeight">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Total Actual Bag Weight </th>
-                <td mat-cell *matCellDef="let purchase"> {{purchase.totalActualBagWeight | currency:'KG '}} </td>
-              </ng-container>
-
               <ng-container matColumnDef="totalMaund">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Maund</th>
-                <td mat-cell *matCellDef="let purchase"> {{purchase.totalMaund}} </td>
+                <td mat-cell *matCellDef="let purchase"> {{purchase.totalMaund | number : '1.2-2'}} </td>
               </ng-container>
 
               <ng-container matColumnDef="ratePerMaund">
@@ -58,14 +33,24 @@
                 <td mat-cell *matCellDef="let purchase"> {{purchase.ratePerMaund | currency:'Rs '}} </td>
               </ng-container>
 
+              <ng-container matColumnDef="brokery">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Brokery</th>
+                <td mat-cell *matCellDef="let purchase"> {{purchase.commission | number : '1.2-2'}} </td>
+              </ng-container>
+
               <ng-container matColumnDef="totalPrice">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Total Price</th>
                 <td mat-cell *matCellDef="let purchase"> {{purchase.totalPrice | currency:'Rs '}} </td>
               </ng-container>
 
+              <ng-container matColumnDef="totalGatepasses">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Total Gatepasses</th>
+                <td mat-cell *matCellDef="let purchase"> {{purchase?.gatepasses?.length }} </td>
+              </ng-container>
+
               <ng-container matColumnDef="createdDate">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
-                <td mat-cell *matCellDef="let purchase"> {{purchase.checkIn | localDatetime}} </td>
+                <td mat-cell *matCellDef="let purchase"> {{purchase.createdDate | localDatetime}} </td>
               </ng-container>
 
               <ng-container matColumnDef="Action">
