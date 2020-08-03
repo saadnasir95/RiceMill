@@ -69,26 +69,19 @@ namespace TheRiceMill.Application.Purchases.Commands.UpdatePurchase
             {
 
                 var gatepasses = _context.GatePasses.Where(q => q.PurchaseId == purchase.Id).ToList();
-                gatepasses.ForEach(pass =>
+                gatepasses.ForEach(gatepass =>
                 {
-                    foreach (var id in request.GatepassIds)
-                    {
-                        if (pass.Id != id)
-                        {
-                            var _gatepass = _context.GatePasses.Find(id);
-                            _gatepass.PurchaseId = null;
-                            _context.GatePasses.Update(_gatepass);
-
-                        }
-                    }
+                    var _gatepass = _context.GatePasses.Find(gatepass.Id);
+                    _gatepass.PurchaseId = null;
+                    _context.GatePasses.Update(_gatepass);
                 });
 
-                /*            foreach (var id in request.GatepassIds)
-                            {
-                                gatepass = _context.GatePasses.GetBy(q => q.Id == id, p => p.Include(pr => pr.Party).Include(pr => pr.Product).Include(pr => pr.Vehicle));
-                                gatepass.PurchaseId = purchase.Id;
-
-                            }*/
+                foreach (var id in request.GatepassIds)
+                {
+                    var gatepass = _context.GatePasses.GetBy(q => q.Id == id);
+                    gatepass.PurchaseId = purchase.Id;
+                    _context.GatePasses.Update(gatepass);
+                }
                 /*          ledger.PartyId = party.Id;
                             ledger.Credit = request.TotalPrice;
                             ledger.Debit = 0;
