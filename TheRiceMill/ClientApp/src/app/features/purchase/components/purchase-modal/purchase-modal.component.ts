@@ -457,11 +457,10 @@ export class PurchaseModalComponent implements OnInit {
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    console.log("EVENT ===>",event)
     if(!this.isGatepassExists(event.option.value)){
       this.gatepasses.push(event.option.value)
       this.purchaseForm.get('weightPriceGroup.totalMaund').setValue(
-        this.purchaseForm.get('weightPriceGroup.totalMaund').value + event.option.value.maund
+        +this.purchaseForm.get('weightPriceGroup.totalMaund').value + event.option.value.maund
       );
     };
     this.gatepassInput.nativeElement.value = '';
