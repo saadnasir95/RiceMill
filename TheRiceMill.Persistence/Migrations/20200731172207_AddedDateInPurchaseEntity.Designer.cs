@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TheRiceMill.Persistence;
 
 namespace TheRiceMill.Persistence.Migrations
 {
     [DbContext(typeof(TheRiceMillDbContext))]
-    partial class TheRiceMillDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200731172207_AddedDateInPurchaseEntity")]
+    partial class AddedDateInPurchaseEntity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -463,6 +465,10 @@ namespace TheRiceMill.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(50);
 
+                    b.Property<double>("Price");
+
+                    b.Property<int>("Type");
+
                     b.Property<string>("UpdatedBy");
 
                     b.Property<DateTime>("UpdatedDate");
@@ -742,6 +748,14 @@ namespace TheRiceMill.Persistence.Migrations
                     b.Property<string>("CreatedBy");
 
                     b.Property<DateTime>("CreatedDate");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(50);
+
+                    b.Property<string>("NormalizedName")
+                        .IsRequired()
+                        .HasMaxLength(50);
 
                     b.Property<string>("PlateNo");
 

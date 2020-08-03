@@ -40,7 +40,7 @@ namespace TheRiceMill.Application.Ledger.Queries.GetLedgerInfo
 
                     break;
                 case LedgerType.Purchase:
-                    var purchase = _context.Purchases.GetBy(p => p.Id == request.TransactionId,
+     /*               var purchase = _context.Purchases.GetBy(p => p.Id == request.TransactionId,
                         p => p.Include(pr => pr.Product));
                     if (purchase != null)
                     {
@@ -51,7 +51,7 @@ namespace TheRiceMill.Application.Ledger.Queries.GetLedgerInfo
                             TotalActualBagWeight = purchase.TotalActualBagWeight,
                             TotalMaund = purchase.TotalMaund
                         });
-                    }
+                    }*/
 
                     break;
                 case LedgerType.BankTransaction:

@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { GateinDirection, ProductType } from '../../../../shared/model/enums';
-import { MatDialogRef, MatAutocompleteSelectedEvent } from '@angular/material';
+import { MatDialogRef, MatAutocompleteSelectedEvent, MatChipInputEvent } from '@angular/material';
 import { Vehicle } from '../../../../shared/model/vehicle.model';
 import { Product } from '../../../../shared/model/product.model';
 import { Party } from '../../../../shared/model/party.model';
@@ -19,12 +19,29 @@ import 'moment-timezone';
 import { NotificationService } from '../../../../shared/services/notification.service';
 import { PurchaseResponse } from '../../../../shared/model/purchase-response.model';
 import { SpinnerService } from '../../../../shared/services/spinner.service';
+import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import { Observable } from 'rxjs/internal/Observable';
+import { startWith, map } from 'rxjs/operators';
+import { GatepassService } from '../../../../shared/services/gatepass.service';
+import { GatepassResponse } from '../../../../shared/model/gatepass-response.model';
+import { Gatepass } from '../../../../shared/model/gatepass.model';
+
 @Component({
   selector: 'app-purchase-modal',
   templateUrl: './purchase-modal.component.html',
   styleUrls: ['./purchase-modal.component.scss']
 })
 export class PurchaseModalComponent implements OnInit {
+  @ViewChild('gatepassInput') gatepassInput: ElementRef<HTMLInputElement>;
+
+  visible = true;
+  selectable = true;
+  removable = true;
+  addOnBlur = false;
+  separatorKeysCodes: number[] = [ENTER, COMMA];
+  filteredGatepasses: Gatepass[];
+  gatepasses: Gatepass[] = [];
+
   vehicleSuggestions: Vehicle[];
   partySuggestions: Party[];
   productSuggestions: Product[];
@@ -32,38 +49,46 @@ export class PurchaseModalComponent implements OnInit {
   commission = 0;
   basePrice = 0;
   purchaseForm: FormGroup = new FormGroup({
-    checkIn: new FormControl(moment.tz('Asia/Karachi').format().slice(0, 16), Validators.required),
-    direction: new FormControl(null, Validators.required),
+    date: new FormControl(moment.tz('Asia/Karachi').format().slice(0, 16), Validators.required),
     additionalCharges: new FormArray([]),
-    partyGroup: new FormGroup({
-      name: new FormControl('', Validators.required),
-      address: new FormControl('', Validators.required),
-      phoneNumber: new FormControl(null, [Validators.required, Validators.maxLength(12)])
-    }),
-    vehicleGroup: new FormGroup({
-      plateNo: new FormControl(null, Validators.required)
-    }),
-    productGroup: new FormGroup({
-      name: new FormControl(null, Validators.required),
-    }),
+    gatepass: new FormControl(),
+    // Credit Debit Form Control
+    // credit: new FormControl(0, [Validators.required, Validators.min(0)]),
+    // debit: new FormControl(0, [Validators.required, Validators.min(0)]),
+
+  //   direction: new FormControl(null, Validators.required),
+  //   companyGroup: new FormGroup({
+  //     name: new FormControl('', Validators.required),
+  //     address: new FormControl('', Validators.required),
+  //     phoneNumber: new FormControl(null, [Validators.required, Validators.maxLength(12)])
+  //   }),
+  //   vehicleGroup: new FormGroup({
+  //     name: new FormControl(null, Validators.required),
+  //     plateNo: new FormControl(null, Validators.required)
+  //   }),
+  //   productGroup: new FormGroup({
+  //     name: new FormControl(null, Validators.required),
+  //     price: new FormControl(null, [Validators.required, Validators.min(0)]),
+  //     type: new FormControl(+ProductType.Purchase, Validators.required)
+  //   }),
     weightPriceGroup: new FormGroup({
-      bagQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
-      bagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
-      kandaWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
-      expectedBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
-      totalExpectedBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
-      emptyBagWeight: new FormControl(0, [Validators.required, Validators.min(0), Validators.max(2)]),
-      totalEmptyBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
-      actualBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
-      totalActualBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
+      // bagQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
+      // bagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
+      // kandaWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
+      // expectedBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
+      // totalExpectedBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
+      // emptyBagWeight: new FormControl(0, [Validators.required, Validators.min(0), Validators.max(2)]),
+      // totalEmptyBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
+      // actualBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
+      // totalActualBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
       totalMaund: new FormControl(0, [Validators.required, Validators.min(0)]),
-      vibration: new FormControl(0, [Validators.required, Validators.min(0)]),
-      ratePerKg: new FormControl(0, [Validators.required, Validators.min(0)]),
+      // vibration: new FormControl(0, [Validators.required, Validators.min(0)]),
+      // ratePerKg: new FormControl(0, [Validators.required, Validators.min(0)]),
       ratePerMaund: new FormControl(0, [Validators.required, Validators.min(0)]),
       commission: new FormControl(0, [Validators.required, Validators.min(0)]),
-      percentCommission: new FormControl(0, [Validators.required, Validators.min(0)]),
+      // percentCommission: new FormControl(0, [Validators.required, Validators.min(0)]),
       totalPrice: new FormControl(0, [Validators.required, Validators.min(0)]),
-      actualBags: new FormControl(0, [Validators.required, Validators.min(0)]),
+      // actualBags: new FormControl(0, [Validators.required, Validators.min(0)]),
     })
   });
   public GateinDirectionTypes = [
@@ -75,189 +100,228 @@ export class PurchaseModalComponent implements OnInit {
   public isNew = true;
   public isDelete = false;
   private purchase: Purchase;
+
   constructor(
     private purchaseService: PurchaseService,
     private partyService: PartyService,
     private vehicleService: VehicleService,
     private productService: ProductService,
     private notificationService: NotificationService,
-    public spinner: SpinnerService) { }
+    private gatepassService: GatepassService,
+    public spinner: SpinnerService) {
+
+      this.purchaseForm.controls['gatepass'].valueChanges.subscribe(
+        (response: string) => {
+          this.gatepassService
+          .getGatepassList(10, 0, response, 'false', '',true)
+          .subscribe(
+            (response: GatepassResponse) => {
+              this.filteredGatepasses = response.data;
+              // this.gatepassList = response.data;
+              // this.dataSource.data = this.gatepassList;
+              // this.paginator.length = response.count;
+            }
+      )
+    })
+
+
+    //   this.purchaseForm.controls['gatepass'].valueChanges.subscribe(
+    //     startWith(null),
+    //     map((fruit: string | null) => {
+    //       debugger
+    //       fruit ? this.gatepassService
+    // .getGatepassList(10, 0, fruit, 'false', '',true)
+    // .subscribe(
+    //   (response: GatepassResponse) => {
+    //     this.filteredGatepasses = response.data;
+    //     // this.gatepassList = response.data;
+    //     // this.dataSource.data = this.gatepassList;
+    //     // this.paginator.length = response.count;
+    //   },
+    //   (error) => console.log(error)
+    // ) : this.allGatepasses.slice()
+    //     } ));
+     }
 
   ngOnInit() {
-    this.purchaseForm.get('weightPriceGroup.bagQuantity').valueChanges.subscribe(
-      (value) => {
-        const totalEmptyBagWeight = +value * +this.purchaseForm.get('weightPriceGroup.emptyBagWeight').value;
-        const bagWeight = +this.purchaseForm.get('weightPriceGroup.bagWeight').value;
-        const vibration = 0.2 * +value;
-        const kandaWeight = +this.purchaseForm.get('weightPriceGroup.kandaWeight').value;
-        const expectedBagWeight = kandaWeight / (+value === 0 ? 1 : +value);
-        const totalActualBagWeight = kandaWeight - totalEmptyBagWeight - vibration;
-        const ratePerMaund = +this.purchaseForm.get('weightPriceGroup.ratePerMaund').value;
-        const totalMaund = totalActualBagWeight / 40;
-        const percentCommission = +this.purchaseForm.get('weightPriceGroup.percentCommission').value;
-        this.basePrice = Math.round(totalActualBagWeight * (+ratePerMaund / 40));
-        this.commission = Math.round(totalMaund * percentCommission);
-        this.purchaseForm.get('weightPriceGroup').patchValue({
-          vibration: vibration,
-          totalEmptyBagWeight: totalEmptyBagWeight,
-          expectedBagWeight: +expectedBagWeight.toFixed(3),
-          totalExpectedBagWeight: +(expectedBagWeight * +value).toFixed(3),
-          totalActualBagWeight: +totalActualBagWeight.toFixed(3),
-          actualBagWeight: +((totalActualBagWeight / (+value === 0 ? 1 : +value)).toFixed(3)),
-          totalMaund: +totalMaund.toFixed(3),
-          ratePerKg: ratePerMaund / 40,
-          commission: this.commission,
-          totalPrice: this.basePrice + +this.additionalCharges + this.commission,
-          actualBags: Math.round(totalActualBagWeight / (bagWeight === 0 ? 1 : bagWeight))
-        }, { emitEvent: false });
+    // this.purchaseForm.get('weightPriceGroup.bagQuantity').valueChanges.subscribe(
+    //   (value) => {
+    //     const totalEmptyBagWeight = +value * +this.purchaseForm.get('weightPriceGroup.emptyBagWeight').value;
+    //     const bagWeight = +this.purchaseForm.get('weightPriceGroup.bagWeight').value;
+    //     const vibration = 0.2 * +value;
+    //     const kandaWeight = +this.purchaseForm.get('weightPriceGroup.kandaWeight').value;
+    //     const expectedBagWeight = kandaWeight / (+value === 0 ? 1 : +value);
+    //     const totalActualBagWeight = kandaWeight - totalEmptyBagWeight - vibration;
+    //     const ratePerMaund = +this.purchaseForm.get('weightPriceGroup.ratePerMaund').value;
+    //     const totalMaund = totalActualBagWeight / 40;
+    //     const percentCommission = +this.purchaseForm.get('weightPriceGroup.percentCommission').value;
+    //     this.basePrice = Math.round(totalActualBagWeight * (+ratePerMaund / 40));
+    //     this.commission = Math.round(totalMaund * percentCommission);
+    //     this.purchaseForm.get('weightPriceGroup').patchValue({
+    //       vibration: vibration,
+    //       totalEmptyBagWeight: totalEmptyBagWeight,
+    //       expectedBagWeight: +expectedBagWeight.toFixed(3),
+    //       totalExpectedBagWeight: +(expectedBagWeight * +value).toFixed(3),
+    //       totalActualBagWeight: +totalActualBagWeight.toFixed(3),
+    //       actualBagWeight: +((totalActualBagWeight / (+value === 0 ? 1 : +value)).toFixed(3)),
+    //       totalMaund: +totalMaund.toFixed(3),
+    //       ratePerKg: ratePerMaund / 40,
+    //       commission: this.commission,
+    //       totalPrice: this.basePrice + +this.additionalCharges + this.commission,
+    //       actualBags: Math.round(totalActualBagWeight / (bagWeight === 0 ? 1 : bagWeight))
+    //     }, { emitEvent: false });
+    //     this.purchaseForm.get('productGroup.price').setValue(ratePerMaund);
+    //   }
+    // );
 
-      }
-    );
+    // this.purchaseForm.get('weightPriceGroup.kandaWeight').valueChanges.subscribe(
+    //   (value) => {
+    //     const bagQuantity = +this.purchaseForm.get('weightPriceGroup.bagQuantity').value;
+    //     const totalEmptyBagWeight = +this.purchaseForm.get('weightPriceGroup.totalEmptyBagWeight').value;
+    //     const bagWeight = +this.purchaseForm.get('weightPriceGroup.bagWeight').value;
+    //     const vibration = +bagQuantity * 0.2;
+    //     const expectedBagWeight = +value / (+bagQuantity === 0 ? 1 : +bagQuantity);
+    //     const totalActualBagWeight = +value - totalEmptyBagWeight - vibration;
+    //     const totalMaund = totalActualBagWeight / 40;
+    //     const percentCommission = +this.purchaseForm.get('weightPriceGroup.percentCommission').value;
+    //     const ratePerMaund = +this.purchaseForm.get('weightPriceGroup.ratePerMaund').value;
+    //     this.basePrice = Math.round(totalActualBagWeight * (+ratePerMaund / 40));
+    //     this.commission = Math.round(totalMaund * percentCommission);
+    //     this.purchaseForm.get('weightPriceGroup').patchValue({
+    //       vibration: vibration,
+    //       expectedBagWeight: +expectedBagWeight.toFixed(3),
+    //       totalExpectedBagWeight: +(expectedBagWeight * +bagQuantity).toFixed(3),
+    //       totalActualBagWeight: +totalActualBagWeight.toFixed(3),
+    //       actualBagWeight: +((totalActualBagWeight / (+bagQuantity === 0 ? 1 : +bagQuantity)).toFixed(3)),
+    //       totalMaund: +totalMaund.toFixed(3),
+    //       ratePerKg: ratePerMaund / 40,
+    //       commission: this.commission,
+    //       totalPrice: this.basePrice + +this.additionalCharges + this.commission,
+    //       actualBags: Math.round(totalActualBagWeight / (bagWeight === 0 ? 1 : bagWeight))
+    //     }, { emitEvent: false });
+    //     this.purchaseForm.get('productGroup.price').setValue(ratePerMaund);
+    //   }
+    // );
 
-    this.purchaseForm.get('weightPriceGroup.kandaWeight').valueChanges.subscribe(
-      (value) => {
-        const bagQuantity = +this.purchaseForm.get('weightPriceGroup.bagQuantity').value;
-        const totalEmptyBagWeight = +this.purchaseForm.get('weightPriceGroup.totalEmptyBagWeight').value;
-        const bagWeight = +this.purchaseForm.get('weightPriceGroup.bagWeight').value;
-        const vibration = +bagQuantity * 0.2;
-        const expectedBagWeight = +value / (+bagQuantity === 0 ? 1 : +bagQuantity);
-        const totalActualBagWeight = +value - totalEmptyBagWeight - vibration;
-        const totalMaund = totalActualBagWeight / 40;
-        const percentCommission = +this.purchaseForm.get('weightPriceGroup.percentCommission').value;
-        const ratePerMaund = +this.purchaseForm.get('weightPriceGroup.ratePerMaund').value;
-        this.basePrice = Math.round(totalActualBagWeight * (+ratePerMaund / 40));
-        this.commission = Math.round(totalMaund * percentCommission);
-        this.purchaseForm.get('weightPriceGroup').patchValue({
-          vibration: vibration,
-          expectedBagWeight: +expectedBagWeight.toFixed(3),
-          totalExpectedBagWeight: +(expectedBagWeight * +bagQuantity).toFixed(3),
-          totalActualBagWeight: +totalActualBagWeight.toFixed(3),
-          actualBagWeight: +((totalActualBagWeight / (+bagQuantity === 0 ? 1 : +bagQuantity)).toFixed(3)),
-          totalMaund: +totalMaund.toFixed(3),
-          ratePerKg: ratePerMaund / 40,
-          commission: this.commission,
-          totalPrice: this.basePrice + +this.additionalCharges + this.commission,
-          actualBags: Math.round(totalActualBagWeight / (bagWeight === 0 ? 1 : bagWeight))
-        }, { emitEvent: false });
+    // this.purchaseForm.get('weightPriceGroup.emptyBagWeight').valueChanges.subscribe(
+    //   (value) => {
+    //     const bagQuantity = +this.purchaseForm.get('weightPriceGroup.bagQuantity').value;
+    //     const totalEmptyBagWeight = bagQuantity * +value;
+    //     const bagWeight = +this.purchaseForm.get('weightPriceGroup.bagWeight').value;
+    //     const vibration = +this.purchaseForm.get('weightPriceGroup.vibration').value;
+    //     const kandaWeight = +this.purchaseForm.get('weightPriceGroup.kandaWeight').value;
+    //     const totalActualBagWeight = +kandaWeight - totalEmptyBagWeight - vibration;
+    //     const totalMaund = totalActualBagWeight / 40;
+    //     const percentCommission = +this.purchaseForm.get('weightPriceGroup.percentCommission').value;
+    //     const ratePerMaund = +this.purchaseForm.get('weightPriceGroup.ratePerMaund').value;
+    //     this.basePrice = Math.round(totalActualBagWeight * (+ratePerMaund / 40));
+    //     this.commission = Math.round(totalMaund * percentCommission);
+    //     this.purchaseForm.get('weightPriceGroup').patchValue({
+    //       totalEmptyBagWeight: totalEmptyBagWeight,
+    //       totalActualBagWeight: +totalActualBagWeight.toFixed(3),
+    //       actualBagWeight: +((totalActualBagWeight / (+bagQuantity === 0 ? 1 : +bagQuantity)).toFixed(3)),
+    //       totalMaund: +totalMaund.toFixed(3),
+    //       ratePerKg: ratePerMaund / 40,
+    //       commission: this.commission,
+    //       totalPrice: this.basePrice + +this.additionalCharges + this.commission,
+    //       actualBags: Math.round(totalActualBagWeight / (bagWeight === 0 ? 1 : bagWeight))
+    //     }, { emitEvent: false });
+    //     this.purchaseForm.get('productGroup.price').setValue(ratePerMaund);
+    //   }
+    // );
 
-      }
-    );
+    // this.purchaseForm.get('weightPriceGroup.vibration').valueChanges.subscribe(
+    //   (value) => {
+    //     const bagQuantity = +this.purchaseForm.get('weightPriceGroup.bagQuantity').value;
+    //     const totalEmptyBagWeight = +this.purchaseForm.get('weightPriceGroup.totalEmptyBagWeight').value;
+    //     const bagWeight = +this.purchaseForm.get('weightPriceGroup.bagWeight').value;
+    //     const kandaWeight = +this.purchaseForm.get('weightPriceGroup.kandaWeight').value;
+    //     const totalActualBagWeight = +kandaWeight - totalEmptyBagWeight - +value;
+    //     const totalMaund = totalActualBagWeight / 40;
+    //     const percentCommission = +this.purchaseForm.get('weightPriceGroup.percentCommission').value;
+    //     const ratePerMaund = +this.purchaseForm.get('weightPriceGroup.ratePerMaund').value;
+    //     this.basePrice = Math.round(totalActualBagWeight * (+ratePerMaund / 40));
+    //     this.commission = Math.round(totalMaund * percentCommission);
+    //     this.purchaseForm.get('weightPriceGroup').patchValue({
+    //       totalActualBagWeight: +totalActualBagWeight.toFixed(3),
+    //       actualBagWeight: +((totalActualBagWeight / (+bagQuantity === 0 ? 1 : +bagQuantity)).toFixed(3)),
+    //       totalMaund: +totalMaund.toFixed(3),
+    //       ratePerKg: ratePerMaund / 40,
+    //       commission: this.commission,
+    //       totalPrice: this.basePrice + +this.additionalCharges + this.commission,
+    //       actualBags: Math.round(totalActualBagWeight / (bagWeight === 0 ? 1 : bagWeight))
+    //     }, { emitEvent: false });
+    //     this.purchaseForm.get('productGroup.price').setValue(ratePerMaund);
+    //   }
+    // );
 
-    this.purchaseForm.get('weightPriceGroup.emptyBagWeight').valueChanges.subscribe(
-      (value) => {
-        const bagQuantity = +this.purchaseForm.get('weightPriceGroup.bagQuantity').value;
-        const totalEmptyBagWeight = bagQuantity * +value;
-        const bagWeight = +this.purchaseForm.get('weightPriceGroup.bagWeight').value;
-        const vibration = +this.purchaseForm.get('weightPriceGroup.vibration').value;
-        const kandaWeight = +this.purchaseForm.get('weightPriceGroup.kandaWeight').value;
-        const totalActualBagWeight = +kandaWeight - totalEmptyBagWeight - vibration;
-        const totalMaund = totalActualBagWeight / 40;
-        const percentCommission = +this.purchaseForm.get('weightPriceGroup.percentCommission').value;
-        const ratePerMaund = +this.purchaseForm.get('weightPriceGroup.ratePerMaund').value;
-        this.basePrice = Math.round(totalActualBagWeight * (+ratePerMaund / 40));
-        this.commission = Math.round(totalMaund * percentCommission);
-        this.purchaseForm.get('weightPriceGroup').patchValue({
-          totalEmptyBagWeight: totalEmptyBagWeight,
-          totalActualBagWeight: +totalActualBagWeight.toFixed(3),
-          actualBagWeight: +((totalActualBagWeight / (+bagQuantity === 0 ? 1 : +bagQuantity)).toFixed(3)),
-          totalMaund: +totalMaund.toFixed(3),
-          ratePerKg: ratePerMaund / 40,
-          commission: this.commission,
-          totalPrice: this.basePrice + +this.additionalCharges + this.commission,
-          actualBags: Math.round(totalActualBagWeight / (bagWeight === 0 ? 1 : bagWeight))
-        }, { emitEvent: false });
-      }
-    );
+    // this.purchaseForm.get('weightPriceGroup.ratePerMaund').valueChanges.subscribe(
+    //   (value) => {
+    //     const totalActualBagWeight = +this.purchaseForm.get('weightPriceGroup.totalActualBagWeight').value;
+    //     const totalMaund = totalActualBagWeight / 40;
+    //     const percentCommission = +this.purchaseForm.get('weightPriceGroup.percentCommission').value;
+    //     this.basePrice = Math.round(totalActualBagWeight * (+value / 40));
+    //     this.commission = Math.round(totalMaund * percentCommission);
+    //     this.purchaseForm.get('weightPriceGroup').patchValue({
+    //       ratePerKg: +value / 40,
+    //       commission: this.commission,
+    //       totalPrice: this.basePrice + +this.additionalCharges + this.commission,
+    //     }, { emitEvent: false });
+    //     this.purchaseForm.get('productGroup.price').setValue(+value);
+    //   }
+    // );
 
-    this.purchaseForm.get('weightPriceGroup.vibration').valueChanges.subscribe(
-      (value) => {
-        const bagQuantity = +this.purchaseForm.get('weightPriceGroup.bagQuantity').value;
-        const totalEmptyBagWeight = +this.purchaseForm.get('weightPriceGroup.totalEmptyBagWeight').value;
-        const bagWeight = +this.purchaseForm.get('weightPriceGroup.bagWeight').value;
-        const kandaWeight = +this.purchaseForm.get('weightPriceGroup.kandaWeight').value;
-        const totalActualBagWeight = +kandaWeight - totalEmptyBagWeight - +value;
-        const totalMaund = totalActualBagWeight / 40;
-        const percentCommission = +this.purchaseForm.get('weightPriceGroup.percentCommission').value;
-        const ratePerMaund = +this.purchaseForm.get('weightPriceGroup.ratePerMaund').value;
-        this.basePrice = Math.round(totalActualBagWeight * (+ratePerMaund / 40));
-        this.commission = Math.round(totalMaund * percentCommission);
-        this.purchaseForm.get('weightPriceGroup').patchValue({
-          totalActualBagWeight: +totalActualBagWeight.toFixed(3),
-          actualBagWeight: +((totalActualBagWeight / (+bagQuantity === 0 ? 1 : +bagQuantity)).toFixed(3)),
-          totalMaund: +totalMaund.toFixed(3),
-          ratePerKg: ratePerMaund / 40,
-          commission: this.commission,
-          totalPrice: this.basePrice + +this.additionalCharges + this.commission,
-          actualBags: Math.round(totalActualBagWeight / (bagWeight === 0 ? 1 : bagWeight))
-        }, { emitEvent: false });
+    // this.purchaseForm.get('weightPriceGroup.percentCommission').valueChanges.subscribe(
+    //   (value) => {
+    //     if(value){
+    //       const totalActualBagWeight = +this.purchaseForm.get('weightPriceGroup.totalActualBagWeight').value;
+    //       const totalMaund = totalActualBagWeight / 40;
+    //       const ratePerMaund = +this.purchaseForm.get('weightPriceGroup.ratePerMaund').value;
+    //       this.basePrice = Math.round(totalActualBagWeight * (+ratePerMaund / 40));
+    //       this.commission = Math.round(totalMaund * +value);
+    //       this.purchaseForm.get('weightPriceGroup').patchValue({
+    //         ratePerKg: +ratePerMaund / 40,
+    //         commission: this.commission,
+    //         totalPrice: this.basePrice + +this.additionalCharges + this.commission,
+    //       }, { emitEvent: false });
+    //       this.purchaseForm.get('productGroup.price').setValue(+ratePerMaund);
+    //     } 
+    //     }
+    // );
 
-      }
-    );
-
-    this.purchaseForm.get('weightPriceGroup.ratePerMaund').valueChanges.subscribe(
-      (value) => {
-        const totalActualBagWeight = +this.purchaseForm.get('weightPriceGroup.totalActualBagWeight').value;
-        const totalMaund = totalActualBagWeight / 40;
-        const percentCommission = +this.purchaseForm.get('weightPriceGroup.percentCommission').value;
-        this.basePrice = Math.round(totalActualBagWeight * (+value / 40));
-        this.commission = Math.round(totalMaund * percentCommission);
-        this.purchaseForm.get('weightPriceGroup').patchValue({
-          ratePerKg: +value / 40,
-          commission: this.commission,
-          totalPrice: this.basePrice + +this.additionalCharges + this.commission,
-        }, { emitEvent: false });
-      }
-    );
-
-    this.purchaseForm.get('weightPriceGroup.percentCommission').valueChanges.subscribe(
-      (value) => {
-        const totalActualBagWeight = +this.purchaseForm.get('weightPriceGroup.totalActualBagWeight').value;
-        const totalMaund = totalActualBagWeight / 40;
-        const ratePerMaund = +this.purchaseForm.get('weightPriceGroup.ratePerMaund').value;
-        this.basePrice = Math.round(totalActualBagWeight * (+ratePerMaund / 40));
-        this.commission = Math.round(totalMaund * +value);
-        this.purchaseForm.get('weightPriceGroup').patchValue({
-          ratePerKg: +ratePerMaund / 40,
-          commission: this.commission,
-          totalPrice: this.basePrice + +this.additionalCharges + this.commission,
-        }, { emitEvent: false });
-        this.purchaseForm.get('productGroup.price').setValue(+ratePerMaund);
-      }
-    );
-
-    this.purchaseForm.get('weightPriceGroup.bagWeight').valueChanges.subscribe(
-      (value) => {
-        const bagQuantity = +this.purchaseForm.get('weightPriceGroup.bagQuantity').value;
-        const totalEmptyBagWeight = 0;
-        const emptyBagWeight = 0;
-        // const vibration = 0;
-        const vibration = +this.purchaseForm.get('weightPriceGroup.vibration').value;
-        const kandaWeight = bagQuantity * +value;
-        const expectedBagWeight = kandaWeight / (+bagQuantity === 0 ? 1 : +bagQuantity);
-        const totalActualBagWeight = kandaWeight - totalEmptyBagWeight - vibration;
-        const ratePerMaund = +this.purchaseForm.get('weightPriceGroup.ratePerMaund').value;
-        const totalMaund = totalActualBagWeight / 40;
-        const percentCommission = +this.purchaseForm.get('weightPriceGroup.percentCommission').value;
-        this.basePrice = Math.round(totalActualBagWeight * (+ratePerMaund / 40));
-        this.commission = Math.round(totalMaund * percentCommission);
-        this.purchaseForm.get('weightPriceGroup').patchValue({
-          kandaWeight: kandaWeight,
-          vibration: vibration,
-          emptyBagWeight: emptyBagWeight,
-          totalEmptyBagWeight: totalEmptyBagWeight,
-          expectedBagWeight: +expectedBagWeight.toFixed(3),
-          totalExpectedBagWeight: +(expectedBagWeight * +bagQuantity).toFixed(3),
-          totalActualBagWeight: +totalActualBagWeight.toFixed(3),
-          actualBagWeight: +((totalActualBagWeight / (bagQuantity === 0 ? 1 : bagQuantity)).toFixed(3)),
-          totalMaund: +totalMaund.toFixed(3),
-          ratePerKg: ratePerMaund / 40,
-          commission: this.commission,
-          totalPrice: this.basePrice + +this.additionalCharges + this.commission,
-          actualBags: Math.round(totalActualBagWeight / (+value === 0 ? 1 : +value))
-        }, { emitEvent: false });
-
-      }
-    );
+    // this.purchaseForm.get('weightPriceGroup.bagWeight').valueChanges.subscribe(
+    //   (value) => {
+    //     const bagQuantity = +this.purchaseForm.get('weightPriceGroup.bagQuantity').value;
+    //     const totalEmptyBagWeight = 0;
+    //     const emptyBagWeight = 0;
+    //     // const vibration = 0;
+    //     const vibration = +this.purchaseForm.get('weightPriceGroup.vibration').value;
+    //     const kandaWeight = bagQuantity * +value;
+    //     const expectedBagWeight = kandaWeight / (+bagQuantity === 0 ? 1 : +bagQuantity);
+    //     const totalActualBagWeight = kandaWeight - totalEmptyBagWeight - vibration;
+    //     const ratePerMaund = +this.purchaseForm.get('weightPriceGroup.ratePerMaund').value;
+    //     const totalMaund = totalActualBagWeight / 40;
+    //     const percentCommission = +this.purchaseForm.get('weightPriceGroup.percentCommission').value;
+    //     this.basePrice = Math.round(totalActualBagWeight * (+ratePerMaund / 40));
+    //     this.commission = Math.round(totalMaund * percentCommission);
+    //     this.purchaseForm.get('weightPriceGroup').patchValue({
+    //       kandaWeight: kandaWeight,
+    //       vibration: vibration,
+    //       emptyBagWeight: emptyBagWeight,
+    //       totalEmptyBagWeight: totalEmptyBagWeight,
+    //       expectedBagWeight: +expectedBagWeight.toFixed(3),
+    //       totalExpectedBagWeight: +(expectedBagWeight * +bagQuantity).toFixed(3),
+    //       totalActualBagWeight: +totalActualBagWeight.toFixed(3),
+    //       actualBagWeight: +((totalActualBagWeight / (bagQuantity === 0 ? 1 : bagQuantity)).toFixed(3)),
+    //       totalMaund: +totalMaund.toFixed(3),
+    //       ratePerKg: ratePerMaund / 40,
+    //       commission: this.commission,
+    //       totalPrice: this.basePrice + +this.additionalCharges + this.commission,
+    //       actualBags: Math.round(totalActualBagWeight / (+value === 0 ? 1 : +value))
+    //     }, { emitEvent: false });
+    //     this.purchaseForm.get('productGroup.price').setValue(ratePerMaund);
+    //   }
+    // );
 
     this.purchaseForm.get('additionalCharges').valueChanges.subscribe(
       (value: Array<any>) => {
@@ -271,71 +335,142 @@ export class PurchaseModalComponent implements OnInit {
               this.additionalCharges -= +value[i].total;
             }
           }
+
           this.purchaseForm.get('additionalCharges').setValue(value, { emitEvent: false });
+          // this.purchaseForm.get('weightPriceGroup.totalPrice').setValue(
+          //   this.purchaseForm.get('weightPriceGroup.totalPrice').value
+          // )
         }
-        const netPrice = +this.basePrice + +this.additionalCharges + +this.commission;
-        this.purchaseForm.get('weightPriceGroup.totalPrice').setValue(netPrice, { eventEmit: false, onlySelf: true });
+        // const netPrice = +this.basePrice + +this.additionalCharges + +this.commission;
+        // this.purchaseForm.get('weightPriceGroup.totalPrice').setValue(netPrice, { eventEmit: false, onlySelf: true });
       }
     );
 
-    this.purchaseForm.get('partyGroup.name').valueChanges.subscribe(
-      (value: string) => {
-        if (this.purchase === undefined || this.purchase === null) {
-          this.purchase = new Purchase();
-        }
-        if (this.purchase.party === undefined || this.purchase.party === null) {
-          this.purchase.party = new Party();
-        }
-        this.purchase.partyId = 0;
-        this.purchaseForm.get('partyGroup.phoneNumber').reset();
-        this.purchaseForm.get('partyGroup.address').reset();
-        if (value) {
-          this.partyService.getParties(5, 0, value).subscribe(
-            (response: PartyResponse) => {
-              this.partySuggestions = response.data;
-            },
-            (error) => console.log(error)
-          );
-        }
-      });
+    // this.purchaseForm.get('weightPriceGroup.ratePerMaund').valueChanges.subscribe(ratePerMaund => {
+    //   this.purchaseForm.get('weightPriceGroup.totalPrice').setValue(
+    //     this.purchaseForm.get('weightPriceGroup.totalPrice').value + ratePerMaund
+    //   )
+    // }
+    // )
 
-    this.purchaseForm.get('productGroup.name').valueChanges.subscribe(
-      (value: string) => {
-        if (this.purchase === undefined || this.purchase === null) {
-          this.purchase = new Purchase();
-        }
-        if (this.purchase.product === undefined || this.purchase.product === null) {
-          this.purchase.product = new Product();
-        }
-        this.purchase.productId = 0;
-        if (value) {
-          this.productService.getProducts(5, 0, value).subscribe(
-            (response: ProductResponse) => {
-              this.productSuggestions = response.data;
-            },
-            (error) => console.log(error)
-          );
-        }
-      });
+      //  this.purchaseForm.get('weightPriceGroup.commission').valueChanges.subscribe(
+      // (commission) => {
+      //   this.purchaseForm.get('weightPriceGroup.totalPrice').setValue(
+      //     this.purchaseForm.get('weightPriceGroup.totalPrice').value + commission
+      //   ) 
+      // })
 
-    this.purchaseForm.get('vehicleGroup.plateNo').valueChanges.subscribe(
-      (value: string) => {
-        if (this.purchase === undefined || this.purchase === null) {
-          this.purchase = new Purchase();
-        }
-        if (this.purchase.vehicle === undefined || this.purchase.vehicle === null) {
-          this.purchase.vehicle = new Vehicle();
-        }
-        this.purchase.vehicleId = 0;
-        if (value) {
-          this.vehicleService.getVehicles(5, 0, value).subscribe(
-            (response: VehicleResponse) => {
-              this.vehicleSuggestions = response.data;
-            },
-            (error) => console.log(error)
-          );
-        }
-      });
+    // this.purchaseForm.get('partyGroup.name').valueChanges.subscribe(
+    //   (value: string) => {
+    //     if (this.purchase === undefined || this.purchase === null) {
+    //       this.purchase = new Purchase();
+    //     }
+    //     if (this.purchase.party === undefined || this.purchase.party === null) {
+    //       this.purchase.party = new Party();
+    //     }
+    //     this.purchase.partyId = 0;
+    //     this.purchaseForm.get('partyGroup.phoneNumber').reset();
+    //     this.purchaseForm.get('partyGroup.address').reset();
+    //     if (value) {
+    //       this.partyService.getParties(5, 0, value).subscribe(
+    //         (response: PartyResponse) => {
+    //           this.partySuggestions = response.data;
+    //         },
+    //         (error) => console.log(error)
+    //       );
+    //     }
+    //   });
+
+    // this.purchaseForm.get('productGroup.name').valueChanges.subscribe(
+    //   (value: string) => {
+    //     if (this.purchase === undefined || this.purchase === null) {
+    //       this.purchase = new Purchase();
+    //     }
+    //     if (this.purchase.product === undefined || this.purchase.product === null) {
+    //       this.purchase.product = new Product();
+    //     }
+    //     this.purchase.productId = 0;
+    //     this.purchaseForm.get('productGroup.price').reset(0);
+    //     this.purchaseForm.get('weightPriceGroup.ratePerMaund').reset(0);
+    //     if (value) {
+    //       this.productService.getProducts(5, 0, value).subscribe(
+    //         (response: ProductResponse) => {
+    //           this.productSuggestions = response.data;
+    //         },
+    //         (error) => console.log(error)
+    //       );
+    //     }
+    //   });
+
+    // this.purchaseForm.get('vehicleGroup.name').valueChanges.subscribe(
+    //   (value: string) => {
+    //     if (this.purchase === undefined || this.purchase === null) {
+    //       this.purchase = new Purchase();
+    //     }
+    //     if (this.purchase.vehicle === undefined || this.purchase.vehicle === null) {
+    //       this.purchase.vehicle = new Vehicle();
+    //     }
+    //     this.purchase.vehicleId = 0;
+    //     this.purchaseForm.get('vehicleGroup.plateNo').reset();
+    //     if (value) {
+    //       this.vehicleService.getVehicles(5, 0, value).subscribe(
+    //         (response: VehicleResponse) => {
+    //           this.vehicleSuggestions = response.data;
+    //         },
+    //         (error) => console.log(error)
+    //       );
+    //     }
+    //   });
+  }
+
+  add(event: MatChipInputEvent): void {
+    const input = event.input;
+    const value = event.value;
+    // Add our gatepass
+    // if ((value || '').trim()) {
+    //   this.gatepasses.push(value.trim());
+    // }
+
+    // Reset the input value
+    if (input) {
+      input.value = '';
+    }
+
+    this.purchaseForm.controls['gatepass'].setValue(null);
+  }
+
+  remove(gatepass: Gatepass): void {
+    let index = 0     
+    this.gatepasses.find((_gatepass,i) => {
+      if(_gatepass.id == gatepass.id){
+        index = i
+        return true
+      }
+    })
+
+    if (index >= 0) {
+      this.gatepasses.splice(index, 1);
+      this.purchaseForm.get('weightPriceGroup.totalMaund').setValue(
+        (this.purchaseForm.get('weightPriceGroup.totalMaund').value - gatepass.maund).toFixed(2)
+      );
+    }
+  }
+
+  selected(event: MatAutocompleteSelectedEvent): void {
+    console.log("EVENT ===>",event)
+    if(!this.isGatepassExists(event.option.value)){
+      this.gatepasses.push(event.option.value)
+      this.purchaseForm.get('weightPriceGroup.totalMaund').setValue(
+        this.purchaseForm.get('weightPriceGroup.totalMaund').value + event.option.value.maund
+      );
+    };
+    this.gatepassInput.nativeElement.value = '';
+    this.purchaseForm.controls['gatepass'].setValue(null);
+  }
+
+  isGatepassExists(gatepass: Gatepass): boolean{
+    const findGatePass = this.gatepasses.find(_gatepass => _gatepass.id == gatepass.id)
+    return findGatePass ? true : false 
   }
 
   closeModal() {
@@ -347,39 +482,43 @@ export class PurchaseModalComponent implements OnInit {
     this.purchase = new Purchase();
     Object.assign(this.purchase, purchase);
     this.commission = this.purchase.commission;
-    this.basePrice = this.purchase.basePrice;
+    this.gatepasses = this.purchase.gatepasses;
+    // this.basePrice = this.purchase.basePrice;
 
     this.purchaseForm.patchValue({
-      checkIn: moment.utc(purchase.checkIn).tz('Asia/Karachi').format().slice(0, 16),
-      direction: purchase.direction,
-      vehicleGroup: {
-        plateNo: purchase.vehicle.plateNo
-      },
-      productGroup: {
-        name: purchase.product.name,
-      },
-      partyGroup: {
-        name: purchase.party.name,
-        address: purchase.party.address,
-        phoneNumber: purchase.party.phoneNumber
-      },
+      date: moment.utc(purchase.date).tz('Asia/Karachi').format().slice(0, 16),
+      // direction: purchase.direction,
+      // vehicleGroup: {
+      //   name: purchase.vehicle.name,
+      //   plateNo: purchase.vehicle.plateNo
+      // },
+      // productGroup: {
+      //   name: purchase.product.name,
+      //   price: purchase.product.price,
+      //   type: purchase.product.price
+      // },
+      // partyGroup: {
+      //   name: purchase.party.name,
+      //   address: purchase.party.address,
+      //   phoneNumber: purchase.party.phoneNumber
+      // },
       weightPriceGroup: {
-        bagQuantity: purchase.bagQuantity,
-        bagWeight: purchase.bagWeight,
-        kandaWeight: purchase.kandaWeight,
-        emptyBagWeight: purchase.expectedEmptyBagWeight,
-        totalEmptyBagWeight: purchase.totalExpectedEmptyBagWeight,
-        expectedBagWeight: purchase.expectedBagWeight,
-        totalExpectedBagWeight: purchase.totalExpectedBagWeight,
-        actualBagWeight: purchase.actualBagWeight,
-        totalActualBagWeight: purchase.totalActualBagWeight,
-        vibration: purchase.vibration,
+        // bagQuantity: purchase.bagQuantity,
+        // bagWeight: purchase.bagWeight,
+        // kandaWeight: purchase.kandaWeight,
+        // emptyBagWeight: purchase.expectedEmptyBagWeight,
+        // totalEmptyBagWeight: purchase.totalExpectedEmptyBagWeight,
+        // expectedBagWeight: purchase.expectedBagWeight,
+        // totalExpectedBagWeight: purchase.totalExpectedBagWeight,
+        // actualBagWeight: purchase.actualBagWeight,
+        // totalActualBagWeight: purchase.totalActualBagWeight,
+        // vibration: purchase.vibration,
         totalMaund: purchase.totalMaund,
-        ratePerKg: purchase.ratePerKg,
+        // ratePerKg: purchase.ratePerKg,
         ratePerMaund: purchase.ratePerMaund,
         totalPrice: purchase.totalPrice,
-        actualBags: purchase.actualBags,
-        percentCommission: purchase.percentCommission,
+        // actualBags: purchase.actualBags,
+        // percentCommission: purchase.percentCommission,
         commission: purchase.commission
       }
     }, { emitEvent: false });
@@ -427,7 +566,69 @@ export class PurchaseModalComponent implements OnInit {
       });
   }
 
-  submit() {
+  submit(){
+    if (this.purchaseForm.valid) {
+      this.spinner.isLoading = true;
+      if (this.purchase === undefined || this.purchase === null) {
+        this.purchase = new Purchase();
+      }
+     
+      if (this.purchase.additionalCharges === undefined || this.purchase.additionalCharges === null) {
+        this.purchase.additionalCharges = [];
+      }
+
+      debugger
+      this.purchase.date = moment(this.purchaseForm.value.date).utc().format(); 
+      this.purchase.gatepassIds = this.gatepasses.map(gatepass => gatepass.id);
+      this.purchase.totalMaund = this.purchaseForm.get('weightPriceGroup').value.totalMaund;
+      this.purchase.ratePerMaund = this.purchaseForm.get('weightPriceGroup').value.ratePerMaund;
+      this.purchase.totalPrice = this.purchaseForm.get('weightPriceGroup.ratePerMaund').value * this.purchaseForm.get('weightPriceGroup.totalMaund').value + this.purchaseForm.get('weightPriceGroup.commission').value + this.additionalCharges;
+      this.purchase.commission = this.purchaseForm.get('weightPriceGroup').value.commission;
+
+      if (this.purchase.additionalCharges.length >= 0 && (this.purchaseForm.get('additionalCharges') as FormArray).length >= 0) {
+        for (let i = 0; i < (this.purchaseForm.get('additionalCharges') as FormArray).length; i++) {
+          this.purchase.additionalCharges[i].id = (this.purchaseForm.get('additionalCharges') as FormArray).at(i).value.id;
+          this.purchase.additionalCharges[i].addPrice = (this.purchaseForm.get('additionalCharges') as FormArray).at(i).value.addPrice;
+          this.purchase.additionalCharges[i].task = (this.purchaseForm.get('additionalCharges') as FormArray).at(i).value.task;
+          this.purchase.additionalCharges[i].bagQuantity = (this.purchaseForm.get('additionalCharges') as FormArray).at(i).value.bagQuantity;
+          this.purchase.additionalCharges[i].rate = (this.purchaseForm.get('additionalCharges') as FormArray).at(i).value.rate;
+          this.purchase.additionalCharges[i].total = (this.purchaseForm.get('additionalCharges') as FormArray).at(i).value.total;
+        }
+      }
+
+      if (this.isNew) {
+        this.purchaseService.addPurchase(this.purchase).subscribe(
+          (response: PurchaseResponse) => {
+            this.spinner.isLoading = false;
+            this.notificationService.successNotifcation('Purchase added successfully');
+            this.modalRef.close();
+            this.purchaseService.purchaseEmitter.emit(response.data);
+          },
+          (error) => {
+            console.log(error);
+            this.spinner.isLoading = false;
+            this.notificationService.errorNotifcation('Something went wrong');
+          });
+
+      } else {
+        this.purchaseService.updatePurchase(this.purchase).subscribe(
+          (data) => {
+            this.spinner.isLoading = false;
+            this.notificationService.successNotifcation('Purchase updated successfully');
+            this.purchaseService.purchaseEmitter.emit(true);
+            this.modalRef.close();
+          },
+          (error) => {
+            this.spinner.isLoading = false;
+            console.log(error);
+            this.notificationService.errorNotifcation('Something went wrong');
+          });
+      }
+    }
+  }
+
+
+  oldSubmit() {
     if (this.purchaseForm.valid) {
       this.spinner.isLoading = true;
       if (this.purchase === undefined || this.purchase === null) {
@@ -446,7 +647,7 @@ export class PurchaseModalComponent implements OnInit {
         this.purchase.additionalCharges = [];
       }
 
-      this.purchase.checkIn = moment(this.purchaseForm.value.checkIn).utc().format();
+      this.purchase.date = moment(this.purchaseForm.value.date).utc().format();
       this.purchase.direction = +this.purchaseForm.value.direction;
 
       // this.purchase.productId = +this.purchase.product.id;

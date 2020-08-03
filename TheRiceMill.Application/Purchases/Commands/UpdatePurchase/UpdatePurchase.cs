@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -36,82 +37,12 @@ namespace TheRiceMill.Application.Purchases.Commands.UpdatePurchase
             {
                 throw new NotFoundException(nameof(Domain.Entities.Sale), request.Id);
             }
-            var ledger = _context.Ledgers.GetBy(p => p.TransactionId == request.Id && p.LedgerType == (int)LedgerType.Purchase);
+            /*var ledger = _context.Ledgers.GetBy(p => p.TransactionId == request.Id && p.LedgerType == (int)LedgerType.Purchase);
             if (ledger == null)
             {
                 throw new NotFoundException(nameof(Domain.Entities.Ledger), request.Id);
-            }
+            }*/
             request.Copy(purchase);
-            purchase.Direction = request.Direction.ToInt();
-            Party party;
-            Vehicle vehicle;
-            Product product;
-            if (!string.IsNullOrEmpty(request.Party?.Name))
-            {
-                party = _context.Parties.GetBy(p => p.NormalizedName.Equals(request.Party.Name.ToUpper()));
-                if (party == null)
-                {
-                    purchase.Party = new Party()
-                    {
-                        Name = request.Party.Name,
-                        NormalizedName = request.Party.Name.ToUpper(),
-                        PhoneNumber = request.Party.PhoneNumber,
-                        Address = request.Party.Address
-                    };
-                    party = purchase.Party;
-                }
-                else
-                {
-                    purchase.PartyId = party.Id;
-                }
-            }
-            else
-            {
-                party = _context.Parties.GetBy(p => p.Id == request.PartyId);
-            }
-            if (!string.IsNullOrEmpty(request.Vehicle?.PlateNo))
-            {
-                vehicle = _context.Vehicles.GetBy(p => p.PlateNo.Equals(request.Vehicle.PlateNo.ToUpper()));
-                if (vehicle == null)
-                {
-                    purchase.Vehicle = new Vehicle()
-                    {
-                        PlateNo = request.Vehicle.PlateNo.ToUpper(),
-                    };
-                    vehicle = purchase.Vehicle;
-                }
-                else
-                {
-                    purchase.VehicleId = vehicle.Id;
-                }
-            }
-            else
-            {
-                vehicle = _context.Vehicles.GetBy(p => p.Id == request.VehicleId);
-            }
-
-            if (!string.IsNullOrEmpty(request.Product?.Name))
-            {
-                product = _context.Products.GetBy(p => p.Name.Equals(request.Product.Name.ToUpper()));
-                if (product == null)
-                {
-                    purchase.Product = new Product()
-                    {
-                        Name = request.Product.Name,
-                        NormalizedName = request.Product.Name.ToUpper()
-                    };
-                    product = purchase.Product;
-                }
-                else
-                {
-                    purchase.ProductId = product.Id;
-                }
-            }
-            else
-            {
-                product = _context.Products.GetBy(p => p.Id == request.ProductId);
-            }
-
             if (request.AdditionalCharges != null)
             {
                 if (purchase.Charges != null && purchase.Charges.Any())
@@ -135,49 +66,72 @@ namespace TheRiceMill.Application.Purchases.Commands.UpdatePurchase
                 }
             }
             _context.Purchases.Update(purchase);
-            ledger.PartyId = party.Id;
-            ledger.Credit = request.TotalPrice;
-            ledger.Debit = 0;
-            _context.Ledgers.Update(ledger);
-            await _context.SaveChangesAsync(cancellationToken);
-            return new ResponseViewModel().CreateOk(new PurchaseResponseViewModel()
             {
-                Vehicle = new VehicleRequestModel()
-                {
-                    PlateNo = vehicle.PlateNo
-                },
-                Product = new ProductRequestModel()
-                {
-                    Name = product.Name
-                },
-                VehicleId = vehicle.Id,
-                ProductId = product.Id,
 
-                BagQuantity = request.BagQuantity,
-                BagWeight = request.BagWeight,
-                KandaWeight = request.KandaWeight,
-                TotalMaund = request.TotalMaund,
-                CheckIn = new DateConverter().ConvertToDateTimeIso(request.CheckIn),
-                Id = purchase.Id,
-                Commission = purchase.Commission,
-                AdditionalCharges = request.AdditionalCharges,
-                BasePrice = purchase.BasePrice,
-                PercentCommission = purchase.PercentCommission,
-                TotalPrice = purchase.TotalPrice,
-                ActualBagWeight = purchase.ActualBagWeight,
-                ExpectedBagWeight = purchase.ExpectedBagWeight,
-                RatePerKg = purchase.RatePerKg,
-                RatePerMaund = purchase.RatePerMaund,
-                ExpectedEmptyBagWeight = purchase.ExpectedEmptyBagWeight,
-                TotalActualBagWeight = purchase.TotalActualBagWeight,
-                TotalExpectedBagWeight = purchase.TotalExpectedBagWeight,
-                TotalExpectedEmptyBagWeight = purchase.TotalExpectedEmptyBagWeight,
-                Direction = purchase.Direction,
-                Vibration = purchase.Vibration,
-                ActualBags = purchase.ActualBags,
-                CreatedDate = new DateConverter().ConvertToDateTimeIso(purchase.CreatedDate)
-            });
+                var gatepasses = _context.GatePasses.Where(q => q.PurchaseId == purchase.Id).ToList();
+                gatepasses.ForEach(pass =>
+                {
+                    foreach (var id in request.GatepassIds)
+                    {
+                        if (pass.Id != id)
+                        {
+                            var _gatepass = _context.GatePasses.Find(id);
+                            _gatepass.PurchaseId = null;
+                            _context.GatePasses.Update(_gatepass);
+
+                        }
+                    }
+                });
+
+                /*            foreach (var id in request.GatepassIds)
+                            {
+                                gatepass = _context.GatePasses.GetBy(q => q.Id == id, p => p.Include(pr => pr.Party).Include(pr => pr.Product).Include(pr => pr.Vehicle));
+                                gatepass.PurchaseId = purchase.Id;
+
+                            }*/
+                /*          ledger.PartyId = party.Id;
+                            ledger.Credit = request.TotalPrice;
+                            ledger.Debit = 0;
+                            _context.Ledgers.Update(ledger);
+                */
+                await _context.SaveChangesAsync(cancellationToken);
+                return new ResponseViewModel().CreateOk(new PurchaseResponseViewModel()
+                {
+
+                    /*              BagQuantity = request.BagQuantity,
+                                    BagWeight = request.BagWeight,
+                                    KandaWeight = request.KandaWeight,
+                    */
+                    /*                Vehicle = new VehicleRequestModel()
+                                    {
+                                        Name = gatepass.Vehicle.Name,
+                                        PlateNo = gatepass.Vehicle.PlateNo
+                                    },
+                                    Product = new ProductRequestModel()
+                                    {
+                                        Name = gatepass.Product.Name,
+                                        Price = gatepass.Product.Price,
+                                        Type = (ProductType)gatepass.Product.Type
+                                    },
+                                    VehicleId = gatepass.Vehicle.Id,
+                                    ProductId = gatepass.Product.Id,
+                                    Party = new PartyRequestModel()
+                                    {
+                                        Name = gatepass.Party.Name,
+                                        Address = gatepass.Party.Address,
+                                        PhoneNumber = gatepass.Party.PhoneNumber
+                                    },*/
+                    TotalMaund = request.TotalMaund,
+                    Id = purchase.Id,
+                    Date = new DateConverter().ConvertToDateTimeIso(purchase.Date),
+                    Commission = purchase.Commission,
+                    AdditionalCharges = request.AdditionalCharges,
+                    TotalPrice = purchase.TotalPrice,
+                    RatePerMaund = purchase.RatePerMaund,
+                    CreatedDate = new DateConverter().ConvertToDateTimeIso(purchase.CreatedDate)
+                });
+            }
         }
-    }
 
+    }
 }

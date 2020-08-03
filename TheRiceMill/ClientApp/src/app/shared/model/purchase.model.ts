@@ -2,10 +2,13 @@ import { Party } from './party.model';
 import { Vehicle } from './vehicle.model';
 import { Product } from './product.model';
 import { AdditionalCharges } from './additionalcharges.model';
+import { Gatepass } from './gatepass.model';
 
 export class Purchase {
   id: number;
-  checkIn: string;
+  gatepassIds: Array<number>;
+  gatepasses: Array<Gatepass>;
+  date: string;
   direction: number;
   partyId: number;
   party: Party;
@@ -32,4 +35,8 @@ export class Purchase {
   percentCommission: number;
   commission: number;
   additionalCharges: AdditionalCharges[];
+
+  constructor(){
+    
+  }
 }

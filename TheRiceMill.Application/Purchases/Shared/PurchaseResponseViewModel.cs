@@ -33,6 +33,8 @@ namespace TheRiceMill.Application.Purchases.Shared
         public int Direction { get; set; }
         public double Vibration { get; set; }
         public string CreatedDate { get; set; }
+        public string Date { get; set; }
+
     }
 
 }

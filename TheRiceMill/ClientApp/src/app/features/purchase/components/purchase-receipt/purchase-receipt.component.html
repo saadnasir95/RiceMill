@@ -30,7 +30,7 @@
       <p class="gray-ish">{{purchase.id}}</p>
 
       <h5 class="gray-ish">Purchase Date</h5>
-      <p class="gray-ish">{{purchase.checkIn | localDatetime}}</p>
+      <p class="gray-ish">{{purchase.date | localDatetime}}</p>
 
     </div>
     <div class="col-6 text-right total-field">
@@ -54,7 +54,7 @@
         </thead>
         <tbody>
           <tr>
-            <td>{{purchase.product.name}}</td>
+            <td>{{purchase?.product?.name}}</td>
             <td>{{purchase.bagQuantity}}</td>
             <td>{{purchase.kandaWeight}}</td>
             <td>{{purchase.totalActualBagWeight| currency:'KG '}}</td>
@@ -75,10 +75,10 @@
     <div class="offset-1 col-5 mb-3 pr-4 sub-table">
       <table class="table table-borderless">
         <tbody>
-          <tr>
+          <!-- <tr>
             <th scope="row gray-ish">Subtotal</th>
             <td class="text-right">{{purchase.basePrice | currency:'Rs '}}</td>
-          </tr>
+          </tr> -->
           <tr>
             <th scope="row gray-ish">Commission</th>
             <td class="text-right">{{purchase.commission | currency: 'Rs '}}</td>

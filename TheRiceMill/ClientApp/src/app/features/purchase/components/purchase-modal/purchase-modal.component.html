@@ -14,12 +14,49 @@
       <div class="row">
         <div class="col-12">
           <mat-form-field class="w-100">
-            <input type="datetime-local" matInput placeholder="Choose Check in DateTime" formControlName="checkIn">
-            <mat-error *ngIf="purchaseForm.get('checkIn').hasError('required')">Check in datetime required</mat-error>
+            <input type="datetime-local" matInput placeholder="Choose DateTime" formControlName="date">
+            <mat-error *ngIf="purchaseForm.get('date').hasError('required')">Datetime required</mat-error>
           </mat-form-field>
         </div>
       </div>
-      <div class="row" formGroupName="partyGroup">
+
+      <div class="row">
+        <div class="col-12">
+          <mat-form-field class="w-100">
+            <mat-chip-list #chipList>
+              <mat-chip
+                *ngFor="let gatepass of gatepasses"
+                [selectable]="selectable"
+                [removable]="removable"
+                (removed)="remove(gatepass)">
+                <p class="mb-0"><b>Company:</b> {{gatepass?.party?.name}} | <b>Product:</b> {{gatepass?.product?.name}} | <b>Maund:</b> {{gatepass?.maund}} | <b>Broker:</b> {{gatepass?.broker}} </p>
+                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+              </mat-chip>
+              <input
+                placeholder="Add Gatepasses..."
+                #gatepassInput
+                formControlName="gatepass"
+                [matAutocomplete]="auto"
+                [matChipInputFor]="chipList"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputAddOnBlur]="addOnBlur"
+                >
+            </mat-chip-list>
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+              <mat-option class="custom-height" *ngFor="let gatepass of filteredGatepasses" [value]="gatepass">
+                <span>
+                  <p><b>Company:</b> {{gatepass?.party?.name}} | <b>Product:</b> {{gatepass?.product?.name}} </p>
+                  <p><b>Maund:</b> {{gatepass?.maund}} | <b>Broker:</b> {{gatepass?.broker}} </p>
+                </span>
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+      </div>
+
+      <!---------------------->
+      <!-- Old Modal Fields -->
+      <!-- <div class="row" formGroupName="companyGroup">
         <div class="col-md-4">
           <mat-form-field class="w-100">
             <input type="text" matInput placeholder="Enter Party Name" formControlName="name" autocomplete="off"
@@ -78,13 +115,13 @@
             </mat-error>
           </mat-form-field>
         </div>
-        <!-- <div class="col-md-6">
+        <div class="col-md-6">
             <mat-form-field class="w-100">
               <input type="text" matInput placeholder="Enter Product Price" formControlName="plateNo">
               <mat-error *ngIf="purchaseForm.get('productGroup.plateNo').hasError('required')">Plate Number is required
               </mat-error>
             </mat-form-field>
-          </div> -->
+          </div>
         <div class="col-md-6">
           <mat-form-field class="w-100 ">
             <mat-select placeholder="Select Gatein Direction" formControlName="direction">
@@ -95,9 +132,9 @@
             <mat-error *ngIf="purchaseForm.get('direction').hasError('required')">Direction is required</mat-error>
           </mat-form-field>
         </div>
-      </div>
+      </div> -->
       <div class="row" formGroupName="weightPriceGroup">
-        <div class="col-md-4">
+        <!-- <div class="col-md-4">
           <mat-form-field>
             <input type="number" matInput placeholder="Enter Bag Quantity" formControlName="bagQuantity">
             <mat-error *ngIf="purchaseForm.get('weightPriceGroup.bagQuantity').hasError('required')">
@@ -212,8 +249,8 @@
             <mat-error *ngIf="purchaseForm.get('weightPriceGroup.totalActualBagWeight').hasError('min')">
               Total Actual bag weight must be greater than 0</mat-error>
           </mat-form-field>
-        </div>
-        <div class="col-md-4">
+        </div> -->
+        <div class="col-md-5">
           <mat-form-field>
             <input type="number" matInput placeholder="Maund Weight" formControlName="totalMaund" readonly>
             <mat-error *ngIf="purchaseForm.get('weightPriceGroup.totalMaund').hasError('required')">
@@ -223,7 +260,7 @@
               Maund weight must be greater than 0</mat-error>
           </mat-form-field>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-5">
           <mat-form-field>
             <input type="number" matInput placeholder="Enter Maund Price" formControlName="ratePerMaund">
             <mat-error *ngIf="purchaseForm.get('weightPriceGroup.ratePerMaund').hasError('required')">
@@ -233,7 +270,12 @@
               Maund Price must be greater than 0</mat-error>
           </mat-form-field>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-2">
+          <span class="grand-total"><p class="d-flex justify-content-end"><b> Total:&nbsp;
+          </b> {{ purchaseForm.get('weightPriceGroup.ratePerMaund').value * purchaseForm.get('weightPriceGroup.totalMaund').value  |currency:"PKR":"symbol":'1.2-2' }} </p>
+          </span>
+        </div>
+        <!-- <div class="col-md-4">
           <mat-form-field>
             <input type="number" matInput placeholder="Kg Price" formControlName="ratePerKg" readonly>
             <mat-error *ngIf="purchaseForm.get('weightPriceGroup.ratePerKg').hasError('required')">
@@ -242,8 +284,8 @@
             <mat-error *ngIf="purchaseForm.get('weightPriceGroup.ratePerKg').hasError('min')">
               Kg Price must be greater than 0</mat-error>
           </mat-form-field>
-        </div>
-        <div class="col-md-4">
+        </div> -->
+        <!-- <div class="col-md-6">
           <mat-form-field>
             <input type="number" matInput placeholder="Total Price" formControlName="totalPrice" readonly>
             <mat-error *ngIf="purchaseForm.get('weightPriceGroup.totalPrice').hasError('required')">
@@ -262,10 +304,10 @@
             <mat-error *ngIf="purchaseForm.get('weightPriceGroup.percentCommission').hasError('min')">
               Commission rate must be greater than 0</mat-error>
           </mat-form-field>
-        </div>
-        <div class="col-md-6">
+        </div> -->
+        <div class="col-md-10">
           <mat-form-field>
-            <input type="number" matInput placeholder="Commission" formControlName="commission" readonly>
+            <input type="number" matInput placeholder="Commission" formControlName="commission">
             <mat-error *ngIf="purchaseForm.get('weightPriceGroup.commission').hasError('required')">
               Commission is required
             </mat-error>
@@ -273,8 +315,33 @@
               Commission must be greater than 0</mat-error>
           </mat-form-field>
         </div>
-      </div>
-      <mat-divider class="mb-2"></mat-divider>
+        <div class="col-md-2">
+          <span class="grand-total"><p class="d-flex justify-content-end"><b> Total:&nbsp;
+          </b> {{ purchaseForm.get('weightPriceGroup.commission').value  |currency:"PKR":"symbol": '1.2-2' }} </p>
+          </span>
+        </div>
+      </div> 
+      <!---------------------->
+      <!-- Old Modal Fields -->
+
+      <!-- <div class="row">
+        <div class="col-6">
+          <mat-form-field class="w-100">
+            <input type="number" matInput placeholder="Enter Credit" formControlName="credit">
+            <mat-error *ngIf="purchaseForm.get('credit').hasError('min')">
+              Credit must be greater than 0</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-6">
+          <mat-form-field class="w-100">
+            <input type="number" matInput placeholder="Enter Debit" formControlName="debit">
+            <mat-error *ngIf="purchaseForm.get('debit').hasError('min')">
+              Debit must be greater than 0</mat-error>
+          </mat-form-field>
+        </div>
+      </div> -->
+
       <div formArrayName="additionalCharges">
         <div *ngFor="let labour of purchaseForm.get('additionalCharges')['controls']; index as i" [formGroupName]="i"
           class="row">
@@ -302,7 +369,33 @@
             </i>
           </div>
         </div>
-        <button mat-raised-button type="button" class="btn btn-primary" (click)="addCharges()">Add Labour</button>
+        <div class="row">
+          <div class="col-md-6">
+            <button mat-raised-button type="button" class="btn btn-primary" (click)="addCharges()">Add Labour</button>
+          </div>
+          <div class="col-md-6">
+            <span class="grand-total"><p class="d-flex justify-content-end"><b> Total:&nbsp;
+            </b> {{ additionalCharges |currency:"PKR":"symbol":'1.2-2' }} </p>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <mat-divider class="mb-2"></mat-divider>
+      <div class="row">
+        <div class="offset-6 col-md-6">
+          <span class="grand-total"><p class="d-flex justify-content-end"><b> Grand Total:&nbsp;
+          </b> {{ purchaseForm.get('weightPriceGroup.ratePerMaund').value * purchaseForm.get('weightPriceGroup.totalMaund').value + purchaseForm.get('weightPriceGroup.commission').value + additionalCharges |currency:"PKR":"symbol":'1.2-2' }} </p>
+          </span>
+          <!-- <mat-form-field>
+            <input type="number" matInput placeholder="Total Price" formControlName="totalPrice" readonly>
+            <mat-error *ngIf="purchaseForm.get('weightPriceGroup.totalPrice').hasError('required')">
+              Total Price is required
+            </mat-error>
+            <mat-error *ngIf="purchaseForm.get('weightPriceGroup.totalPrice').hasError('min')">
+              Total Price must be greater than 0</mat-error>
+          </mat-form-field> -->
+      </div>
       </div>
     </mat-dialog-content>
     <mat-dialog-actions>

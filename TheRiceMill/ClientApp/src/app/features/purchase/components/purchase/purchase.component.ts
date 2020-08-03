@@ -14,7 +14,7 @@ import { NotificationService } from '../../../../shared/services/notification.se
   styleUrls: ['./purchase.component.scss']
 })
 export class PurchaseComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['Id', 'party.name', 'product.name', 'bagQuantity', 'kandaWeight', 'totalActualBagWeight', 'totalMaund', 'ratePerMaund', 'totalPrice', 'createdDate', 'Action'];
+  displayedColumns: string[] = ['Id', 'createdDate','totalMaund', 'ratePerMaund', 'brokery', 'totalPrice','totalGatepasses', 'Action'];
   dataSource: MatTableDataSource<Purchase>;
   purchaseList: Purchase[];
   isLoadingData: Boolean = false;
@@ -80,8 +80,10 @@ export class PurchaseComponent implements OnInit, OnDestroy {
       disableClose: true,
       width: '1400px'
     });
+
+    const _purchase = JSON.parse(JSON.stringify(purchase));
     this.dialogRef.componentInstance.modalRef = this.dialogRef;
-    this.dialogRef.componentInstance.editPurchase(purchase);
+    this.dialogRef.componentInstance.editPurchase(_purchase);
   }
   printPurchase(purchase: Purchase) {
     this.purchaseReceiptComponent.purchase = purchase;
