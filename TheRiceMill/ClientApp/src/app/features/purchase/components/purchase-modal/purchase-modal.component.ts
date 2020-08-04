@@ -568,6 +568,10 @@ export class PurchaseModalComponent implements OnInit {
 
   submit(){
     if (this.purchaseForm.valid) {
+      if(this.gatepasses.length == 0){
+        return
+      }
+
       this.spinner.isLoading = true;
       if (this.purchase === undefined || this.purchase === null) {
         this.purchase = new Purchase();
