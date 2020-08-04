@@ -40,13 +40,44 @@ namespace TheRiceMill.Application.Purchases.Queries
             }
             var purchase = _context.Purchases.GetMany(
                     query,
-                    request.OrderBy, request.Page, request.PageSize, request.IsDescending)
+                    request.OrderBy, request.Page, request.PageSize, request.IsDescending, 
+                    p => p.Include(pr => pr.GatePasses))
                 .Select(p => new
                 {
                     RatePerMaund = p.RatePerMaund,
                     TotalPrice = p.TotalPrice,
                     TotalMaund = p.TotalMaund,
-                    Gatepasses = p.GatePasses,
+                    Gatepasses = p.GatePasses.Select(gp => new GatePassResponseModel()
+                    {
+                        Type = (GatePassType)gp.Type,
+                        BagQuantity = gp.BagQuantity,
+                        BoriQuantity = gp.BoriQuantity,
+                        WeightPerBag = gp.WeightPerBag,
+                        NetWeight = gp.NetWeight,
+                        Maund = gp.Maund,
+                        DateTime = gp.DateTime,
+                        Broker = gp.Broker,
+                        Id = p.Id,
+                        Party = new PartyRequestModel()
+                        {
+                            Address = gp.Party.Address,
+                            Name = gp.Party.Name,
+                            PhoneNumber = gp.Party.PhoneNumber
+                        },
+                        Product = new ProductRequestModel()
+                        {
+                            Name = gp.Product.Name
+                        },
+                        Vehicle = new VehicleRequestModel()
+                        {
+                            PlateNo = gp.Vehicle.PlateNo
+                        },
+                        PartyId = gp.PartyId,
+                        ProductId = gp.ProductId,
+                        VehicleId = gp.VehicleId,
+                        PurchaseId = gp.PurchaseId,
+                        SaleId = gp.SaleId
+                    }).ToList(),
                     CreatedDate = new DateConverter().ConvertToDateTimeIso(p.Date),
                     Commission = p.Commission,
                     Id = p.Id,

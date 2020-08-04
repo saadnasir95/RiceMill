@@ -29,7 +29,7 @@
                 [selectable]="selectable"
                 [removable]="removable"
                 (removed)="remove(gatepass)">
-                <p class="mb-0"><b>Company:</b> {{gatepass?.party?.name}} | <b>Product:</b> {{gatepass?.product?.name}} | <b>Maund:</b> {{gatepass?.maund}} | <b>Broker:</b> {{gatepass?.broker}} </p>
+                <p class="mb-0"><b>Party:</b> {{gatepass?.party?.name}} | <b>Product:</b> {{gatepass?.product?.name}} | <b>Maund:</b> {{gatepass?.maund}} | <b>Broker:</b> {{gatepass?.broker}} </p>
                 <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
               </mat-chip>
               <input
@@ -45,7 +45,7 @@
             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
               <mat-option class="custom-height" *ngFor="let gatepass of filteredGatepasses" [value]="gatepass">
                 <span>
-                  <p><b>Company:</b> {{gatepass?.party?.name}} | <b>Product:</b> {{gatepass?.product?.name}} </p>
+                  <p><b>Party:</b> {{gatepass?.party?.name}} | <b>Product:</b> {{gatepass?.product?.name}} </p>
                   <p><b>Maund:</b> {{gatepass?.maund}} | <b>Broker:</b> {{gatepass?.broker}} </p>
                 </span>
               </mat-option>
@@ -250,7 +250,7 @@
               Total Actual bag weight must be greater than 0</mat-error>
           </mat-form-field>
         </div> -->
-        <div class="col-md-5">
+        <div class="col-md-4">
           <mat-form-field>
             <input type="number" matInput placeholder="Maund Weight" formControlName="totalMaund" readonly>
             <mat-error *ngIf="purchaseForm.get('weightPriceGroup.totalMaund').hasError('required')">
@@ -260,7 +260,7 @@
               Maund weight must be greater than 0</mat-error>
           </mat-form-field>
         </div>
-        <div class="col-md-5">
+        <div class="col-md-4">
           <mat-form-field>
             <input type="number" matInput placeholder="Enter Maund Price" formControlName="ratePerMaund">
             <mat-error *ngIf="purchaseForm.get('weightPriceGroup.ratePerMaund').hasError('required')">
@@ -270,8 +270,8 @@
               Maund Price must be greater than 0</mat-error>
           </mat-form-field>
         </div>
-        <div class="col-md-2">
-          <span class="grand-total"><p class="d-flex justify-content-end"><b> Total:&nbsp;
+        <div class="col-md-4">
+          <span class="grand-total"><p class="d-flex justify-content-end"><b> Total Maund Charges:&nbsp;
           </b> {{ purchaseForm.get('weightPriceGroup.ratePerMaund').value * purchaseForm.get('weightPriceGroup.totalMaund').value  |currency:"PKR":"symbol":'1.2-2' }} </p>
           </span>
         </div>
@@ -305,18 +305,18 @@
               Commission rate must be greater than 0</mat-error>
           </mat-form-field>
         </div> -->
-        <div class="col-md-10">
+        <div class="col-md-8">
           <mat-form-field>
-            <input type="number" matInput placeholder="Commission" formControlName="commission">
+            <input type="number" matInput placeholder="Brokery" formControlName="commission">
             <mat-error *ngIf="purchaseForm.get('weightPriceGroup.commission').hasError('required')">
-              Commission is required
+              Brokery is required
             </mat-error>
             <mat-error *ngIf="purchaseForm.get('weightPriceGroup.commission').hasError('min')">
-              Commission must be greater than 0</mat-error>
+              Brokery must be greater than 0</mat-error>
           </mat-form-field>
         </div>
-        <div class="col-md-2">
-          <span class="grand-total"><p class="d-flex justify-content-end"><b> Total:&nbsp;
+        <div class="col-md-4">
+          <span class="grand-total"><p class="d-flex justify-content-end"><b> Total Brokery Charges:&nbsp;
           </b> {{ purchaseForm.get('weightPriceGroup.commission').value  |currency:"PKR":"symbol": '1.2-2' }} </p>
           </span>
         </div>
@@ -374,7 +374,7 @@
             <button mat-raised-button type="button" class="btn btn-primary" (click)="addCharges()">Add Labour</button>
           </div>
           <div class="col-md-6">
-            <span class="grand-total"><p class="d-flex justify-content-end"><b> Total:&nbsp;
+            <span class="grand-total"><p class="d-flex justify-content-end"><b> Total Additional Charges:&nbsp;
             </b> {{ additionalCharges |currency:"PKR":"symbol":'1.2-2' }} </p>
             </span>
           </div>

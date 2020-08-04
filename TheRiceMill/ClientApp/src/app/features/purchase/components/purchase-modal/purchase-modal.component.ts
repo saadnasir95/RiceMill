@@ -477,6 +477,7 @@ export class PurchaseModalComponent implements OnInit {
   }
 
   editPurchase(purchase: Purchase) {
+    debugger
     this.isNew = false;
     this.purchase = new Purchase();
     Object.assign(this.purchase, purchase);
