@@ -128,7 +128,27 @@
         </div>
         <div class="col-md-6">
           <mat-form-field>
-            <input type="number" matInput placeholder="Enter Net Weight" formControlName="netWeight">
+            <input type="number" matInput placeholder="Enter Kanda Weight" formControlName="kandaWeight">
+            <mat-error *ngIf="gatepassForm.get('weightPriceGroup.kandaWeight').hasError('required')">
+              kanda weight  is required
+            </mat-error>
+            <mat-error *ngIf="gatepassForm.get('weightPriceGroup.kandaWeight').hasError('min')">
+              kanda weight must be greater than or equal to 0</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-6">
+          <mat-form-field>
+            <input type="number" matInput placeholder="Enter Empty Weight" formControlName="emptyWeight">
+            <mat-error *ngIf="gatepassForm.get('weightPriceGroup.emptyWeight').hasError('required')">
+              Empty weight is required
+            </mat-error>
+            <mat-error *ngIf="gatepassForm.get('weightPriceGroup.emptyWeight').hasError('min')">
+              Empty weight must be greater than or equal to 0</mat-error>
+          </mat-form-field>
+        </div>
+        <div class="col-md-6">
+          <mat-form-field>
+            <input type="number" matInput placeholder="Net Weight" formControlName="netWeight" readonly>
             <mat-error *ngIf="gatepassForm.get('weightPriceGroup.netWeight').hasError('required')">
               Net weight is required
             </mat-error>
@@ -138,7 +158,7 @@
         </div>
         <div class="col-md-6">
           <mat-form-field>
-            <input type="number" matInput placeholder="Enter Maund Weight" formControlName="maund" readonly>
+            <input type="number" matInput placeholder="Maund Weight" formControlName="maund" readonly>
             <mat-error *ngIf="gatepassForm.get('weightPriceGroup.maund').hasError('required')">
               Maund weight is required
             </mat-error>

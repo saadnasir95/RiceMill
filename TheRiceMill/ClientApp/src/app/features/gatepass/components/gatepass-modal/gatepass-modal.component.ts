@@ -47,6 +47,8 @@ export class GatepassModalComponent implements OnInit {
       bagQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
       boriQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
       weightPerBag: new FormControl(0, [Validators.required, Validators.min(0)]),
+      kandaWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
+      emptyWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
       netWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
       maund: new FormControl(0, [Validators.required, Validators.min(0)]),
     })
@@ -101,13 +103,42 @@ export class GatepassModalComponent implements OnInit {
     //   }
     // );
 
-    this.gatepassForm.get('weightPriceGroup.netWeight').valueChanges.subscribe(
+    this.gatepassForm.get('weightPriceGroup').valueChanges.subscribe(
       (value) => {
+        const kandaWeight = +value.kandaWeight;
+        const emptyWeight = +value.emptyWeight;
+        const netWeight = kandaWeight - emptyWeight;
+        const maund = netWeight / 40;
         this.gatepassForm.get('weightPriceGroup').patchValue({
-          maund: (+value / 40)
+          kandaWeight: kandaWeight,
+          emptyWeight: emptyWeight,
+          netWeight: netWeight.toFixed(3),
+          maund: maund.toFixed(3)
         }, { emitEvent: false });
       }
     );
+    // this.gatepassForm.get('weightPriceGroup.netWeight').valueChanges.subscribe(
+    //   (value) => {
+    //     this.gatepassForm.get('weightPriceGroup').patchValue({
+    //       maund: (+value / 40)
+    //     }, { emitEvent: false });
+    //   }
+    // );
+    // this.gatepassForm.get('weightPriceGroup.emptyWeight').valueChanges.subscribe(
+    //   (value) => {
+
+    //     this.gatepassForm.get('weightPriceGroup').patchValue({
+    //       maund: (+value / 40)
+    //     }, { emitEvent: false });
+    //   }
+    // );
+    // this.gatepassForm.get('weightPriceGroup.kandaWeight').valueChanges.subscribe(
+    //   (value) => {
+    //     this.gatepassForm.get('weightPriceGroup').patchValue({
+    //       maund: (+value / 40)
+    //     }, { emitEvent: false });
+    //   }
+    // );
 
     this.gatepassForm.get('partyGroup.name').valueChanges.subscribe(
       (value: string) => {
@@ -194,6 +225,8 @@ export class GatepassModalComponent implements OnInit {
         bagQuantity: gatepass.bagQuantity,
         boriQuantity: gatepass.boriQuantity,
         weightPerBag: gatepass.weightPerBag,
+        kandaWeight: gatepass.kandaWeight,
+        emptyWeight: gatepass.emptyWeight,
         netWeight: gatepass.netWeight,
         maund: gatepass.maund
       }
@@ -260,6 +293,8 @@ export class GatepassModalComponent implements OnInit {
       this.gatepass.bagQuantity = this.gatepassForm.get('weightPriceGroup').value.bagQuantity;
       this.gatepass.boriQuantity = this.gatepassForm.get('weightPriceGroup').value.boriQuantity;
       this.gatepass.weightPerBag = this.gatepassForm.get('weightPriceGroup').value.weightPerBag;
+      this.gatepass.kandaWeight = this.gatepassForm.get('weightPriceGroup').value.kandaWeight;
+      this.gatepass.emptyWeight = this.gatepassForm.get('weightPriceGroup').value.emptyWeight;
       this.gatepass.netWeight = this.gatepassForm.get('weightPriceGroup').value.netWeight;
       this.gatepass.maund = this.gatepassForm.get('weightPriceGroup').value.maund;
 

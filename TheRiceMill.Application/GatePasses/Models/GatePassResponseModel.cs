@@ -25,6 +25,8 @@ namespace TheRiceMill.Application.GatePasses.Models
         /// <summary>
         /// The Weight Measured by the Guys by Machine
         /// </summary>
+        public double KandaWeight { get; set; }
+        public double EmptyWeight { get; set; }
         public double NetWeight { get; set; }
         /// <summary>
         /// Total Maund = Total Actual Weight of Bags / 40

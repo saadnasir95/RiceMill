@@ -57,6 +57,8 @@ namespace TheRiceMill.Application.GatePasses.Queries
                     BagQuantity = p.BagQuantity,
                     BoriQuantity = p.BoriQuantity,
                     WeightPerBag = p.WeightPerBag,
+                    KandaWeight = p.KandaWeight,
+                    EmptyWeight = p.EmptyWeight,
                     NetWeight = p.NetWeight,
                     Maund = p.Maund,
                     DateTime = p.DateTime,
