@@ -21,7 +21,7 @@ namespace TheRiceMill.Application.Products.Commands
 
         public Task<ResponseViewModel> Handle(DeleteProductRequestModel request, CancellationToken cancellationToken)
         {
-            var canDelete = _context.Products.Any(p => p.Id == request.Id && !p.Purchases.Any() && !p.Sales.Any());
+            var canDelete = _context.Products.Any(p => p.Id == request.Id && !p.Sales.Any());
             if (!canDelete)
             {
                 throw new CannotDeleteException(nameof(Product), request.Id);

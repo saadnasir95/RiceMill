@@ -16,7 +16,6 @@ namespace TheRiceMill.Domain.Entities
         /// </summary>
         public string NormalizedName { get; set; }
 
-        public IEnumerable<Purchase> Purchases { get; set; }
         public IEnumerable<GatePass> GatePasses { get; set; }
         public IEnumerable<Sale> Sales { get; set; }
     }
