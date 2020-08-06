@@ -28,6 +28,10 @@ namespace TheRiceMill.Application.GatePasses.Commands
             {
                 throw new NotFoundException(nameof(GatePass), request.Id);
             }
+            else if (gatePass != null && (gatePass.SaleId != null || gatePass.PurchaseId != null))
+            {
+                throw new CannotDeleteException(nameof(GatePass), request.Id);
+            }
             _context.GatePasses.Remove(gatePass);
             await _context.SaveChangesAsync(cancellationToken);
             return new ResponseViewModel().CreateOk();

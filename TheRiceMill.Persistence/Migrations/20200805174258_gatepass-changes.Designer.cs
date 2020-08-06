@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TheRiceMill.Persistence;
 
 namespace TheRiceMill.Persistence.Migrations
 {
     [DbContext(typeof(TheRiceMillDbContext))]
-    partial class TheRiceMillDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200805174258_gatepass-changes")]
+    partial class gatepasschanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -482,8 +484,6 @@ namespace TheRiceMill.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<double>("BoriQuantity");
-
                     b.Property<double>("Commission");
 
                     b.Property<string>("CreatedBy");
@@ -491,8 +491,6 @@ namespace TheRiceMill.Persistence.Migrations
                     b.Property<DateTime>("CreatedDate");
 
                     b.Property<DateTime>("Date");
-
-                    b.Property<int>("RateBasedOn");
 
                     b.Property<double>("RatePerMaund");
 

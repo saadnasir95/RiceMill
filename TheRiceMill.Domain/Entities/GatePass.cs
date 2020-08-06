@@ -21,6 +21,8 @@ namespace TheRiceMill.Domain.Entities
         public double BagQuantity { get; set; }
         public double BoriQuantity { get; set; }
         public double WeightPerBag { get; set; }
+        public double KandaWeight { get; set; }
+        public double EmptyWeight { get; set; }
         public double NetWeight { get; set; }
         public double Maund { get; set; }
     }

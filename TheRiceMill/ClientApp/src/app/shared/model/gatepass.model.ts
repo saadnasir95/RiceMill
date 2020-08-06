@@ -16,6 +16,8 @@ export class Gatepass {
   bagQuantity: number;
   boriQuantity: number;
   weightPerBag: number;
+  kandaWeight: number;
+  emptyWeight: number;
   netWeight: number;
   maund: number;
   saleId: number;

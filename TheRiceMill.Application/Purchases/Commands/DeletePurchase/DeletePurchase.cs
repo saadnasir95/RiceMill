@@ -22,19 +22,23 @@ namespace TheRiceMill.Application.Purchases.Commands.DeletePurchase
 
         public async Task<ResponseViewModel> Handle(DeletePurchaseRequestModel request, CancellationToken cancellationToken)
         {
-            var purchase = _context.Purchases.GetBy(p => p.Id == request.PurchaseId, p => p.Include(pr => pr.Charges));
+            var purchase = _context.Purchases.GetBy(p => p.Id == request.PurchaseId, p => p.Include(pr => pr.Charges).Include(pr => pr.GatePasses));
             if (purchase == null)
             {
-                throw new NotFoundException(nameof(Domain.Entities.Purchase),request.PurchaseId);
+                throw new NotFoundException(nameof(Domain.Entities.Purchase), request.PurchaseId);
             }
             /*var ledger = _context.Ledgers.GetBy(p => p.TransactionId == request.PurchaseId && p.LedgerType == (int)LedgerType.Purchase);
             if (ledger == null)
             {
                 throw new NotFoundException(nameof(Domain.Entities.Ledger),request.PurchaseId);
             }*/
-            if(purchase.Charges.Count > 0)
+            if (purchase.Charges.Count > 0)
             {
                 _context.Charges.RemoveRange(purchase.Charges);
+            }
+            if (purchase.GatePasses?.Count > 0)
+            {
+                purchase.GatePasses.ForEach(pr => pr.PurchaseId = null);
             }
             _context.Purchases.Remove(purchase);
             //_context.Ledgers.Remove(ledger);

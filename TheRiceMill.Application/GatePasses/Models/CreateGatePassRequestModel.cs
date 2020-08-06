@@ -30,6 +30,8 @@ namespace TheRiceMill.Application.GatePasses.Models
         /// <summary>
         /// The Weight Measured by the Guys by Machine
         /// </summary>
+        public double KandaWeight { get; set; }
+        public double EmptyWeight { get; set; }
         public double NetWeight { get; set; }
         /// <summary>
         /// Total Maund = Total Actual Weight of Bags / 40
@@ -77,9 +79,11 @@ namespace TheRiceMill.Application.GatePasses.Models
             RuleFor(p => p.VehicleId).Must(p => p > 0).When(p => p.Vehicle == null).WithMessage(Messages.IncorrectValue);
             RuleFor(p => p.WeightPerBag).GreaterThan(0).WithMessage(Messages.LessThan(1));
             RuleFor(p => p.Maund).GreaterThan(0).WithMessage(Messages.LessThan(1));
+            RuleFor(p => p.KandaWeight).GreaterThan(0).WithMessage(Messages.LessThan(1));
+            RuleFor(p => p.EmptyWeight).GreaterThanOrEqualTo(0).WithMessage(Messages.LessThan(0));
             RuleFor(p => p.NetWeight).GreaterThan(0).WithMessage(Messages.LessThan(1));
-            RuleFor(p => p.BagQuantity).Required();
-            RuleFor(p => p.BoriQuantity).Required();
+            RuleFor(p => p.BagQuantity).Required().GreaterThanOrEqualTo(0).WithMessage(Messages.LessThan(0));
+            RuleFor(p => p.BoriQuantity).Required().GreaterThanOrEqualTo(0).WithMessage(Messages.LessThan(0));
             RuleFor(p => p.DateTime).GreaterThan(DateTime.MinValue).WithMessage(Messages.LessThan(DateTime.MinValue));
         }
     }

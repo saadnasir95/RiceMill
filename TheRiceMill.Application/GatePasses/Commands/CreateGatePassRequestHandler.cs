@@ -36,6 +36,8 @@ namespace TheRiceMill.Application.GatePasses.Commands
                 BagQuantity = request.BagQuantity,
                 BoriQuantity = request.BoriQuantity,
                 WeightPerBag = request.WeightPerBag,
+                KandaWeight = request.KandaWeight,
+                EmptyWeight = request.EmptyWeight,
                 NetWeight = request.NetWeight,
                 Maund = request.Maund,
                 Broker = request.Broker,
