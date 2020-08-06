@@ -87,6 +87,8 @@ namespace TheRiceMill.Application.Purchases.Commands.UpdatePurchase
                             ledger.Debit = 0;
                             _context.Ledgers.Update(ledger);
                 */
+                purchase.RateBasedOn = request.RateBasedOn == 1 ? RateBasedOn.Maund : RateBasedOn.Bori;
+                purchase.BoriQuantity = request.BoriQuantity;
                 await _context.SaveChangesAsync(cancellationToken);
                 return new ResponseViewModel().CreateOk(new PurchaseResponseViewModel()
                 {

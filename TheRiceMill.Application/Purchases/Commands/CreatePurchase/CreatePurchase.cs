@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -52,37 +53,41 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
 
             purchase.Charges = new List<Charge>();
             purchase.Charges = charges;
+            purchase.RateBasedOn =  request.RateBasedOn == 1 ? RateBasedOn.Maund : RateBasedOn.Bori;
             purchase.Commission = request.Commission;
             purchase.RatePerMaund = request.RatePerMaund;
             purchase.TotalPrice = request.TotalPrice;
+            purchase.BoriQuantity = request.BoriQuantity;
             purchase.Date = request.Date;
             _context.Purchases.Add(purchase);
 
+            List<GatePass> gatepasses = new List<GatePass>();
             GatePass gatepass = null;
             foreach (var id in request.GatepassIds)
             {
                 // Need to Discuss this
                 gatepass = _context.GatePasses.GetBy(q => q.Id == id, p => p.Include(pr => pr.Party).Include(pr => pr.Product).Include(pr => pr.Vehicle));
+                gatepasses.Add(gatepass);
                 gatepass.PurchaseId = purchase.Id;
 
             }
             await _context.SaveChangesAsync(cancellationToken);
- /*           var ledger = new Domain.Entities.Ledger()
-            {
-                //PartyId = party.Id,
-                Credit = request.TotalPrice,
-                Debit = 0,
-                Description = "",
-                TransactionId = purchase.Id,
-                LedgerType = (int)LedgerType.Purchase,
-            };*/
+            /*           var ledger = new Domain.Entities.Ledger()
+                       {
+                           //PartyId = party.Id,
+                           Credit = request.TotalPrice,
+                           Debit = 0,
+                           Description = "",
+                           TransactionId = purchase.Id,
+                           LedgerType = (int)LedgerType.Purchase,
+                       };*/
             //_context.Add(ledger);
             //await _context.SaveChangesAsync(cancellationToken);
             return new ResponseViewModel().CreateOk(new PurchaseResponseViewModel()
             {
-                /*               BagQuantity = request.BagQuantity,
-                               BagWeight = request.BagWeight,
-                               KandaWeight = request.KandaWeight,*/
+                /*BagQuantity = request.BagQuantity,
+                BagWeight = request.BagWeight,
+                KandaWeight = request.KandaWeight,*/
                 Vehicle = new VehicleRequestModel()
                 {
                     PlateNo = gatepass.Vehicle.PlateNo
@@ -90,8 +95,8 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
                 Product = new ProductRequestModel()
                 {
                     Name = gatepass.Product.Name,
-/*                    Price = gatepass.Product.Price,
-                    Type = (ProductType)gatepass.Product.Type*/
+                    /*Price = gatepass.Product.Price,
+                      Type = (ProductType)gatepass.Product.Type*/
                 },
                 VehicleId = gatepass.Vehicle.Id,
                 ProductId = gatepass.Product.Id,
@@ -102,25 +107,29 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
                     PhoneNumber = gatepass.Party.PhoneNumber
                 },
                 TotalMaund = request.TotalMaund,
+                BoriQuantity = request.BoriQuantity,
+                Gatepasses = new GatePassResponseModel() {
+                    
+                },
                 //CheckIn = new DateConverter().ConvertToDateTimeIso(request.CheckIn),
                 Id = purchase.Id,
                 Commission = purchase.Commission,
                 AdditionalCharges = request.AdditionalCharges,
-/*                BasePrice = purchase.BasePrice,
-                PercentCommission = purchase.PercentCommission,*/
+                /*BasePrice = purchase.BasePrice,
+                 PercentCommission = purchase.PercentCommission,*/
                 TotalPrice = purchase.TotalPrice,
-/*                ActualBagWeight = purchase.ActualBagWeight,
+                /*ActualBagWeight = purchase.ActualBagWeight,
                 ExpectedBagWeight = purchase.ExpectedBagWeight,
                 RatePerKg = purchase.RatePerKg,*/
                 RatePerMaund = purchase.RatePerMaund,
                 Date = new DateConverter().ConvertToDateTimeIso(purchase.Date),
-                /*                ExpectedEmptyBagWeight = purchase.ExpectedEmptyBagWeight,
-                                TotalActualBagWeight = purchase.TotalActualBagWeight,
-                                TotalExpectedBagWeight = purchase.TotalExpectedBagWeight,
-                                TotalExpectedEmptyBagWeight = purchase.TotalExpectedEmptyBagWeight,
-                                Direction = purchase.Direction,
-                                Vibration = purchase.Vibration,
-                                ActualBags = purchase.ActualBags*/
+                /*ExpectedEmptyBagWeight = purchase.ExpectedEmptyBagWeight,
+                TotalActualBagWeight = purchase.TotalActualBagWeight,
+                TotalExpectedBagWeight = purchase.TotalExpectedBagWeight,
+                TotalExpectedEmptyBagWeight = purchase.TotalExpectedEmptyBagWeight,
+                Direction = purchase.Direction,
+                Vibration = purchase.Vibration,
+                ActualBags = purchase.ActualBags*/
                 CreatedDate = new DateConverter().ConvertToDateTimeIso(purchase.CreatedDate)
             });
         }

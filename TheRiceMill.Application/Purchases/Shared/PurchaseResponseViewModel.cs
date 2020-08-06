@@ -9,10 +9,14 @@ namespace TheRiceMill.Application.Purchases.Shared
         public string CheckIn { get; set; }
         public int VehicleId { get; set; }
         public int ProductId { get; set; }
+        public GatePassResponseModel Gatepasses { get; set; }
+
         public VehicleRequestModel Vehicle { get; set; }
         public ProductRequestModel Product { get; set; }
         public PartyRequestModel Party { get; set; }
         public double BagQuantity { get; set; }
+        public double BoriQuantity { get; set; }
+
         public double BagWeight { get; set; }
         public double ExpectedBagWeight { get; set; }
         public double TotalExpectedBagWeight { get; set; }

@@ -3,6 +3,19 @@
 }
 
 .grand-total {
-    font-weight: 500;
+    font-weight: 600;
     padding: 8px;
+}
+
+.container {
+    p {
+        b{
+            font-weight: 600;
+        }
+    }
+}
+
+.mat-checkbox {
+    font-family: Roboto,"Helvetica Neue",sans-serif;
+    padding: 0.2rem !important;
 }

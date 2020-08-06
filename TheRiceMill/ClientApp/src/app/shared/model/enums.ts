@@ -41,3 +41,9 @@ export enum PaymentType {
   Cash = 1,
   Cheque = 2
 }
+
+export enum RateBasedOn {
+  Maund = 1,
+  Bori,
+  Bag
+}

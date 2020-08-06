@@ -20,7 +20,10 @@ namespace TheRiceMill.Application.Purchases.Commands.UpdatePurchase
         //public double KandaWeight { get; set; }
         //public double ActualBagWeight { get; set; }
         //public double TotalActualBagWeight { get; set; }
+        public int RateBasedOn { get; set; }
         public double TotalMaund { get; set; }
+        public double BoriQuantity { get; set; }
+
         //public double RatePerKg { get; set; }
         public double RatePerMaund { get; set; }
         public double TotalPrice { get; set; }

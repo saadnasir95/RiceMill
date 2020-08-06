@@ -9,7 +9,7 @@
 </ng-template>
 
 <ng-template #body>
-  <form [formGroup]="purchaseForm" (ngSubmit)="submit()">
+  <form class="container" [formGroup]="purchaseForm" (ngSubmit)="submit()">
     <mat-dialog-content>
       <div class="row">
         <div class="col-12">
@@ -250,19 +250,74 @@
               Total Actual bag weight must be greater than 0</mat-error>
           </mat-form-field>
         </div> -->
+
+        
         <div class="col-md-4">
-          <mat-form-field>
-            <input type="number" matInput placeholder="Maund Weight" formControlName="totalMaund" readonly>
+          <div class="row">
+            <div class="col-md-12 d-flex">
+              <mat-checkbox
+                      class="rem-0.2" 
+                      [checked]="rateBasedOn == '1'" 
+                      [color]="primary"
+                      (change)="updateRateType(1)"></mat-checkbox>
+                        <p class="pl-2"><b> Maund: </b>
+              {{purchaseForm.get('weightPriceGroup.totalMaund').value}} </p> 
+            </div>
+          </div>
+          
+          <!-- <mat-form-field>
+            <input type="number" matInput placeholder="Maund" formControlName="totalMaund" readonly>
             <mat-error *ngIf="purchaseForm.get('weightPriceGroup.totalMaund').hasError('required')">
               Maund weight is required
             </mat-error>
             <mat-error *ngIf="purchaseForm.get('weightPriceGroup.totalMaund').hasError('min')">
               Maund weight must be greater than 0</mat-error>
-          </mat-form-field>
+          </mat-form-field> -->
+          <div class="row">
+            <div class="col-md-12 d-flex">
+              <mat-checkbox
+              class="rem-0.2" 
+              [checked]="rateBasedOn == '2'" 
+              [color]="primary"
+              (change)="updateRateType(2)"></mat-checkbox>
+              <p class="pl-2"><b> Bori Quantity: </b>
+              {{purchaseForm.get('weightPriceGroup.boriQuantity').value}}  </p>
+            </div>
+          </div>
+           
+          <!-- <mat-form-field>
+            <input type="number" matInput placeholder="Bori Quantity" formControlName="totalMaund" readonly>
+            <mat-error *ngIf="purchaseForm.get('weightPriceGroup.boriQuantity').hasError('required')">
+              Maund weight is required
+            </mat-error>
+            <mat-error *ngIf="purchaseForm.get('weightPriceGroup.boriQuantity').hasError('min')">
+              Maund weight must be greater than 0</mat-error>
+          </mat-form-field> -->
+
+          <div class="row">
+            <div class="col-md-12 d-flex">
+              <mat-checkbox
+              class="rem-0.2"
+              [checked]="rateBasedOn == '3'" 
+              [color]="primary"
+              [disabled]="true"
+              (change)="updateRateType(3)"></mat-checkbox>
+              <p class="pl-2"><b> Bag Quantity: </b> {{purchaseForm.get('weightPriceGroup.bagQuantity').value}} </p>
+            </div>
+          </div>
+          <!-- <mat-form-field>
+            <input type="number" matInput placeholder="Maund" formControlName="totalMaund" readonly>
+            <mat-error *ngIf="purchaseForm.get('weightPriceGroup.totalMaund').hasError('required')">
+              Maund weight is required
+            </mat-error>
+            <mat-error *ngIf="purchaseForm.get('weightPriceGroup.totalMaund').hasError('min')">
+              Maund weight must be greater than 0</mat-error>
+          </mat-form-field> -->
         </div>
-        <div class="col-md-4">
-          <mat-form-field>
-            <input type="number" matInput placeholder="Enter Maund Price" formControlName="ratePerMaund">
+
+        <div class="col-md-4 d-flex align-items-center">
+          <mat-form-field class="w-100">
+            <input type="number" matInput placeholder="Enter {{selectedRateOnText}} Rate" formControlName="ratePerMaund">
             <mat-error *ngIf="purchaseForm.get('weightPriceGroup.ratePerMaund').hasError('required')">
               Maund Price is required
             </mat-error>
@@ -270,11 +325,16 @@
               Maund Price must be greater than 0</mat-error>
           </mat-form-field>
         </div>
-        <div class="col-md-4">
-          <span class="grand-total"><p class="d-flex justify-content-end"><b> Total Maund Charges:&nbsp;
+        <div class="col-md-4 d-flex align-items-center justify-content-end">
+          <span class="grand-total"><p class="d-flex justify-content-end"><b> Total Charges:&nbsp;
           </b> {{ purchaseForm.get('weightPriceGroup.ratePerMaund').value * purchaseForm.get('weightPriceGroup.totalMaund').value  |currency:"PKR":"symbol":'1.2-2' }} </p>
           </span>
         </div>
+
+        <div class="col-md-12">
+          <mat-divider class="mb-2"></mat-divider>
+        </div>
+
         <!-- <div class="col-md-4">
           <mat-form-field>
             <input type="number" matInput placeholder="Kg Price" formControlName="ratePerKg" readonly>
@@ -320,6 +380,10 @@
           </b> {{ purchaseForm.get('weightPriceGroup.commission').value  |currency:"PKR":"symbol": '1.2-2' }} </p>
           </span>
         </div>
+        <div class="col-md-12">
+          <mat-divider class="mb-2"></mat-divider>
+        </div>
+
       </div> 
       <!---------------------->
       <!-- Old Modal Fields -->
@@ -379,9 +443,11 @@
             </span>
           </div>
         </div>
+        <div class="col-md-12">
+          <mat-divider class="mb-2"></mat-divider>
+        </div>
       </div>
 
-      <mat-divider class="mb-2"></mat-divider>
       <div class="row">
         <div class="offset-6 col-md-6">
           <span class="grand-total"><p class="d-flex justify-content-end"><b> Grand Total:&nbsp;

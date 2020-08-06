@@ -40,12 +40,13 @@ namespace TheRiceMill.Application.Purchases.Queries
             }
             var purchase = _context.Purchases.GetMany(
                     query,
-                    request.OrderBy, request.Page, request.PageSize, request.IsDescending, 
+                    request.OrderBy, request.Page, request.PageSize, request.IsDescending,
                     p => p.Include(pr => pr.GatePasses))
                 .Select(p => new
                 {
                     RatePerMaund = p.RatePerMaund,
                     TotalPrice = p.TotalPrice,
+                    BoriQuantity = p.BoriQuantity,
                     TotalMaund = p.TotalMaund,
                     Gatepasses = p.GatePasses.Select(gp => new GatePassResponseModel()
                     {

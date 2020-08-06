@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
-import { GateinDirection, ProductType } from '../../../../shared/model/enums';
+import { GateinDirection, ProductType, RateBasedOn } from '../../../../shared/model/enums';
 import { MatDialogRef, MatAutocompleteSelectedEvent, MatChipInputEvent } from '@angular/material';
 import { Vehicle } from '../../../../shared/model/vehicle.model';
 import { Product } from '../../../../shared/model/product.model';
@@ -38,6 +38,8 @@ export class PurchaseModalComponent implements OnInit {
   selectable = true;
   removable = true;
   addOnBlur = false;
+  selectedRateOnText: string 
+  rateBasedOn: RateBasedOn; 
   separatorKeysCodes: number[] = [ENTER, COMMA];
   filteredGatepasses: Gatepass[];
   gatepasses: Gatepass[] = [];
@@ -72,7 +74,8 @@ export class PurchaseModalComponent implements OnInit {
   //     type: new FormControl(+ProductType.Purchase, Validators.required)
   //   }),
     weightPriceGroup: new FormGroup({
-      // bagQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
+      bagQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
+      boriQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
       // bagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
       // kandaWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
       // expectedBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
@@ -128,7 +131,6 @@ export class PurchaseModalComponent implements OnInit {
     //   this.purchaseForm.controls['gatepass'].valueChanges.subscribe(
     //     startWith(null),
     //     map((fruit: string | null) => {
-    //       debugger
     //       fruit ? this.gatepassService
     // .getGatepassList(10, 0, fruit, 'false', '',true)
     // .subscribe(
@@ -457,12 +459,22 @@ export class PurchaseModalComponent implements OnInit {
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
+    debugger
     if(!this.isGatepassExists(event.option.value)){
       this.gatepasses.push(event.option.value)
       this.purchaseForm.get('weightPriceGroup.totalMaund').setValue(
         +this.purchaseForm.get('weightPriceGroup.totalMaund').value + event.option.value.maund
       );
+
+      this.purchaseForm.get('weightPriceGroup.boriQuantity').setValue(
+        +this.purchaseForm.get('weightPriceGroup.boriQuantity').value + event.option.value.boriQuantity
+      );
+
+      this.purchaseForm.get('weightPriceGroup.bagQuantity').setValue(
+        +this.purchaseForm.get('weightPriceGroup.bagQuantity').value + event.option.value.bagQuantity
+      );
     };
+    this.updateRateType(RateBasedOn.Maund);
     this.gatepassInput.nativeElement.value = '';
     this.purchaseForm.controls['gatepass'].setValue(null);
   }
@@ -477,12 +489,13 @@ export class PurchaseModalComponent implements OnInit {
   }
 
   editPurchase(purchase: Purchase) {
-    debugger
     this.isNew = false;
     this.purchase = new Purchase();
+    debugger
     Object.assign(this.purchase, purchase);
     this.commission = this.purchase.commission;
     this.gatepasses = this.purchase.gatepasses;
+    this.updateRateType(this.purchase.rateBasedOn);
     // this.basePrice = this.purchase.basePrice;
 
     this.purchaseForm.patchValue({
@@ -581,9 +594,9 @@ export class PurchaseModalComponent implements OnInit {
         this.purchase.additionalCharges = [];
       }
 
-      debugger
       this.purchase.date = moment(this.purchaseForm.value.date).utc().format(); 
       this.purchase.gatepassIds = this.gatepasses.map(gatepass => gatepass.id);
+      this.purchase.rateBasedOn = this.rateBasedOn;
       this.purchase.totalMaund = this.purchaseForm.get('weightPriceGroup').value.totalMaund;
       this.purchase.ratePerMaund = this.purchaseForm.get('weightPriceGroup').value.ratePerMaund;
       this.purchase.totalPrice = this.purchaseForm.get('weightPriceGroup.ratePerMaund').value * this.purchaseForm.get('weightPriceGroup.totalMaund').value + this.purchaseForm.get('weightPriceGroup.commission').value + this.additionalCharges;
@@ -796,6 +809,15 @@ export class PurchaseModalComponent implements OnInit {
   deleteCharges(id: number) {
     (this.purchaseForm.get('additionalCharges') as FormArray).removeAt(id);
     this.purchase.additionalCharges.splice(id, 1);
+  }
+
+  updateRateType(type: number): string{
+    this.rateBasedOn = type
+    if(type == RateBasedOn.Maund) return this.selectedRateOnText = "Maund"; 
+
+    if(type == RateBasedOn.Bori) return this.selectedRateOnText = "Bori"; 
+ 
+    if(type == RateBasedOn.Bag) return this.selectedRateOnText = "Bag"; 
   }
 
 }

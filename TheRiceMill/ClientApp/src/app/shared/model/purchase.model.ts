@@ -16,6 +16,7 @@ export class Purchase {
   vehicle: Vehicle;
   productId: number;
   product: Product;
+  rateBasedOn: number;
   bagQuantity: number;
   expectedBagWeight: number;
   totalExpectedBagWeight: number;
