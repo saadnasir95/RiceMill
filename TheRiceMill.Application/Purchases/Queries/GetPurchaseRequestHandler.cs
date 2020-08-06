@@ -48,6 +48,7 @@ namespace TheRiceMill.Application.Purchases.Queries
                     TotalPrice = p.TotalPrice,
                     BoriQuantity = p.BoriQuantity,
                     TotalMaund = p.TotalMaund,
+                    RateBasedOn = p.RateBasedOn == RateBasedOn.Maund ? 1 : 2,
                     Gatepasses = p.GatePasses.Select(gp => new GatePassResponseModel()
                     {
                         Type = (GatePassType)gp.Type,

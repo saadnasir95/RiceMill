@@ -19,24 +19,25 @@
   </div>
 
   <div class="invoice-content row px-5 pt-5">
-    <div class="col-3">
+    <!-- <div class="col-3">
       <h5 class="gray-ish">Invoiced to:</h5>
       <p class="gray-ish">{{purchase.party.name}}</p>
       <p class="gray-ish">{{purchase.party.address}}</p>
       <p class="gray-ish">{{purchase.party.phoneNumber}}</p>
-    </div>
-    <div class="col-3">
+    </div> -->
+    <div class="col-6">
       <h5 class="gray-ish">Purchase number:</h5>
       <p class="gray-ish">{{purchase.id}}</p>
-
-      <h5 class="gray-ish">Purchase Date</h5>
-      <p class="gray-ish">{{purchase.date | localDatetime}}</p>
-
     </div>
-    <div class="col-6 text-right total-field">
+
+    <div class="col-6">
+      <h5 class="gray-ish d-flex justify-content-end">Purchase Date</h5>
+      <p class="gray-ish d-flex justify-content-end">{{purchase.date | localDatetime}}</p>
+    </div>
+    <!-- <div class="col-6 text-right total-field">
       <h4 class="gray-ish">Purchase Total</h4>
       <h1 class="gray-ish">{{purchase.totalPrice | currency:'Rs '}}</h1>
-    </div>
+    </div> -->
   </div>
 
   <div class="row mt-5">
@@ -44,20 +45,26 @@
       <table class="table table-hover">
         <thead class="thead splitForPrint">
           <tr>
+            <th scope="col gray-ish">#</th>
+            <th scope="col gray-ish">Party</th>
             <th scope="col gray-ish">Product</th>
             <th scope="col gray-ish">Bag Qty</th>
+            <th scope="col gray-ish">Bori Qty</th>
             <th scope="col gray-ish">Kanda Weight</th>
-            <th scope="col gray-ish">Total Actual Bag Weight</th>
+            <!-- <th scope="col gray-ish">Total Actual Bag Weight</th> -->
             <th scope="col gray-ish">Total Maund</th>
             <th scope="col gray-ish">Rate per Maund</th>
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>{{purchase?.product?.name}}</td>
-            <td>{{purchase.bagQuantity}}</td>
-            <td>{{purchase.kandaWeight}}</td>
-            <td>{{purchase.totalActualBagWeight| currency:'KG '}}</td>
+          <tr *ngFor="let gatepass of purchase.gatepasses; let i= index">
+            <td>{{i + 1}}</td>
+            <td>{{gatepass?.party?.name}}</td>
+            <td>{{gatepass?.product?.name}}</td>
+            <td>{{gatepass.bagQuantity}}</td>
+            <td>{{gatepass.boriQuantity}}</td>
+            <td>{{gatepass.kandaWeight}}</td>
+            <!-- <td>{{gatepass.totalActualBagWeight| currency:'KG '}}</td> -->
             <td>{{purchase.totalMaund}}</td>
             <td>{{purchase.ratePerMaund | currency:'Rs '}}</td>
           </tr>
@@ -80,7 +87,7 @@
             <td class="text-right">{{purchase.basePrice | currency:'Rs '}}</td>
           </tr> -->
           <tr>
-            <th scope="row gray-ish">Commission</th>
+            <th scope="row gray-ish">Brokery</th>
             <td class="text-right">{{purchase.commission | currency: 'Rs '}}</td>
           </tr>
 

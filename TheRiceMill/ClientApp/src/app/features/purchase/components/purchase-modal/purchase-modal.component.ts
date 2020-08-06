@@ -459,7 +459,6 @@ export class PurchaseModalComponent implements OnInit {
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    debugger
     if(!this.isGatepassExists(event.option.value)){
       this.gatepasses.push(event.option.value)
       this.purchaseForm.get('weightPriceGroup.totalMaund').setValue(
@@ -491,7 +490,6 @@ export class PurchaseModalComponent implements OnInit {
   editPurchase(purchase: Purchase) {
     this.isNew = false;
     this.purchase = new Purchase();
-    debugger
     Object.assign(this.purchase, purchase);
     this.commission = this.purchase.commission;
     this.gatepasses = this.purchase.gatepasses;

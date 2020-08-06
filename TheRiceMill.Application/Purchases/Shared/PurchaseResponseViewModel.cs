@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using TheRiceMill.Application.GatePasses.Models;
 using TheRiceMill.Application.Sale.Commands.CreateSale;
 
@@ -9,7 +10,8 @@ namespace TheRiceMill.Application.Purchases.Shared
         public string CheckIn { get; set; }
         public int VehicleId { get; set; }
         public int ProductId { get; set; }
-        public GatePassResponseModel Gatepasses { get; set; }
+        public List<GatePassResponseModel> Gatepasses { get; set; }
+        public int RateBasedOn { get; set; }
 
         public VehicleRequestModel Vehicle { get; set; }
         public ProductRequestModel Product { get; set; }

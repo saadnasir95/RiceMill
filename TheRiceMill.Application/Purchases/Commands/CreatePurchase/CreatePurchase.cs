@@ -24,6 +24,7 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
     public class CreatePurchaseRequestHandler : IRequestHandler<CreatePurchaseRequestModel, ResponseViewModel>
     {
         private readonly TheRiceMillDbContext _context;
+        GatepassMapper gatepassMapper = new GatepassMapper();
 
         public CreatePurchaseRequestHandler(TheRiceMillDbContext context)
         {
@@ -88,31 +89,13 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
                 /*BagQuantity = request.BagQuantity,
                 BagWeight = request.BagWeight,
                 KandaWeight = request.KandaWeight,*/
-                Vehicle = new VehicleRequestModel()
-                {
-                    PlateNo = gatepass.Vehicle.PlateNo
-                },
-                Product = new ProductRequestModel()
-                {
-                    Name = gatepass.Product.Name,
-                    /*Price = gatepass.Product.Price,
-                      Type = (ProductType)gatepass.Product.Type*/
-                },
-                VehicleId = gatepass.Vehicle.Id,
-                ProductId = gatepass.Product.Id,
-                Party = new PartyRequestModel()
-                {
-                    Name = gatepass.Party.Name,
-                    Address = gatepass.Party.Address,
-                    PhoneNumber = gatepass.Party.PhoneNumber
-                },
                 TotalMaund = request.TotalMaund,
                 BoriQuantity = request.BoriQuantity,
-                Gatepasses = new GatePassResponseModel() {
-                    
-                },
+                Gatepasses = gatepassMapper.MapFull(gatepasses),
+                
                 //CheckIn = new DateConverter().ConvertToDateTimeIso(request.CheckIn),
                 Id = purchase.Id,
+                RateBasedOn = purchase.RateBasedOn == RateBasedOn.Maund ? 1 : 2,
                 Commission = purchase.Commission,
                 AdditionalCharges = request.AdditionalCharges,
                 /*BasePrice = purchase.BasePrice,
@@ -131,7 +114,7 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
                 Vibration = purchase.Vibration,
                 ActualBags = purchase.ActualBags*/
                 CreatedDate = new DateConverter().ConvertToDateTimeIso(purchase.CreatedDate)
-            });
+            }); ;
         }
     }
 
