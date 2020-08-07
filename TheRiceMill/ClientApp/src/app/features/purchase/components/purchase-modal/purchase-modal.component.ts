@@ -1,7 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { GateinDirection, ProductType, RateBasedOn } from '../../../../shared/model/enums';
-import { MatDialogRef, MatAutocompleteSelectedEvent, MatChipInputEvent } from '@angular/material';
+import { MatDialogRef, MatAutocompleteSelectedEvent, MatChipInputEvent, MatSlideToggleChange } from '@angular/material';
 import { Vehicle } from '../../../../shared/model/vehicle.model';
 import { Product } from '../../../../shared/model/product.model';
 import { Party } from '../../../../shared/model/party.model';
@@ -20,8 +20,6 @@ import { NotificationService } from '../../../../shared/services/notification.se
 import { PurchaseResponse } from '../../../../shared/model/purchase-response.model';
 import { SpinnerService } from '../../../../shared/services/spinner.service';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
-import { Observable } from 'rxjs/internal/Observable';
-import { startWith, map } from 'rxjs/operators';
 import { GatepassService } from '../../../../shared/services/gatepass.service';
 import { GatepassResponse } from '../../../../shared/model/gatepass-response.model';
 import { Gatepass } from '../../../../shared/model/gatepass.model';
@@ -39,7 +37,7 @@ export class PurchaseModalComponent implements OnInit {
   removable = true;
   addOnBlur = false;
   selectedRateOnText: string 
-  rateBasedOn: RateBasedOn; 
+  // rateBasedOn: RateBasedOn; 
   separatorKeysCodes: number[] = [ENTER, COMMA];
   filteredGatepasses: Gatepass[];
   gatepasses: Gatepass[] = [];
@@ -50,6 +48,7 @@ export class PurchaseModalComponent implements OnInit {
   additionalCharges = 0;
   commission = 0;
   basePrice = 0;
+
   purchaseForm: FormGroup = new FormGroup({
     date: new FormControl(moment.tz('Asia/Karachi').format().slice(0, 16), Validators.required),
     additionalCharges: new FormArray([]),
@@ -74,6 +73,7 @@ export class PurchaseModalComponent implements OnInit {
   //     type: new FormControl(+ProductType.Purchase, Validators.required)
   //   }),
     weightPriceGroup: new FormGroup({
+      isMaundBasedRate: new FormControl("1"),
       bagQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
       boriQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
       // bagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
@@ -87,7 +87,7 @@ export class PurchaseModalComponent implements OnInit {
       totalMaund: new FormControl(0, [Validators.required, Validators.min(0)]),
       // vibration: new FormControl(0, [Validators.required, Validators.min(0)]),
       // ratePerKg: new FormControl(0, [Validators.required, Validators.min(0)]),
-      ratePerMaund: new FormControl(0, [Validators.required, Validators.min(0)]),
+      rate: new FormControl(0, [Validators.required, Validators.min(0)]),
       commission: new FormControl(0, [Validators.required, Validators.min(0)]),
       // percentCommission: new FormControl(0, [Validators.required, Validators.min(0)]),
       totalPrice: new FormControl(0, [Validators.required, Validators.min(0)]),
@@ -112,37 +112,6 @@ export class PurchaseModalComponent implements OnInit {
     private notificationService: NotificationService,
     private gatepassService: GatepassService,
     public spinner: SpinnerService) {
-
-      this.purchaseForm.controls['gatepass'].valueChanges.subscribe(
-        (response: string) => {
-          this.gatepassService
-          .getGatepassList(10, 0, response, 'false', '',true)
-          .subscribe(
-            (response: GatepassResponse) => {
-              this.filteredGatepasses = response.data;
-              // this.gatepassList = response.data;
-              // this.dataSource.data = this.gatepassList;
-              // this.paginator.length = response.count;
-            }
-      )
-    })
-
-
-    //   this.purchaseForm.controls['gatepass'].valueChanges.subscribe(
-    //     startWith(null),
-    //     map((fruit: string | null) => {
-    //       fruit ? this.gatepassService
-    // .getGatepassList(10, 0, fruit, 'false', '',true)
-    // .subscribe(
-    //   (response: GatepassResponse) => {
-    //     this.filteredGatepasses = response.data;
-    //     // this.gatepassList = response.data;
-    //     // this.dataSource.data = this.gatepassList;
-    //     // this.paginator.length = response.count;
-    //   },
-    //   (error) => console.log(error)
-    // ) : this.allGatepasses.slice()
-    //     } ));
      }
 
   ngOnInit() {
@@ -325,6 +294,32 @@ export class PurchaseModalComponent implements OnInit {
     //   }
     // );
 
+    this.purchaseForm.controls['gatepass'].valueChanges.subscribe(
+      (response: string) => {
+        this.gatepassService
+        .getGatepassList(10, 0, response, 'false', '',true)
+        .subscribe(
+          (response: GatepassResponse) => {
+            this.filteredGatepasses = response.data;
+            // this.gatepassList = response.data;
+            // this.dataSource.data = this.gatepassList;
+            // this.paginator.length = response.count;
+          }
+    )
+  })
+
+  this.purchaseForm.get('weightPriceGroup.isMaundBasedRate').valueChanges.subscribe(
+    (response: string) => {
+      if(+response == RateBasedOn.Maund){
+        // this.rateBasedOn +response
+        this.selectedRateOnText = "Maund";
+      } 
+      else if(+response == RateBasedOn.Bag) {
+        // this.rateBasedOn +response
+        this.selectedRateOnText = "Bag"; 
+      }
+  })
+
     this.purchaseForm.get('additionalCharges').valueChanges.subscribe(
       (value: Array<any>) => {
         this.additionalCharges = 0;
@@ -455,6 +450,14 @@ export class PurchaseModalComponent implements OnInit {
       this.purchaseForm.get('weightPriceGroup.totalMaund').setValue(
         (this.purchaseForm.get('weightPriceGroup.totalMaund').value - gatepass.maund).toFixed(2)
       );
+
+      this.purchaseForm.get('weightPriceGroup.boriQuantity').setValue(
+        (this.purchaseForm.get('weightPriceGroup.boriQuantity').value - gatepass.boriQuantity).toFixed(2)
+      );
+
+      this.purchaseForm.get('weightPriceGroup.bagQuantity').setValue(
+        (this.purchaseForm.get('weightPriceGroup.bagQuantity').value - gatepass.bagQuantity).toFixed(2)
+      );
     }
   }
 
@@ -473,7 +476,7 @@ export class PurchaseModalComponent implements OnInit {
         +this.purchaseForm.get('weightPriceGroup.bagQuantity').value + event.option.value.bagQuantity
       );
     };
-    this.updateRateType(RateBasedOn.Maund);
+    // this.updateRateType(RateBasedOn.Maund);
     this.gatepassInput.nativeElement.value = '';
     this.purchaseForm.controls['gatepass'].setValue(null);
   }
@@ -493,9 +496,8 @@ export class PurchaseModalComponent implements OnInit {
     Object.assign(this.purchase, purchase);
     this.commission = this.purchase.commission;
     this.gatepasses = this.purchase.gatepasses;
-    this.updateRateType(this.purchase.rateBasedOn);
+    // this.updateRateType(this.purchase.rateBasedOn);
     // this.basePrice = this.purchase.basePrice;
-
     this.purchaseForm.patchValue({
       date: moment.utc(purchase.date).tz('Asia/Karachi').format().slice(0, 16),
       // direction: purchase.direction,
@@ -524,12 +526,15 @@ export class PurchaseModalComponent implements OnInit {
         // actualBagWeight: purchase.actualBagWeight,
         // totalActualBagWeight: purchase.totalActualBagWeight,
         // vibration: purchase.vibration,
-        totalMaund: purchase.totalMaund,
-        // ratePerKg: purchase.ratePerKg,
-        ratePerMaund: purchase.ratePerMaund,
-        totalPrice: purchase.totalPrice,
         // actualBags: purchase.actualBags,
         // percentCommission: purchase.percentCommission,
+        // ratePerKg: purchase.ratePerKg,
+        isMaundBasedRate: purchase.rateBasedOn.toString(),
+        totalMaund: purchase.totalMaund,
+        bagQuantity: purchase.bagQuantity,
+        boriQuantity: purchase.boriQuantity,
+        rate: purchase.rate,
+        totalPrice: purchase.totalPrice,
         commission: purchase.commission
       }
     }, { emitEvent: false });
@@ -594,10 +599,12 @@ export class PurchaseModalComponent implements OnInit {
 
       this.purchase.date = moment(this.purchaseForm.value.date).utc().format(); 
       this.purchase.gatepassIds = this.gatepasses.map(gatepass => gatepass.id);
-      this.purchase.rateBasedOn = this.rateBasedOn;
+      this.purchase.rateBasedOn = this.purchaseForm.get('weightPriceGroup').value.isMaundBasedRate;
       this.purchase.totalMaund = this.purchaseForm.get('weightPriceGroup').value.totalMaund;
-      this.purchase.ratePerMaund = this.purchaseForm.get('weightPriceGroup').value.ratePerMaund;
-      this.purchase.totalPrice = this.purchaseForm.get('weightPriceGroup.ratePerMaund').value * this.purchaseForm.get('weightPriceGroup.totalMaund').value + this.purchaseForm.get('weightPriceGroup.commission').value + this.additionalCharges;
+      this.purchase.bagQuantity = this.purchaseForm.get('weightPriceGroup').value.bagQuantity;
+      this.purchase.boriQuantity = this.purchaseForm.get('weightPriceGroup').value.boriQuantity;
+      this.purchase.rate = this.purchaseForm.get('weightPriceGroup').value.rate;
+      this.purchase.totalPrice = this.getRateBasedOnTotal() + this.purchaseForm.get('weightPriceGroup.commission').value + this.additionalCharges;
       this.purchase.commission = this.purchaseForm.get('weightPriceGroup').value.commission;
 
       if (this.purchase.additionalCharges.length >= 0 && (this.purchaseForm.get('additionalCharges') as FormArray).length >= 0) {
@@ -694,7 +701,7 @@ export class PurchaseModalComponent implements OnInit {
       this.purchase.vibration = this.purchaseForm.get('weightPriceGroup').value.vibration;
       this.purchase.totalMaund = this.purchaseForm.get('weightPriceGroup').value.totalMaund;
       this.purchase.ratePerKg = this.purchaseForm.get('weightPriceGroup').value.ratePerKg;
-      this.purchase.ratePerMaund = this.purchaseForm.get('weightPriceGroup').value.ratePerMaund;
+      this.purchase.rate = this.purchaseForm.get('weightPriceGroup').value.rate;
       this.purchase.totalPrice = this.purchaseForm.get('weightPriceGroup').value.totalPrice;
       this.purchase.actualBags = this.purchaseForm.get('weightPriceGroup').value.actualBags;
       this.purchase.percentCommission = this.purchaseForm.get('weightPriceGroup').value.percentCommission;
@@ -809,13 +816,26 @@ export class PurchaseModalComponent implements OnInit {
     this.purchase.additionalCharges.splice(id, 1);
   }
 
-  updateRateType(type: number): string{
-    this.rateBasedOn = type
-    if(type == RateBasedOn.Maund) return this.selectedRateOnText = "Maund"; 
+  // updateRateType(type: number): string{
+  //   this.rateBasedOn = type
+  //   if(type == RateBasedOn.Maund) return this.selectedRateOnText = "Maund"; 
 
-    if(type == RateBasedOn.Bori) return this.selectedRateOnText = "Bori"; 
+  //   if(type == RateBasedOn.Bori) return this.selectedRateOnText = "Bori"; 
  
-    if(type == RateBasedOn.Bag) return this.selectedRateOnText = "Bag"; 
+  //   if(type == RateBasedOn.Bag) return this.selectedRateOnText = "Bag"; 
+  // }
+
+  // onToggle(event: MatSlideToggleChange){
+  //   if(event.checked) return this.selectedRateOnText = "Maund"
+
+  //   if(!event.checked) return this.selectedRateOnText = "Bag"
+  // }
+
+  getRateBasedOnTotal():number{
+    return this.purchaseForm.get('weightPriceGroup.isMaundBasedRate').value == '1' ? 
+    +this.purchaseForm.get('weightPriceGroup.rate').value * +this.purchaseForm.get('weightPriceGroup.totalMaund').value :  
+    +this.purchaseForm.get('weightPriceGroup.rate').value * (+this.purchaseForm.get('weightPriceGroup.bagQuantity').value + 
+    +this.purchaseForm.get('weightPriceGroup.boriQuantity').value)
   }
 
 }

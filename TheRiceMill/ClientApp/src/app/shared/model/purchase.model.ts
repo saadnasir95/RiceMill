@@ -18,6 +18,7 @@ export class Purchase {
   product: Product;
   rateBasedOn: number;
   bagQuantity: number;
+  boriQuantity: number;
   expectedBagWeight: number;
   totalExpectedBagWeight: number;
   kandaWeight: number;
@@ -28,7 +29,7 @@ export class Purchase {
   totalActualBagWeight: number;
   totalMaund: number;
   ratePerKg: number;
-  ratePerMaund: number;
+  rate: number;
   basePrice: number;
   totalPrice: number;
   actualBags: number;

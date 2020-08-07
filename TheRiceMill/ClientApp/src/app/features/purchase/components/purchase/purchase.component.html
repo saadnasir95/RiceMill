@@ -33,10 +33,15 @@
                 <td mat-cell *matCellDef="let purchase"> {{purchase.boriQuantity | number : '1.2-2'}} </td>
               </ng-container>
 
-              <!-- <ng-container matColumnDef="ratePerMaund">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> Rate per Maund</th>
-                <td mat-cell *matCellDef="let purchase"> {{purchase.ratePerMaund | currency:'Rs '}} </td>
-              </ng-container> -->
+              <ng-container matColumnDef="bagQuantity">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Bag Quantity</th>
+                <td mat-cell *matCellDef="let purchase"> {{purchase.bagQuantity | number : '1.2-2'}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="rate">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Rate</th>
+                <td mat-cell *matCellDef="let purchase"> {{purchase.rate | currency:'Rs '}} </td>
+              </ng-container>
 
               <ng-container matColumnDef="brokery">
                 <th mat-header-cell *matHeaderCellDef mat-sort-header> Brokery</th>

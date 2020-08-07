@@ -49,8 +49,8 @@
             <th scope="col gray-ish">Party</th>
             <th scope="col gray-ish">Product</th>
             <th scope="col gray-ish">Maund</th>
-            <th scope="col gray-ish">Bag Qty</th>
             <th scope="col gray-ish">Bori Qty</th>
+            <th scope="col gray-ish">Bag Qty</th>
             <th scope="col gray-ish">Kanda Weight</th>
             <!-- <th scope="col gray-ish">Total Actual Bag Weight</th> -->
             <!-- <th scope="col gray-ish">Rate per Maund</th> -->
@@ -62,11 +62,11 @@
             <td>{{gatepass?.party?.name}}</td>
             <td>{{gatepass?.product?.name}}</td>
             <td>{{gatepass.maund}}</td>
-            <td>{{gatepass.bagQuantity}}</td>
             <td>{{gatepass.boriQuantity}}</td>
+            <td>{{gatepass.bagQuantity}}</td>
             <td>{{gatepass.kandaWeight}}</td>
             <!-- <td>{{gatepass.totalActualBagWeight| currency:'KG '}}</td> -->
-            <!-- <td>{{purchase.ratePerMaund | currency:'Rs '}}</td> -->
+            <!-- <td>{{purchase.rate | currency:'Rs '}}</td> -->
           </tr>
         </tbody>
       </table>
@@ -88,7 +88,7 @@
           </tr> -->
           <tr>
             <th scope="row gray-ish">Rate Per {{ purchase?.rateBasedOn == '1' ? 'Maund' : 'Bag' }}</th>
-            <td class="text-right">{{purchase.ratePerMaund | currency:'Rs '}}</td>
+            <td class="text-right">{{purchase.rate | currency:'Rs '}}</td>
           </tr>
           <tr>
             <th scope="row gray-ish">Brokery</th>

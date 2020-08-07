@@ -87,42 +87,25 @@ namespace TheRiceMill.Application.Purchases.Commands.UpdatePurchase
                             ledger.Debit = 0;
                             _context.Ledgers.Update(ledger);
                 */
-                purchase.RateBasedOn = request.RateBasedOn == 1 ? RateBasedOn.Maund : RateBasedOn.Bori;
+                purchase.RateBasedOn = request.RateBasedOn == 1 ? RateBasedOn.Maund : RateBasedOn.Bag;
                 purchase.BoriQuantity = request.BoriQuantity;
+                purchase.BagQuantity = request.BagQuantity;
+                purchase.TotalMaund = request.TotalMaund;
                 await _context.SaveChangesAsync(cancellationToken);
                 return new ResponseViewModel().CreateOk(new PurchaseResponseViewModel()
                 {
 
-                    /*              BagQuantity = request.BagQuantity,
-                                    BagWeight = request.BagWeight,
-                                    KandaWeight = request.KandaWeight,
-                    */
-                    /*                Vehicle = new VehicleRequestModel()
-                                    {
-                                        Name = gatepass.Vehicle.Name,
-                                        PlateNo = gatepass.Vehicle.PlateNo
-                                    },
-                                    Product = new ProductRequestModel()
-                                    {
-                                        Name = gatepass.Product.Name,
-                                        Price = gatepass.Product.Price,
-                                        Type = (ProductType)gatepass.Product.Type
-                                    },
-                                    VehicleId = gatepass.Vehicle.Id,
-                                    ProductId = gatepass.Product.Id,
-                                    Party = new PartyRequestModel()
-                                    {
-                                        Name = gatepass.Party.Name,
-                                        Address = gatepass.Party.Address,
-                                        PhoneNumber = gatepass.Party.PhoneNumber
-                                    },*/
+/*                    BagWeight = request.BagWeight,
+                    KandaWeight = request.KandaWeight,*/
                     TotalMaund = request.TotalMaund,
                     Id = purchase.Id,
                     Date = new DateConverter().ConvertToDateTimeIso(purchase.Date),
                     Commission = purchase.Commission,
                     AdditionalCharges = request.AdditionalCharges,
                     TotalPrice = purchase.TotalPrice,
-                    RatePerMaund = purchase.RatePerMaund,
+                    Rate = purchase.Rate,
+                    BagQuantity = purchase.BagQuantity,
+                    BoriQuantity = purchase.BoriQuantity,
                     CreatedDate = new DateConverter().ConvertToDateTimeIso(purchase.CreatedDate)
                 });
             }

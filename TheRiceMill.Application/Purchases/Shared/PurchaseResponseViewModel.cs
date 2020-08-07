@@ -30,7 +30,8 @@ namespace TheRiceMill.Application.Purchases.Shared
         public double ActualBags { get; set; }
         public double TotalMaund { get; set; }
         public double RatePerKg { get; set; }
-        public double RatePerMaund { get; set; }
+        public double Rate { get; set; }
+
         public double BasePrice { get; set; }
         public double TotalPrice { get; set; }
         public double Commission { get; set; }

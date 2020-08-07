@@ -8,8 +8,9 @@ namespace TheRiceMill.Domain.Entities
         public DateTime Date { get; set; }
         public double TotalMaund { get; set; }
         public double BoriQuantity { get; set; }
+        public double BagQuantity { get; set; }
 
-        public double RatePerMaund { get; set; }
+        public double Rate { get; set; }
         public RateBasedOn RateBasedOn { get; set; }
 
         /// <summary>

@@ -54,11 +54,13 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
 
             purchase.Charges = new List<Charge>();
             purchase.Charges = charges;
-            purchase.RateBasedOn =  request.RateBasedOn == 1 ? RateBasedOn.Maund : RateBasedOn.Bori;
+            purchase.RateBasedOn =  request.RateBasedOn == 1 ? RateBasedOn.Maund : RateBasedOn.Bag;
             purchase.Commission = request.Commission;
-            purchase.RatePerMaund = request.RatePerMaund;
+            purchase.Rate = request.Rate;
             purchase.TotalPrice = request.TotalPrice;
+            purchase.TotalMaund = request.TotalMaund;
             purchase.BoriQuantity = request.BoriQuantity;
+            purchase.BagQuantity = request.BagQuantity;
             purchase.Date = request.Date;
             _context.Purchases.Add(purchase);
 
@@ -88,30 +90,30 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
                 /*BagQuantity = request.BagQuantity,
                 BagWeight = request.BagWeight,
                 KandaWeight = request.KandaWeight,*/
-                TotalMaund = request.TotalMaund,
-                BoriQuantity = request.BoriQuantity,
-                Gatepasses = gatepassMapper.MapFull(gatepasses),
-                
                 //CheckIn = new DateConverter().ConvertToDateTimeIso(request.CheckIn),
-                Id = purchase.Id,
-                RateBasedOn = purchase.RateBasedOn == RateBasedOn.Maund ? 1 : 2,
-                Commission = purchase.Commission,
-                AdditionalCharges = request.AdditionalCharges,
                 /*BasePrice = purchase.BasePrice,
                  PercentCommission = purchase.PercentCommission,*/
-                TotalPrice = purchase.TotalPrice,
                 /*ActualBagWeight = purchase.ActualBagWeight,
                 ExpectedBagWeight = purchase.ExpectedBagWeight,
-                RatePerKg = purchase.RatePerKg,*/
-                RatePerMaund = purchase.RatePerMaund,
-                Date = new DateConverter().ConvertToDateTimeIso(purchase.Date),
-                /*ExpectedEmptyBagWeight = purchase.ExpectedEmptyBagWeight,
+                RatePerKg = purchase.RatePerKg,
+                ExpectedEmptyBagWeight = purchase.ExpectedEmptyBagWeight,
                 TotalActualBagWeight = purchase.TotalActualBagWeight,
                 TotalExpectedBagWeight = purchase.TotalExpectedBagWeight,
                 TotalExpectedEmptyBagWeight = purchase.TotalExpectedEmptyBagWeight,
                 Direction = purchase.Direction,
                 Vibration = purchase.Vibration,
                 ActualBags = purchase.ActualBags*/
+                TotalMaund = request.TotalMaund,
+                BagQuantity = request.BagQuantity,
+                BoriQuantity = request.BoriQuantity,
+                Gatepasses = gatepassMapper.MapFull(gatepasses),                
+                Id = purchase.Id,
+                RateBasedOn = (int)purchase.RateBasedOn,
+                Commission = purchase.Commission,
+                AdditionalCharges = request.AdditionalCharges,
+                TotalPrice = purchase.TotalPrice,
+                Rate = purchase.Rate,
+                Date = new DateConverter().ConvertToDateTimeIso(purchase.Date),
                 CreatedDate = new DateConverter().ConvertToDateTimeIso(purchase.CreatedDate)
             }); ;
         }

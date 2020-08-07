@@ -44,11 +44,12 @@ namespace TheRiceMill.Application.Purchases.Queries
                     p => p.Include(pr => pr.GatePasses))
                 .Select(p => new
                 {
-                    RatePerMaund = p.RatePerMaund,
+                    Rate = p.Rate,
                     TotalPrice = p.TotalPrice,
-                    BoriQuantity = p.BoriQuantity,
+                    BagQuantity = p.BagQuantity,
                     TotalMaund = p.TotalMaund,
-                    RateBasedOn = p.RateBasedOn == RateBasedOn.Maund ? 1 : 2,
+                    BoriQuantity = p.BoriQuantity,
+                    RateBasedOn = (int)p.RateBasedOn,
                     Gatepasses = p.GatePasses.Select(gp => new GatePassResponseModel()
                     {
                         Type = (GatePassType)gp.Type,
@@ -59,7 +60,7 @@ namespace TheRiceMill.Application.Purchases.Queries
                         Maund = gp.Maund,
                         DateTime = gp.DateTime,
                         Broker = gp.Broker,
-                        Id = p.Id,
+                        Id = gp.Id,
                         Party = new PartyRequestModel()
                         {
                             Address = gp.Party.Address,

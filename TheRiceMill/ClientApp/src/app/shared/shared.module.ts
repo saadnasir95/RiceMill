@@ -16,7 +16,8 @@ import {
   MatSelectModule,
   MatAutocompleteModule,
   MatRadioModule,
-  MatDividerModule
+  MatDividerModule,
+  MatButtonToggleModule
 } from '@angular/material';
 import { ModalComponent } from './components/modal/modal.component';
 import { ProductTypePipe } from './pipes/product-type.pipe';
@@ -62,7 +63,8 @@ import { LocalCurrencyPipe } from './pipes/local-currency.pipe';
     MatRadioModule,
     MatCheckboxModule,
     MatDividerModule,
-    TranslateModule
+    TranslateModule,
+    MatButtonToggleModule
   ],
   exports: [
     MatButtonModule,
@@ -92,7 +94,8 @@ import { LocalCurrencyPipe } from './pipes/local-currency.pipe';
     TranslateModule,
     LedgerTypePipe,
     PaymentTypePipe,
-    LocalCurrencyPipe
+    LocalCurrencyPipe,
+    MatButtonToggleModule
   ],
   entryComponents: [ModalComponent]
 })

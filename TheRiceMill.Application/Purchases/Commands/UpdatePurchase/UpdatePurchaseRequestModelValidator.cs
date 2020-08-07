@@ -18,7 +18,7 @@ namespace TheRiceMill.Application.Purchases.Commands.UpdatePurchase
             RuleFor(p => p.ActualBagWeight).Required()*/;
 /*            RuleFor(p => p.TotalActualBagWeight).Required();
             RuleFor(p => p.RatePerKg).Required();*/
-            RuleFor(p => p.RatePerMaund).Required();
+            RuleFor(p => p.Rate).Required();
             RuleFor(p => p.TotalPrice).Required();
         }
     }

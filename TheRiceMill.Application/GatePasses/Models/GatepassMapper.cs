@@ -17,6 +17,7 @@ namespace TheRiceMill.Application.GatePasses.Models
                 gatePassResponseModels.Add(new GatePassResponseModel
                 {
                     BagQuantity = _gatepass.BagQuantity,
+                    BoriQuantity = _gatepass.BoriQuantity,
                     Broker = _gatepass.Broker,
                     EmptyWeight = _gatepass.EmptyWeight,
                     Maund = _gatepass.Maund,
@@ -43,32 +44,33 @@ namespace TheRiceMill.Application.GatePasses.Models
             return gatePassResponseModels; 
         }
 
-        public GatePassResponseModel Map(GatePass gatePasses)
+        public GatePassResponseModel Map(GatePass _gatepass)
         {
             return new GatePassResponseModel
             {
-                BagQuantity = gatePasses.BagQuantity,
-                Broker = gatePasses.Broker,
-                EmptyWeight = gatePasses.EmptyWeight,
-                Maund = gatePasses.Maund,
+                BagQuantity = _gatepass.BagQuantity,
+                BoriQuantity = _gatepass.BoriQuantity,
+                Broker = _gatepass.Broker,
+                EmptyWeight = _gatepass.EmptyWeight,
+                Maund = _gatepass.Maund,
                 Party = new PartyRequestModel()
                 {
-                    Name = gatePasses.Party.Name,
-                    Address = gatePasses.Party.Address,
-                    PhoneNumber = gatePasses.Party.PhoneNumber
+                    Name = _gatepass.Party.Name,
+                    Address = _gatepass.Party.Address,
+                    PhoneNumber = _gatepass.Party.PhoneNumber
                 },
                 Vehicle = new VehicleRequestModel()
                 {
-                    PlateNo = gatePasses.Vehicle.PlateNo
+                    PlateNo = _gatepass.Vehicle.PlateNo
                 },
                 Product = new ProductRequestModel()
                 {
-                    Name = gatePasses.Product.Name,
+                    Name = _gatepass.Product.Name,
                     /*Price = gatepass.Product.Price,
                       Type = (ProductType)gatepass.Product.Type*/
                 },
-                VehicleId = gatePasses.Vehicle.Id,
-                ProductId = gatePasses.Product.Id,
+                VehicleId = _gatepass.Vehicle.Id,
+                ProductId = _gatepass.Product.Id,
             };
         }
     }

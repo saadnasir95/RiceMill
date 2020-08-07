@@ -51,9 +51,9 @@
         /// </summary>
         public double RatePerKg { get; set; }
         /// <summary>
-        /// Rate of Product Per Maund
+        /// Rate of Product Based on Selection (Maund or Bag)
         /// </summary>
-        public double RatePerMaund { get; set; }
+        public double Rate { get; set; }
         /// <summary>
         /// Total Price of Product
         /// </summary>

@@ -9,7 +9,9 @@ namespace TheRiceMill.Application.Purchases.Models
         public CreatePurchaseRequestModelValidator()
         {
             RuleFor(p => p.TotalMaund).Required();
-            RuleFor(p => p.RatePerMaund).Required();
+            RuleFor(p => p.BoriQuantity).Required();
+            RuleFor(p => p.BagQuantity).Required();
+            RuleFor(p => p.Rate).Required();
             RuleFor(p => p.GatepassIds).NotEmpty();
             RuleFor(p => p.TotalPrice).Required();
         }
