@@ -66,7 +66,6 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
             GatePass gatepass = null;
             foreach (var id in request.GatepassIds)
             {
-                // Need to Discuss this
                 gatepass = _context.GatePasses.GetBy(q => q.Id == id, p => p.Include(pr => pr.Party).Include(pr => pr.Product).Include(pr => pr.Vehicle));
                 gatepasses.Add(gatepass);
                 gatepass.PurchaseId = purchase.Id;
