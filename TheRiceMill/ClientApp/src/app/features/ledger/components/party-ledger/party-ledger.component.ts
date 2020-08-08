@@ -1,20 +1,20 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatPaginator } from '@angular/material';
-import { CompanyLedgerService } from '../../../../shared/services/company-ledger.service';
-import { CompanyLedger } from '../../../../shared/model/company-ledger.model';
-import { CompanyLedgerResponse, CompanyLedgerData } from '../../../../shared/model/company-ledger-response.model';
 import { Party } from '../../../../shared/model/party.model';
-// import { CompanyResponse } from '../../../../shared/model/company-response.model';
-// import { CompanyService } from '../../../../shared/services/company.service';
 import { trigger, state, transition, animate, style } from '@angular/animations';
 import { LedgerType } from '../../../../shared/model/enums';
 import { LedgerInfo } from '../../../../shared/model/ledger-info.model';
 import { BankTransactionInfo } from '../../../../shared/model/bank-transaction-info.model';
+import { PartyService } from '../../../../shared/services/party.service';
+import { PartyResponse } from '../../../../shared/model/party-response.model';
+import { Ledger } from '../../../../shared/model/ledger.model';
+import { LedgerData, LedgerResponse } from '../../../../shared/model/ledger-response.model';
+import { LedgerService } from '../../../../shared/services/ledger.service';
 
 @Component({
-  selector: 'app-company-ledger',
-  templateUrl: './company-ledger.component.html',
-  styleUrls: ['./company-ledger.component.scss'],
+  selector: 'app-party-ledger',
+  templateUrl: './party-ledger.component.html',
+  styleUrls: ['./party-ledger.component.scss'],
   animations: [
     trigger('detailExpand', [
       state('collapsed', style({ height: '0px', minHeight: '0' })),
@@ -23,8 +23,8 @@ import { BankTransactionInfo } from '../../../../shared/model/bank-transaction-i
     ]),
   ],
 })
-export class CompanyLedgerComponent implements OnInit {
-  expandedTransactionId = 0;
+export class PartyLedgerComponent implements OnInit {
+  expandedId = 0;
   expandedLedgerType: LedgerType = LedgerType.Purchase;
   salePurchaseInfo = 0;
   ledgerInfo: LedgerInfo = {
@@ -39,31 +39,32 @@ export class CompanyLedgerComponent implements OnInit {
     chequeNumber: '',
     paymentType: 1
   };
-  companyList: Party[];
-  selectedCompanyID = 0;
+  partyList: Party[];
+  selectedPartyId = 0;
   displayedColumns: string[] = ['createdDate', 'ledgerType', 'credit', 'debit', 'balance'];
-  dataSource: MatTableDataSource<CompanyLedger>;
-  ledgerData: CompanyLedgerData;
+  dataSource: MatTableDataSource<Ledger>;
+  ledgerData: LedgerData;
   isLoadingData: Boolean = false;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  constructor(private ledgerService: CompanyLedgerService
-    // private companyService: CompanyService
-    ) { }
+  constructor(
+    private ledgerService: LedgerService,
+    private partyService: PartyService
+  ) { }
 
   ngOnInit() {
     this.dataSource = new MatTableDataSource();
     this.paginator.pageSize = 25;
-    // this.companyService.getCompanies(100, 0).subscribe(
-    //   (response: CompanyResponse) => {
-    //     this.companyList = response.data;
-    //     if (this.companyList.length > 0) {
-    //       this.selectedCompanyID = this.companyList[0].id;
-    //       this.getLedgerList();
-    //     }
-    //   }
-    // );
+    this.partyService.getParties(100, 0).subscribe(
+      (response: PartyResponse) => {
+        this.partyList = response.data;
+        if (this.partyList.length > 0) {
+          this.selectedPartyId = this.partyList[0].id;
+          this.getLedgerList();
+        }
+      }
+    );
   }
-  onCompanyChange() {
+  onPartyChange() {
     this.getLedgerList();
   }
 
@@ -71,21 +72,23 @@ export class CompanyLedgerComponent implements OnInit {
     this.getLedgerList();
   }
   getLedgerList() {
-    if (this.selectedCompanyID !== 0) {
+    if (this.selectedPartyId !== 0) {
       this.ledgerService
-        .getCompanyLedger(this.selectedCompanyID, this.paginator.pageSize, this.paginator.pageIndex)
+        .getPartyLedger(this.selectedPartyId, this.paginator.pageSize, this.paginator.pageIndex)
         .subscribe(
-          (response: CompanyLedgerResponse) => {
+          (response: LedgerResponse) => {
             this.ledgerData = response.data;
             let previousBalance: number = this.ledgerData.previousBalance != null ? this.ledgerData.previousBalance : 0;
             this.ledgerData.ledgerResponses.forEach(element => {
-              if (element.credit !== 0) {
-                previousBalance += element.credit;
-                element.balance = previousBalance;
-              } else {
-                previousBalance -= element.debit;
-                element.balance = previousBalance;
-              }
+              // if (element.credit !== 0) {
+              //   previousBalance += element.credit;
+              //   element.balance = previousBalance;
+              // } else {
+              //   previousBalance -= element.debit;
+              //   element.balance = previousBalance;
+              // }
+              previousBalance += element.amount;
+              element.balance = previousBalance;
             });
             this.dataSource.data = this.ledgerData.ledgerResponses;
             this.paginator.length = response.count;
@@ -95,9 +98,10 @@ export class CompanyLedgerComponent implements OnInit {
     }
 
   }
-  getLedgerInfo(ledger: CompanyLedger) {
-    if (this.expandedTransactionId === ledger.transactionId && this.expandedLedgerType === ledger.ledgerType) {
-      this.expandedTransactionId = 0;
+  getLedgerInfo(ledger: Ledger) {
+    debugger;
+    if (this.expandedId === ledger.id && this.expandedLedgerType === ledger.ledgerType) {
+      this.expandedId = 0;
       this.expandedLedgerType = LedgerType.Purchase;
       this.salePurchaseInfo = 0;
     } else {
@@ -106,9 +110,9 @@ export class CompanyLedgerComponent implements OnInit {
       } else {
         this.salePurchaseInfo = 2;
       }
-      this.expandedTransactionId = ledger.transactionId;
+      this.expandedId = ledger.id;
       this.expandedLedgerType = ledger.ledgerType;
-      this.ledgerService.getLedgerDetails(ledger.ledgerType, ledger.transactionId)
+      this.ledgerService.getLedgerDetails(ledger.ledgerType, ledger.id)
         .subscribe(
           (response: any) => {
             if (this.salePurchaseInfo === 1) {

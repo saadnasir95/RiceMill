@@ -11,10 +11,10 @@
               <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
             </mat-form-field> -->
             <mat-form-field class="col-12">
-              <mat-label>Select Company</mat-label>
-              <mat-select [(ngModel)]="selectedCompanyID" (selectionChange)="onCompanyChange()">
-                <mat-option *ngFor="let company of companyList" [value]="company.id">
-                  {{company.name}}
+              <mat-label>Select Party</mat-label>
+              <mat-select [(ngModel)]="selectedPartyId" (selectionChange)="onPartyChange()">
+                <mat-option *ngFor="let party of partyList" [value]="party.id">
+                  {{party.name}}
                 </mat-option>
               </mat-select>
             </mat-form-field>
@@ -23,7 +23,7 @@
           <div class="row" *ngIf="ledgerData">
             <div class="col-12">
               <h4 class="text-right netBalance">Net Balance:
-                {{(ledgerData.totalCredit-ledgerData.totalDebit) | localCurrency}}</h4>
+                {{(ledgerData.netBalance) | localCurrency}}</h4>
             </div>
           </div>
           <div class="mat-elevation-z8">
@@ -41,8 +41,8 @@
               <ng-container matColumnDef="credit">
                 <th mat-header-cell *matHeaderCellDef> Credit</th>
                 <td mat-cell *matCellDef="let ledger">
-                  <span *ngIf="ledger.credit!==0">
-                    {{ledger.credit | currency:'Rs '}}
+                  <span *ngIf="ledger.amount>=0">
+                    {{ledger.amount | currency:'Rs '}}
                   </span>
                 </td>
               </ng-container>
@@ -50,8 +50,8 @@
               <ng-container matColumnDef="debit">
                 <th mat-header-cell *matHeaderCellDef> Debit </th>
                 <td mat-cell *matCellDef="let ledger">
-                  <span *ngIf="ledger.debit!==0">
-                    {{ledger.debit | currency:'Rs '}}
+                  <span *ngIf="ledger.amount < 0">
+                    {{ledger.amount | currency:'Rs '}}
                   </span>
                 </td>
               </ng-container>
@@ -69,7 +69,7 @@
                 <td mat-cell *matCellDef="let ledger" [attr.colspan]="displayedColumns.length">
                   <!-- <mat-divider></mat-divider> -->
                   <div class="example-element-detail"
-                    [@detailExpand]="ledger.transactionId == expandedTransactionId && ledger.ledgerType == expandedLedgerType ? 'expanded' : 'collapsed'">
+                    [@detailExpand]="ledger.transactionId == expandedId && ledger.ledgerType == expandedLedgerType ? 'expanded' : 'collapsed'">
                     <div *ngIf="salePurchaseInfo==1">
                       <p><b>Product Name: </b>{{ledgerInfo.product}}</p>
                       <p><b>Total Actual Bag Weight: </b>{{ledgerInfo.totalActualBagWeight | currency:'Kg '}}</p>
@@ -96,7 +96,7 @@
 
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
               <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="example-element-row"
-                [class.example-expanded-row]="expandedTransactionId === row.transactionId" (click)="getLedgerInfo(row)">
+                [class.example-expanded-row]="expandedId === row.transactionId" (click)="getLedgerInfo(row)">
               </tr>
               <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
               <div *ngIf="ledgerData && ledgerData.ledgerResponses.length==0">

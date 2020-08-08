@@ -18,7 +18,7 @@ const routes: Routes = [
       { path: 'party', loadChildren: '../party/party.module#PartyModule', data: { role: ['Administrator'] } },
       { path: 'settings', loadChildren: '../setting/setting.module#SettingModule', data: { role: ['Administrator', 'GateKeeper'] } },
       { path: 'product', loadChildren: '../product/product.module#ProductModule', data: { role: ['Administrator'] } },
-      { path: 'company-ledger', loadChildren: '../company-ledger/company-ledger.module#CompanyLedgerModule', data: { role: ['Administrator'] } },
+      { path: 'ledger', loadChildren: '../ledger/ledger.module#LedgerModule', data: { role: ['Administrator'] } },
       { path: 'bank-transaction', loadChildren: '../bank-transaction/bank-transaction.module#BankTransactionModule', data: { role: ['Administrator'] } },
       { path: 'bank-account', loadChildren: '../bank-account/bank-account.module#BankAccountModule', data: { role: ['Administrator'] } },
     ]
