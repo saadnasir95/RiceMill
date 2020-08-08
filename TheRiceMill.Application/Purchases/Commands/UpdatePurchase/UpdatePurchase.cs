@@ -37,11 +37,12 @@ namespace TheRiceMill.Application.Purchases.Commands.UpdatePurchase
             {
                 throw new NotFoundException(nameof(Domain.Entities.Sale), request.Id);
             }
-            /*var ledger = _context.Ledgers.GetBy(p => p.TransactionId == request.Id && p.LedgerType == (int)LedgerType.Purchase);
-            if (ledger == null)
+            var partyledger = _context.Ledgers.GetBy(p => p.Id == request.Id && p.LedgerType == (int)LedgerType.Purchase && p.TransactionType == TransactionType.Party.ToInt());
+            var companyLedger = _context.Ledgers.GetBy(p => p.Id == request.Id && p.LedgerType == (int)LedgerType.Purchase && p.TransactionType == TransactionType.Company.ToInt());
+            if (partyledger == null || companyLedger == null)
             {
                 throw new NotFoundException(nameof(Domain.Entities.Ledger), request.Id);
-            }*/
+            }
             request.Copy(purchase);
             if (request.AdditionalCharges != null)
             {
@@ -82,11 +83,13 @@ namespace TheRiceMill.Application.Purchases.Commands.UpdatePurchase
                     gatepass.PurchaseId = purchase.Id;
                     _context.GatePasses.Update(gatepass);
                 }
-                /*          ledger.PartyId = party.Id;
-                            ledger.Credit = request.TotalPrice;
-                            ledger.Debit = 0;
-                            _context.Ledgers.Update(ledger);
-                */
+
+                partyledger.Amount = request.TotalPrice - request.Commission;
+                companyLedger.Amount = -request.TotalPrice;
+
+                _context.Ledgers.Update(companyLedger);
+                _context.Ledgers.Update(partyledger);
+
                 purchase.RateBasedOn = request.RateBasedOn == 1 ? RateBasedOn.Maund : RateBasedOn.Bag;
                 purchase.BoriQuantity = request.BoriQuantity;
                 purchase.BagQuantity = request.BagQuantity;
@@ -95,8 +98,8 @@ namespace TheRiceMill.Application.Purchases.Commands.UpdatePurchase
                 return new ResponseViewModel().CreateOk(new PurchaseResponseViewModel()
                 {
 
-/*                    BagWeight = request.BagWeight,
-                    KandaWeight = request.KandaWeight,*/
+                    /*                    BagWeight = request.BagWeight,
+                                        KandaWeight = request.KandaWeight,*/
                     TotalMaund = request.TotalMaund,
                     Id = purchase.Id,
                     Date = new DateConverter().ConvertToDateTimeIso(purchase.Date),

@@ -3,9 +3,9 @@ using TheRiceMill.Application.Extensions;
 
 namespace TheRiceMill.Application.Ledger.Queries.GetLedgers
 {
-    public class GetLedgersRequestModelValidator : AbstractValidator<GetLedgersRequestModel>
+    public class GetPartyLedgerRequestModelValidator : AbstractValidator<GetPartyLedgerRequestModel>
     {
-        public GetLedgersRequestModelValidator()
+        public GetPartyLedgerRequestModelValidator()
         {
             RuleFor(p => p.Page).Required();
             RuleFor(p => p.PageSize).Required();

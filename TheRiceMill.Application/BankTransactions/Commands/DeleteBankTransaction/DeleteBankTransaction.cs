@@ -28,7 +28,7 @@ namespace TheRiceMill.Application.BankTransactions.Commands.DeleteBankTransactio
                 throw new NotFoundException(nameof(BankTransaction),request.BankTransactionId);
             }
             
-            var ledger = _context.Ledgers.GetBy(p => p.TransactionId == request.BankTransactionId && p.LedgerType == (int)LedgerType.BankTransaction);
+            var ledger = _context.Ledgers.GetBy(p => p.Id == request.BankTransactionId && p.LedgerType == (int)LedgerType.BankTransaction);
             if (ledger == null)
             {
                 throw new NotFoundException(nameof(Domain.Entities.Ledger),request.BankTransactionId);

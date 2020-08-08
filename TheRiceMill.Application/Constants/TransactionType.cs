@@ -9,11 +9,11 @@ namespace TheRiceMill.Application.Constants
         /// <summary>
         /// 1 Credit
         /// </summary>
-        Credit = 1,
+        Company = 1,
         /// <summary>
         /// 2 Debit
         /// </summary>
-        Debit,
+        Party,
     }
 
     public enum PaymentType

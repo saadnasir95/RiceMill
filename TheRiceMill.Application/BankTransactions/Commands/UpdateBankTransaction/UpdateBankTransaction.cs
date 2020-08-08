@@ -41,7 +41,7 @@ namespace TheRiceMill.Application.BankTransactions.Commands.UpdateBankTransactio
                 throw new NotFoundException(nameof(BankTransaction),request.Id);
             }
             
-            var ledger = _context.Ledgers.GetBy(p => p.TransactionId == request.Id && p.LedgerType == (int)LedgerType.BankTransaction);
+            var ledger = _context.Ledgers.GetBy(p => p.Id == request.Id && p.LedgerType == (int)LedgerType.BankTransaction);
             if (ledger == null)
             {
                 throw new NotFoundException(nameof(Domain.Entities.Ledger),request.Id);
@@ -49,17 +49,17 @@ namespace TheRiceMill.Application.BankTransactions.Commands.UpdateBankTransactio
             
             bankTransaction.BankAccountId = request.BankAccountId;
             bankTransaction.PartyId = request.PartyId;
-            bankTransaction.Credit = request.TransactionType == TransactionType.Debit ? request.TransactionAmount : 0;
-            bankTransaction.Debit = request.TransactionType == TransactionType.Credit ? request.TransactionAmount : 0;
+            //bankTransaction.Credit = request.TransactionType == TransactionType.Debit ? request.TransactionAmount : 0;
+            //bankTransaction.Debit = request.TransactionType == TransactionType.Credit ? request.TransactionAmount : 0;
             bankTransaction.TransactionDate = request.TransactionDate;
             bankTransaction.TransactionType = (int) request.TransactionType;
             bankTransaction.ChequeNumber = request.ChequeNumber;
             bankTransaction.PaymentType = (int) request.PaymentType;
             ledger.PartyId = request.PartyId;
-            ledger.Credit = request.TransactionType == TransactionType.Credit ? request.TransactionAmount : 0;
-            ledger.Debit = request.TransactionType == TransactionType.Debit ? request.TransactionAmount : 0;
+            //ledger.Credit = request.TransactionType == TransactionType.Credit ? request.TransactionAmount : 0;
+            //ledger.Debit = request.TransactionType == TransactionType.Debit ? request.TransactionAmount : 0;
             ledger.LedgerType = (int) LedgerType.BankTransaction;
-            ledger.Description = "";
+            //ledger.Description = "";
 
             _context.Update(ledger);
             _context.Update(bankTransaction);

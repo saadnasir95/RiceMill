@@ -120,10 +120,10 @@ namespace TheRiceMill.Application.Sale.Commands.CreateSale
             var ledger = new Domain.Entities.Ledger()
             {
                 PartyId = party.Id,
-                Debit = request.TotalPrice,
-                Credit = 0,
-                Description = "",
-                TransactionId = sale.Id,
+                //Debit = request.TotalPrice,
+                //Credit = 0,
+                //Description = "",
+                //TransactionId = sale.Id,
                 LedgerType = (int) LedgerType.Sale,
             };
             _context.Add(ledger);

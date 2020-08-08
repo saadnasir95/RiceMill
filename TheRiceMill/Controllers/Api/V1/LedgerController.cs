@@ -8,7 +8,7 @@ namespace TheRiceMill.Presentation.Controllers.Api.V1
     public class LedgerController : BaseController
     {
         [HttpGet]
-        public async Task<IActionResult> GetLedger([FromQuery]GetLedgersRequestModel model)
+        public async Task<IActionResult> GetPartyLedger([FromQuery]GetPartyLedgerRequestModel model)
         {
             var response = await Mediator.Send(model);
             return StatusCode(response.Status, response.Response);

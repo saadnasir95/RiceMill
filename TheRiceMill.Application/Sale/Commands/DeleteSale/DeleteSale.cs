@@ -27,7 +27,7 @@ namespace TheRiceMill.Application.Sale.Commands.DeleteSale
             {
                 throw new NotFoundException(nameof(Domain.Entities.Sale),request.SaleId);
             }
-            var ledger = _context.Ledgers.GetBy(p => p.TransactionId == request.SaleId && p.LedgerType == (int)LedgerType.Sale);
+            var ledger = _context.Ledgers.GetBy(p => p.Id == request.SaleId && p.LedgerType == (int)LedgerType.Sale);
             if (ledger == null)
             {
                 throw new NotFoundException(nameof(Domain.Entities.Ledger),request.SaleId);

@@ -35,7 +35,7 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
         {
             var purchase = new Purchase();
             request.Copy(purchase);
-            List <Charge> charges = new List<Charge>();
+            List<Charge> charges = new List<Charge>();
             if (request.AdditionalCharges != null && request.AdditionalCharges.Any())
             {
                 foreach (var charge in request.AdditionalCharges)
@@ -54,7 +54,7 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
 
             purchase.Charges = new List<Charge>();
             purchase.Charges = charges;
-            purchase.RateBasedOn =  request.RateBasedOn == 1 ? RateBasedOn.Maund : RateBasedOn.Bag;
+            purchase.RateBasedOn = request.RateBasedOn == 1 ? RateBasedOn.Maund : RateBasedOn.Bag;
             purchase.Commission = request.Commission;
             purchase.Rate = request.Rate;
             purchase.TotalPrice = request.TotalPrice;
@@ -74,17 +74,28 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
 
             }
             await _context.SaveChangesAsync(cancellationToken);
-            /*           var ledger = new Domain.Entities.Ledger()
-                       {
-                           //PartyId = party.Id,
-                           Credit = request.TotalPrice,
-                           Debit = 0,
-                           Description = "",
-                           TransactionId = purchase.Id,
-                           LedgerType = (int)LedgerType.Purchase,
-                       };*/
-            //_context.Add(ledger);
-            //await _context.SaveChangesAsync(cancellationToken);
+            var transactionId = Guid.NewGuid().ToString();
+            var companyLedger = new Domain.Entities.Ledger()
+            {
+                PartyId = gatepass.PartyId,
+                Amount = -request.TotalPrice,
+                Id = purchase.Id,
+                TransactionType = TransactionType.Company.ToInt(),
+                LedgerType = (int)LedgerType.Purchase,
+                TransactionId = transactionId
+            };
+            var partyLedger = new Domain.Entities.Ledger()
+            {
+                PartyId = gatepass.PartyId,
+                Amount = request.TotalPrice - request.Commission,
+                Id = purchase.Id,
+                TransactionType = TransactionType.Party.ToInt(),
+                LedgerType = (int)LedgerType.Purchase,
+                TransactionId = transactionId
+            };
+            _context.Add(companyLedger);
+            _context.Add(partyLedger);
+            await _context.SaveChangesAsync(cancellationToken);
             return new ResponseViewModel().CreateOk(new PurchaseResponseViewModel()
             {
                 /*BagQuantity = request.BagQuantity,
@@ -106,7 +117,7 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
                 TotalMaund = request.TotalMaund,
                 BagQuantity = request.BagQuantity,
                 BoriQuantity = request.BoriQuantity,
-                Gatepasses = gatepassMapper.MapFull(gatepasses),                
+                Gatepasses = gatepassMapper.MapFull(gatepasses),
                 Id = purchase.Id,
                 RateBasedOn = (int)purchase.RateBasedOn,
                 Commission = purchase.Commission,

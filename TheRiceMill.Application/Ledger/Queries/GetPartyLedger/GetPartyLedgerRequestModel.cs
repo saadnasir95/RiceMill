@@ -4,7 +4,7 @@ using TheRiceMill.Common.Response;
 
 namespace TheRiceMill.Application.Ledger.Queries.GetLedgers
 {
-    public class GetLedgersRequestModel : IRequest<ResponseViewModel>
+    public class GetPartyLedgerRequestModel : IRequest<ResponseViewModel>
     {
         public int PartyId { get; set; }
         public int Page { get; set; }

@@ -35,7 +35,7 @@ namespace TheRiceMill.Application.Sale.Commands.UpdateSale
             {
                 throw new NotFoundException(nameof(Domain.Entities.Sale),request.Id);
             }
-            var ledger = _context.Ledgers.GetBy(p => p.TransactionId == request.Id && p.LedgerType == (int)LedgerType.Sale);
+            var ledger = _context.Ledgers.GetBy(p => p.Id == request.Id && p.LedgerType == (int)LedgerType.Sale);
             if (ledger == null)
             {
                 throw new NotFoundException(nameof(Domain.Entities.Ledger),request.Id);
@@ -134,8 +134,8 @@ namespace TheRiceMill.Application.Sale.Commands.UpdateSale
             }
             _context.Sales.Update(sale);
             ledger.PartyId = party.Id;
-            ledger.Debit = request.TotalPrice;
-            ledger.Credit = 0;
+            //ledger.Debit = request.TotalPrice;
+            //ledger.Credit = 0;
             _context.Ledgers.Update(ledger);
 
             await _context.SaveChangesAsync(cancellationToken);

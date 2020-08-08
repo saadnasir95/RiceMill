@@ -7,18 +7,20 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TheRiceMill.Application.Constants;
+using TheRiceMill.Common.Extensions;
 using TheRiceMill.Common.Response;
 using TheRiceMill.Common.Util;
+using TheRiceMill.Domain.Entities;
 using TheRiceMill.Persistence;
 using TheRiceMill.Persistence.Extensions;
 
 namespace TheRiceMill.Application.Ledger.Queries.GetLedgers
 {
-    public class GetLedgersRequestHandler : IRequestHandler<GetLedgersRequestModel, ResponseViewModel>
+    public class GetPartyLedgerRequestHandler : IRequestHandler<GetPartyLedgerRequestModel, ResponseViewModel>
     {
         private readonly TheRiceMillDbContext _context;
 
-        public GetLedgersRequestHandler(TheRiceMillDbContext context)
+        public GetPartyLedgerRequestHandler(TheRiceMillDbContext context)
         {
             _context = context;
         }
@@ -31,10 +33,10 @@ namespace TheRiceMill.Application.Ledger.Queries.GetLedgers
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<ResponseViewModel> Handle(GetLedgersRequestModel request, CancellationToken cancellationToken)
+        public async Task<ResponseViewModel> Handle(GetPartyLedgerRequestModel request, CancellationToken cancellationToken)
         {
             request.SetDefaultValue();
-            Expression<Func<Domain.Entities.Ledger, bool>> query = p => p.PartyId == request.PartyId;
+            Expression<Func<Domain.Entities.Ledger, bool>> query = p => p.PartyId == request.PartyId && p.TransactionType == TransactionType.Party.ToInt();
 
             //PrevBalance = 10000
 
@@ -44,32 +46,30 @@ namespace TheRiceMill.Application.Ledger.Queries.GetLedgers
                     p => p.Include(pr => pr.Party)).Select(p =>
                     new LedgerResponse()
                     {
+                        Id = p.Id,
                         PartyId = p.PartyId,
                         LedgerType = p.LedgerType,
-                        Credit = p.Credit,
-                        Debit = p.Debit,
-                        Description = p.Description,
-                        PartyName = p.Party.Name,
+                        Amount = p.Amount,
+                        Party = p.Party,
+                        TransactionType = p.TransactionType,
                         CreatedDate = dateConverter.ConvertToDateTimeIso(p.CreatedDate),
                         TransactionId = p.TransactionId,
                     }).ToListAsync(cancellationToken);
             var count = await _context.Ledgers.CountAsync(query, cancellationToken);
-            var totalCredit = await _context.Ledgers.SumAsync(query,p => p.Credit, cancellationToken);
-            var totalDebit = await _context.Ledgers.SumAsync(query,p => p.Debit, cancellationToken);
+            var netBalance = await _context.Ledgers.SumAsync(query, p => p.Amount, cancellationToken);
             var firstLedger = list.FirstOrDefault();
             double previousBalance = 0;
             if (firstLedger != null)
             {
                 var firstDate = DateTime.Parse(firstLedger.CreatedDate);
                 previousBalance = await _context.Ledgers.SumAsync(
-                    p => p.PartyId == request.PartyId && p.CreatedDate < firstDate, p => p.Credit - p.Debit,
+                    p => p.PartyId == request.PartyId && p.TransactionType == TransactionType.Party.ToInt() && p.CreatedDate < firstDate, p => p.Amount,
                     cancellationToken);
             }
             return new ResponseViewModel().CreateOk(new Response()
             {
                 LedgerResponses = list,
-                TotalCredit = totalCredit,
-                TotalDebit = totalDebit,
+                NetBalance = netBalance,
                 PreviousBalance = previousBalance
             }, count);
         }
@@ -77,20 +77,19 @@ namespace TheRiceMill.Application.Ledger.Queries.GetLedgers
         class Response
         {
             public List<LedgerResponse> LedgerResponses { get; set; }
-            public double TotalCredit { get; set; }
-            public double TotalDebit { get; set; }
+            public double NetBalance { get; set; }
             public double PreviousBalance { get; set; }
         }
         class LedgerResponse
         {
-            public double Debit { get; set; }
-            public double Credit { get; set; }
-            public string Description { get; set; }
-            public int PartyId { get; set; }
-            public string PartyName { get; set; }
+            public int Id { get; set; }
             public int LedgerType { get; set; }
+            public int TransactionType { get; set; }
+            public double Amount { get; set; }
+            public int PartyId { get; set; }
+            public Party Party { get; set; }
             public string CreatedDate { get; set; }
-            public int TransactionId { get; set; }
+            public string TransactionId { get; set; }
         }
     }
 }

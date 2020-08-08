@@ -42,8 +42,8 @@ namespace TheRiceMill.Application.BankTransactions.Commands.CreateBankTransactio
             {
                 BankAccountId = request.BankAccountId,
                 PartyId = request.PartyId,
-                Credit = request.TransactionType == TransactionType.Debit ? request.TransactionAmount : 0,
-                Debit = request.TransactionType == TransactionType.Credit ? request.TransactionAmount : 0,
+                //Credit = request.TransactionType == TransactionType.Debit ? request.TransactionAmount : 0,
+                //Debit = request.TransactionType == TransactionType.Credit ? request.TransactionAmount : 0,
                 TransactionDate = request.TransactionDate,
                 TransactionType = (int) request.TransactionType,
                 ChequeNumber = request.ChequeNumber,
@@ -54,11 +54,10 @@ namespace TheRiceMill.Application.BankTransactions.Commands.CreateBankTransactio
             var ledger = new Domain.Entities.Ledger()
             {
                 PartyId = request.PartyId,
-                Credit = request.TransactionType == TransactionType.Credit ? request.TransactionAmount : 0,
-                Debit = request.TransactionType == TransactionType.Debit ? request.TransactionAmount : 0,
+                //Credit = request.TransactionType == TransactionType.Credit ? request.TransactionAmount : 0,
+                //Debit = request.TransactionType == TransactionType.Debit ? request.TransactionAmount : 0,
                 LedgerType = (int) LedgerType.BankTransaction,
-                Description = "",
-                TransactionId = bankTransaction.Id,
+                Id = bankTransaction.Id,
             };
             _context.Add(ledger);
             var dateConverter = new DateConverter();

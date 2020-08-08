@@ -25,37 +25,37 @@ namespace TheRiceMill.Application.Ledger.Queries.GetLedgerInfo
             switch (request.LedgerType)
             {
                 case LedgerType.Sale:
-                    var sale = _context.Sales.GetBy(p => p.Id == request.TransactionId,
-                        p => p.Include(pr => pr.Product));
-                    if (sale != null)
-                    {
-                        return new ResponseViewModel().CreateOk(new SaleInfo()
-                        {
-                            Product = sale.Product.Name,
-                            MaundPrice = sale.RatePerMaund,
-                            TotalActualBagWeight = sale.TotalActualBagWeight,
-                            TotalMaund = sale.TotalMaund
-                        });
-                    }
+                    //var sale = _context.Sales.GetBy(p => p.Id == request.Id,
+                    //    p => p.Include(pr => pr.Product));
+                    //if (sale != null)
+                    //{
+                    //    return new ResponseViewModel().CreateOk(new SaleInfo()
+                    //    {
+                    //        Product = sale.Product.Name,
+                    //        MaundPrice = sale.RatePerMaund,
+                    //        TotalActualBagWeight = sale.TotalActualBagWeight,
+                    //        TotalMaund = sale.TotalMaund
+                    //    });
+                    //}
 
                     break;
                 case LedgerType.Purchase:
-     /*               var purchase = _context.Purchases.GetBy(p => p.Id == request.TransactionId,
-                        p => p.Include(pr => pr.Product));
-                    if (purchase != null)
-                    {
-                        return new ResponseViewModel().CreateOk(new PurchaseInfo()
-                        {
-                            Product = purchase.Product.Name,
-                            MaundPrice = purchase.RatePerMaund,
-                            TotalActualBagWeight = purchase.TotalActualBagWeight,
-                            TotalMaund = purchase.TotalMaund
-                        });
-                    }*/
+                    //var purchase = _context.Purchases.GetBy(p => p.Id == request.Id,
+                    //    p => p.Include(pr => pr.GatePasses));
+                    //if (purchase != null)
+                    //{
+                    //    return new ResponseViewModel().CreateOk(new PurchaseInfo()
+                    //    {
+                    //        //Product = purchase.Product.Name,
+                    //        //MaundPrice = purchase.Rate,
+                    //        //TotalActualBagWeight = purchase,
+                    //        //TotalMaund = purchase.TotalMaund
+                    //    });
+                    //}
 
                     break;
                 case LedgerType.BankTransaction:
-                    var bankTransaction = _context.BankTransactions.GetBy(p => p.Id == request.TransactionId,
+                    var bankTransaction = _context.BankTransactions.GetBy(p => p.Id == request.Id,
                         p => p.Include(pr => pr.BankAccount.Bank));
                     if (bankTransaction != null)
                     {

@@ -8,7 +8,7 @@ namespace TheRiceMill.Application.Ledger.Queries.GetLedgerInfo
         public GetLedgerInfoRequestModelValidator()
         {
             RuleFor(p => p.LedgerType).IsInEnum();
-            RuleFor(p => p.TransactionId).Required();
+            RuleFor(p => p.Id).Required();
         }
     }
 }

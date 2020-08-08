@@ -13,7 +13,7 @@ namespace TheRiceMill.Persistence.Configurations
                 .WithMany(b => b.Ledgers)
                 .HasForeignKey(p => p.PartyId);
 
-            builder.HasKey(p => new {p.LedgerType, p.TransactionId});
+            builder.HasKey(p => new { p.LedgerType, p.Id, p.TransactionType });
         }
     }
 

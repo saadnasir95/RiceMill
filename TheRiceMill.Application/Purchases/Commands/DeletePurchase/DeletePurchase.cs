@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TheRiceMill.Application.Constants;
 using TheRiceMill.Application.Exceptions;
+using TheRiceMill.Common.Extensions;
 using TheRiceMill.Common.Response;
 using TheRiceMill.Persistence;
 using TheRiceMill.Persistence.Extensions;
@@ -27,11 +28,12 @@ namespace TheRiceMill.Application.Purchases.Commands.DeletePurchase
             {
                 throw new NotFoundException(nameof(Domain.Entities.Purchase), request.PurchaseId);
             }
-            /*var ledger = _context.Ledgers.GetBy(p => p.TransactionId == request.PurchaseId && p.LedgerType == (int)LedgerType.Purchase);
-            if (ledger == null)
+            var partyledger = _context.Ledgers.GetBy(p => p.Id == request.PurchaseId && p.LedgerType == (int)LedgerType.Purchase && p.TransactionType == TransactionType.Party.ToInt());
+            var companyLedger = _context.Ledgers.GetBy(p => p.Id == request.PurchaseId && p.LedgerType == (int)LedgerType.Purchase && p.TransactionType == TransactionType.Company.ToInt());
+            if (partyledger == null || companyLedger == null)
             {
-                throw new NotFoundException(nameof(Domain.Entities.Ledger),request.PurchaseId);
-            }*/
+                throw new NotFoundException(nameof(Domain.Entities.Ledger), request.PurchaseId);
+            }
             if (purchase.Charges.Count > 0)
             {
                 _context.Charges.RemoveRange(purchase.Charges);
