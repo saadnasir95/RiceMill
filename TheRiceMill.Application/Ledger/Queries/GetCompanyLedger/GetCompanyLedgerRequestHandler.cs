@@ -78,11 +78,11 @@ namespace TheRiceMill.Application.Ledger.Queries.GetCompanyLedger
         {
             if (request.ToDate != null && request.FromDate != null && request.LedgerType != 0)
             {
-                return p => p.TransactionType == TransactionType.Company.ToInt() && p.LedgerType == request.LedgerType && p.Date <= request.FromDate && p.Date >= request.ToDate;
+                return p => p.TransactionType == TransactionType.Company.ToInt() && p.LedgerType == request.LedgerType && p.Date >= request.FromDate && p.Date <= request.ToDate;
             }
             if (request.ToDate != null && request.FromDate != null)
             {
-                return p => p.TransactionType == TransactionType.Company.ToInt() && p.Date <= request.FromDate && p.Date >= request.ToDate;
+                return p => p.TransactionType == TransactionType.Company.ToInt() && p.Date >= request.FromDate && p.Date <= request.ToDate;
             }
             if (request.LedgerType != 0)
             {
