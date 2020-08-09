@@ -44,6 +44,7 @@ namespace TheRiceMill.Application.Purchases.Queries
                     p => p.Include(pr => pr.GatePasses))
                 .Select(p => new
                 {
+                    p.Date,
                     Rate = p.Rate,
                     TotalPrice = p.TotalPrice,
                     BagQuantity = p.BagQuantity,
