@@ -22,7 +22,7 @@ export class LedgerService {
 }
 
 
-  getCompanyLedger(pageSize: number, pageIndex: number,ledgerType: number, toDate: string, fromDate: string)
+  getCompanyLedger(pageSize: number, pageIndex: number,ledgerType: number, fromDate: string,toDate: string)
     : Observable<LedgerResponse> {
     const params = new HttpParams()
       .set('Page', (pageIndex + 1).toString())
