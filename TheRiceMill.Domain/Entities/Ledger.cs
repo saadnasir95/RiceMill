@@ -11,5 +11,6 @@ namespace TheRiceMill.Domain.Entities
         public Party Party { get; set; }
         public string TransactionId { get; set; }
         public int TransactionType { get; set; }
+        public DateTime Date { get; set; }
     }
 }

@@ -2,7 +2,7 @@ import { Party } from "./party.model";
 
 export class Ledger {
   id: number;
-  createdDate: string;
+  date: string;
   amount: number;
   balance: number;
   ledgerType: number;

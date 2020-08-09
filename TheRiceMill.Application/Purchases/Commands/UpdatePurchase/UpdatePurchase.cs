@@ -85,7 +85,9 @@ namespace TheRiceMill.Application.Purchases.Commands.UpdatePurchase
                 }
 
                 partyledger.Amount = request.TotalPrice - request.Commission;
+                partyledger.Date = purchase.Date;
                 companyLedger.Amount = -request.TotalPrice;
+                companyLedger.Date = purchase.Date;
 
                 _context.Ledgers.Update(companyLedger);
                 _context.Ledgers.Update(partyledger);

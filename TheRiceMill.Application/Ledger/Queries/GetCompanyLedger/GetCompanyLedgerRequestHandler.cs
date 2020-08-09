@@ -42,7 +42,7 @@ namespace TheRiceMill.Application.Ledger.Queries.GetCompanyLedger
             
             var dateConverter = new DateConverter();
             var list = await _context.Ledgers
-                .GetManyReadOnly(query, "CreatedDate", request.Page, request.PageSize, false,
+                .GetManyReadOnly(query, "Date", request.Page, request.PageSize, false,
                     p => p.Include(pr => pr.Party)).Select(p =>
                     new LedgerResponse()
                     {
@@ -52,7 +52,7 @@ namespace TheRiceMill.Application.Ledger.Queries.GetCompanyLedger
                         Amount = p.Amount,
                         Party = p.Party,
                         TransactionType = p.TransactionType,
-                        CreatedDate = dateConverter.ConvertToDateTimeIso(p.CreatedDate),
+                        Date = dateConverter.ConvertToDateTimeIso(p.Date),
                         TransactionId = p.TransactionId,
                     }).ToListAsync(cancellationToken);
             var count = await _context.Ledgers.CountAsync(query, cancellationToken);
@@ -61,9 +61,9 @@ namespace TheRiceMill.Application.Ledger.Queries.GetCompanyLedger
             double previousBalance = 0;
             if (firstLedger != null)
             {
-                var firstDate = DateTime.Parse(firstLedger.CreatedDate);
+                var firstDate = DateTime.Parse(firstLedger.Date);
                 previousBalance = await _context.Ledgers.SumAsync(
-                    p => p.TransactionType == TransactionType.Company.ToInt() && p.CreatedDate < firstDate, p => p.Amount,
+                    p => p.TransactionType == TransactionType.Company.ToInt() && p.Date < firstDate, p => p.Amount,
                     cancellationToken);
             }
             return new ResponseViewModel().CreateOk(new Response()
@@ -78,11 +78,11 @@ namespace TheRiceMill.Application.Ledger.Queries.GetCompanyLedger
         {
             if (request.ToDate != null && request.FromDate != null && request.LedgerType != 0)
             {
-                return p => p.TransactionType == TransactionType.Company.ToInt() && p.LedgerType == request.LedgerType && p.CreatedDate <= request.FromDate && p.CreatedDate >= request.ToDate;
+                return p => p.TransactionType == TransactionType.Company.ToInt() && p.LedgerType == request.LedgerType && p.Date <= request.FromDate && p.Date >= request.ToDate;
             }
             if (request.ToDate != null && request.FromDate != null)
             {
-                return p => p.TransactionType == TransactionType.Company.ToInt() && p.CreatedDate <= request.FromDate && p.CreatedDate >= request.ToDate;
+                return p => p.TransactionType == TransactionType.Company.ToInt() && p.Date <= request.FromDate && p.Date >= request.ToDate;
             }
             if (request.LedgerType != 0)
             {

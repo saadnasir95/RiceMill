@@ -82,7 +82,8 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
                 Id = purchase.Id,
                 TransactionType = TransactionType.Company.ToInt(),
                 LedgerType = (int)LedgerType.Purchase,
-                TransactionId = transactionId
+                TransactionId = transactionId,
+                Date = purchase.Date
             };
             var partyLedger = new Domain.Entities.Ledger()
             {
@@ -91,7 +92,8 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
                 Id = purchase.Id,
                 TransactionType = TransactionType.Party.ToInt(),
                 LedgerType = (int)LedgerType.Purchase,
-                TransactionId = transactionId
+                TransactionId = transactionId,
+                Date = purchase.Date
             };
             _context.Add(companyLedger);
             _context.Add(partyLedger);
