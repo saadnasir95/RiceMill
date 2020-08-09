@@ -69,6 +69,17 @@
             <!-- <td>{{purchase.rate | currency:'Rs '}}</td> -->
           </tr>
         </tbody>
+        <tfoot>
+          <tr>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Brokery</td>
+            <td>{{purchase.commission | currency: 'Rs '}}</td>
+          </tr>
+        </tfoot>
       </table>
     </div>
   </div>
@@ -90,10 +101,10 @@
             <th scope="row gray-ish">Rate Per {{ purchase?.rateBasedOn == '1' ? 'Maund' : 'Bag' }}</th>
             <td class="text-right">{{purchase.rate | currency:'Rs '}}</td>
           </tr>
-          <tr>
+          <!-- <tr>
             <th scope="row gray-ish">Brokery</th>
             <td class="text-right">{{purchase.commission | currency: 'Rs '}}</td>
-          </tr>
+          </tr> -->
 
           <tr *ngFor="let charge of purchase.additionalCharges">
             <th scope="row gray-ish">{{charge.task}}</th>

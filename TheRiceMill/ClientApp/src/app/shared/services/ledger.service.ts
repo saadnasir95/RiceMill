@@ -13,13 +13,26 @@ export class LedgerService {
   constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   getPartyLedger(partyId: number, pageSize: number, pageIndex: number)
+  : Observable<LedgerResponse> {
+  const params = new HttpParams()
+    .set('PartyId', partyId.toString())
+    .set('Page', (pageIndex + 1).toString())
+    .set('PageSize', pageSize.toString());
+  return this.http.get<LedgerResponse>(this.apiUrl + '/GetPartyLedger', { headers: this.tokenService.getHeaders(), params: params });
+}
+
+
+  getCompanyLedger(pageSize: number, pageIndex: number,ledgerType: number, toDate: string, fromDate: string)
     : Observable<LedgerResponse> {
     const params = new HttpParams()
-      .set('PartyId', partyId.toString())
       .set('Page', (pageIndex + 1).toString())
-      .set('PageSize', pageSize.toString());
-    return this.http.get<LedgerResponse>(this.apiUrl + '/GetPartyLedger', { headers: this.tokenService.getHeaders(), params: params });
+      .set('PageSize', pageSize.toString())
+      .set('LedgerType',ledgerType.toString())
+      .set('ToDate',toDate ? toDate.toString(): null)
+      .set('FromDate',fromDate ? fromDate.toString(): null);
+    return this.http.get<LedgerResponse>(this.apiUrl + '/GetCompanyLedger', { headers: this.tokenService.getHeaders(), params: params });
   }
+
   getLedgerDetails(ledgerType: number, id: number)
     : Observable<any> {
     const params = new HttpParams()

@@ -1,26 +1,27 @@
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
 using TheRiceMill.Application.Constants;
 using TheRiceMill.Common.Extensions;
 using TheRiceMill.Common.Response;
 using TheRiceMill.Common.Util;
-using TheRiceMill.Domain.Entities;
 using TheRiceMill.Persistence;
 using TheRiceMill.Persistence.Extensions;
+using static TheRiceMill.Application.Ledger.Queries.GetLedgers.GetPartyLedgerRequestHandler;
 
-namespace TheRiceMill.Application.Ledger.Queries.GetLedgers
+namespace TheRiceMill.Application.Ledger.Queries.GetCompanyLedger
 {
-    public class GetPartyLedgerRequestHandler : IRequestHandler<GetPartyLedgerRequestModel, ResponseViewModel>
+    class GetCompanyLedgerRequestHandler : IRequestHandler<GetCompanyLedgerRequestModel, ResponseViewModel>
     {
         private readonly TheRiceMillDbContext _context;
 
-        public GetPartyLedgerRequestHandler(TheRiceMillDbContext context)
+        public GetCompanyLedgerRequestHandler(TheRiceMillDbContext context)
         {
             _context = context;
         }
@@ -33,13 +34,12 @@ namespace TheRiceMill.Application.Ledger.Queries.GetLedgers
         /// <param name="request"></param>
         /// <param name="cancellationToken"></param>
         /// <returns></returns>
-        public async Task<ResponseViewModel> Handle(GetPartyLedgerRequestModel request, CancellationToken cancellationToken)
+        public async Task<ResponseViewModel> Handle(GetCompanyLedgerRequestModel request, CancellationToken cancellationToken)
         {
             request.SetDefaultValue();
-            Expression<Func<Domain.Entities.Ledger, bool>> query = p => p.PartyId == request.PartyId && p.TransactionType == TransactionType.Party.ToInt();
-
-            //PrevBalance = 10000
-
+            Expression<Func<Domain.Entities.Ledger, bool>> query ;
+            query = CreateQuery(request);
+            
             var dateConverter = new DateConverter();
             var list = await _context.Ledgers
                 .GetManyReadOnly(query, "CreatedDate", request.Page, request.PageSize, false,
@@ -63,7 +63,7 @@ namespace TheRiceMill.Application.Ledger.Queries.GetLedgers
             {
                 var firstDate = DateTime.Parse(firstLedger.CreatedDate);
                 previousBalance = await _context.Ledgers.SumAsync(
-                    p => p.PartyId == request.PartyId && p.TransactionType == TransactionType.Party.ToInt() && p.CreatedDate < firstDate, p => p.Amount,
+                    p => p.TransactionType == TransactionType.Company.ToInt() && p.CreatedDate < firstDate, p => p.Amount,
                     cancellationToken);
             }
             return new ResponseViewModel().CreateOk(new Response()
@@ -74,22 +74,31 @@ namespace TheRiceMill.Application.Ledger.Queries.GetLedgers
             }, count);
         }
 
+        private Expression<Func<Domain.Entities.Ledger, bool>> CreateQuery(GetCompanyLedgerRequestModel request)
+        {
+            if (request.ToDate != null && request.FromDate != null && request.LedgerType != 0)
+            {
+                return p => p.TransactionType == TransactionType.Company.ToInt() && p.LedgerType == request.LedgerType && p.CreatedDate <= request.FromDate && p.CreatedDate >= request.ToDate;
+            }
+            if (request.ToDate != null && request.FromDate != null)
+            {
+                return p => p.TransactionType == TransactionType.Company.ToInt() && p.CreatedDate <= request.FromDate && p.CreatedDate >= request.ToDate;
+            }
+            if (request.LedgerType != 0)
+            {
+                return p => p.TransactionType == TransactionType.Company.ToInt() && p.LedgerType == request.LedgerType;
+            }
+            else
+            {
+                return p => p.TransactionType == TransactionType.Company.ToInt();
+            }
+        }
+
         class Response
         {
             public List<LedgerResponse> LedgerResponses { get; set; }
             public double NetBalance { get; set; }
             public double PreviousBalance { get; set; }
-        }
-        public class LedgerResponse
-        {
-            public int Id { get; set; }
-            public int LedgerType { get; set; }
-            public int TransactionType { get; set; }
-            public double Amount { get; set; }
-            public int PartyId { get; set; }
-            public Party Party { get; set; }
-            public string CreatedDate { get; set; }
-            public string TransactionId { get; set; }
         }
     }
 }
