@@ -30,6 +30,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { LedgerTypePipe } from './pipes/ledger-type.pipe';
 import { PaymentTypePipe } from './pipes/payment-type.pipe';
 import { LocalCurrencyPipe } from './pipes/local-currency.pipe';
+import { RateBasedOnPipe } from './pipes/rate-based-on.pipe';
 
 @NgModule({
   declarations: [
@@ -42,7 +43,8 @@ import { LocalCurrencyPipe } from './pipes/local-currency.pipe';
     LocalDatetimePipe,
     LedgerTypePipe,
     PaymentTypePipe,
-    LocalCurrencyPipe
+    LocalCurrencyPipe,
+    RateBasedOnPipe
   ],
   imports: [
     CommonModule,
@@ -95,7 +97,8 @@ import { LocalCurrencyPipe } from './pipes/local-currency.pipe';
     LedgerTypePipe,
     PaymentTypePipe,
     LocalCurrencyPipe,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    RateBasedOnPipe
   ],
   entryComponents: [ModalComponent]
 })

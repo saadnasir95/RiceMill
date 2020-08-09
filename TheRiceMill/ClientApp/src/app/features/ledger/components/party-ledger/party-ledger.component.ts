@@ -24,15 +24,11 @@ import { LedgerService } from '../../../../shared/services/ledger.service';
   ],
 })
 export class PartyLedgerComponent implements OnInit {
+  isLoading = false;
   expandedId = 0;
   expandedLedgerType: LedgerType = LedgerType.Purchase;
   salePurchaseInfo = 0;
-  ledgerInfo: LedgerInfo = {
-    product: '',
-    totalActualBagWeight: 0,
-    totalMaund: 0,
-    maundPrice: 0
-  };
+  ledgerInfo: LedgerInfo = null;
   bankTransactionInfo: BankTransactionInfo = {
     bank: '',
     accountNumber: '',
@@ -99,12 +95,12 @@ export class PartyLedgerComponent implements OnInit {
 
   }
   getLedgerInfo(ledger: Ledger) {
-    debugger;
     if (this.expandedId === ledger.id && this.expandedLedgerType === ledger.ledgerType) {
       this.expandedId = 0;
       this.expandedLedgerType = LedgerType.Purchase;
       this.salePurchaseInfo = 0;
     } else {
+      this.isLoading = true;
       if (ledger.ledgerType === LedgerType.Purchase || ledger.ledgerType === LedgerType.Sale) {
         this.salePurchaseInfo = 1;
       } else {
@@ -120,9 +116,12 @@ export class PartyLedgerComponent implements OnInit {
             } else {
               this.bankTransactionInfo = response.data as BankTransactionInfo;
             }
-
+            this.isLoading = false;
           },
-          (error) => console.log(error)
+          (error) => {
+            console.log(error);
+            this.isLoading = false;
+          }
         );
     }
   }

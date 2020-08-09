@@ -1,10 +1,12 @@
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TheRiceMill.Application.Constants;
 using TheRiceMill.Common.Response;
+using TheRiceMill.Domain.Entities;
 using TheRiceMill.Persistence;
 using TheRiceMill.Persistence.Extensions;
 
@@ -40,18 +42,23 @@ namespace TheRiceMill.Application.Ledger.Queries.GetLedgerInfo
 
                     break;
                 case LedgerType.Purchase:
-                    //var purchase = _context.Purchases.GetBy(p => p.Id == request.Id,
-                    //    p => p.Include(pr => pr.GatePasses));
-                    //if (purchase != null)
-                    //{
-                    //    return new ResponseViewModel().CreateOk(new PurchaseInfo()
-                    //    {
-                    //        //Product = purchase.Product.Name,
-                    //        //MaundPrice = purchase.Rate,
-                    //        //TotalActualBagWeight = purchase,
-                    //        //TotalMaund = purchase.TotalMaund
-                    //    });
-                    //}
+                    var purchase = _context.Purchases.GetBy(p => p.Id == request.Id,
+                        p => p.Include(pr => pr.GatePasses).ThenInclude(g => g.Product).Include(c => c.Charges));
+                    if (purchase != null)
+                    {
+                        return new ResponseViewModel().CreateOk(new PurchaseInfo()
+                        {
+                            AdditionalCharges = purchase.Charges.Sum(c => c.Total),
+                            BagQuantity = purchase.BagQuantity,
+                            BoriQuantity = purchase.BoriQuantity,
+                            Commission = purchase.Commission,
+                            GatepassIds = String.Join(", ", purchase.GatePasses.Select(c => c.Id)),
+                            Product = String.Join(", ", purchase.GatePasses.Select(c => c.Product.Name).Distinct()),
+                            TotalMaund = purchase.TotalMaund,
+                            Rate = purchase.Rate,
+                            RateBasedOn = purchase.RateBasedOn
+                        });
+                    }
 
                     break;
                 case LedgerType.BankTransaction:
@@ -84,9 +91,14 @@ namespace TheRiceMill.Application.Ledger.Queries.GetLedgerInfo
         class PurchaseInfo
         {
             public string Product { get; set; }
-            public double TotalActualBagWeight { get; set; }
+            public double BoriQuantity { get; set; }
+            public double BagQuantity { get; set; }
             public double TotalMaund { get; set; }
-            public double MaundPrice { get; set; }
+            public double AdditionalCharges { get; set; }
+            public double Commission { get; set; }
+            public string GatepassIds { get; set; }
+            public RateBasedOn RateBasedOn { get; set; }
+            public double Rate { get; set; }
         }
 
         class BankInfo
