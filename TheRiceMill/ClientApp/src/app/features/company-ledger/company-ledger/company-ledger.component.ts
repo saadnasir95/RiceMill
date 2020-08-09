@@ -39,7 +39,7 @@ export class CompanyLedgerComponent implements OnInit {
     accountNumber: '',
     chequeNumber: '',
     paymentType: 1
-  };
+  }; 
   startDate 
   endDate
   isLoading = false;
