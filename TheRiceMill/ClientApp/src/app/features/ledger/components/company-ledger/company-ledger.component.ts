@@ -1,16 +1,16 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { Moment } from 'moment';
 import moment = require('moment');
-import { LedgerService } from '../../../shared/services/ledger.service';
 import { MatPaginator, MatTableDataSource } from '@angular/material';
-import { LedgerResponse, LedgerData } from '../../../shared/model/ledger-response.model';
-import { Ledger } from '../../../shared/model/ledger.model';
 import { FormGroup, FormControl } from '@angular/forms';
 import { trigger, state, transition, animate, style } from '@angular/animations';
-import { repeat } from 'rxjs/operators';
-import { LedgerType } from '../../../shared/model/enums';
-import { LedgerInfo } from '../../../shared/model/ledger-info.model';
-import { BankTransactionInfo } from '../../../shared/model/bank-transaction-info.model';
+import { LedgerType } from '../../../../shared/model/enums';
+import { Ledger } from '../../../../shared/model/ledger.model';
+import { LedgerData, LedgerResponse } from '../../../../shared/model/ledger-response.model';
+import { BankTransactionInfo } from '../../../../shared/model/bank-transaction-info.model';
+import { LedgerInfo } from '../../../../shared/model/ledger-info.model';
+import { LedgerService } from '../../../../shared/services/ledger.service';
+
 
 @Component({
   selector: 'app-company-ledger',
@@ -91,8 +91,8 @@ export class CompanyLedgerComponent implements OnInit {
     })
 
     this.ledgerForm.get('date').valueChanges.subscribe(response => {
-        this.startDate = response.start ? response.start.toISOString() : null,
-        this.endDate = response.end ? response.end.toISOString(): null
+        this.startDate = response.start ? moment(response.start).utc().format() : null,
+        this.endDate = response.end ? moment(response.end).utc().format(): null
         this.getLedgerList()
     })
 
