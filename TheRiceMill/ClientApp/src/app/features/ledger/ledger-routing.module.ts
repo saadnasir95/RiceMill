@@ -3,7 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { PartyLedgerComponent } from './components/party-ledger/party-ledger.component';
 
 const routes: Routes = [
-  { path: '', component: PartyLedgerComponent }
+  { path: 'party', component: PartyLedgerComponent }
 ];
 
 @NgModule({

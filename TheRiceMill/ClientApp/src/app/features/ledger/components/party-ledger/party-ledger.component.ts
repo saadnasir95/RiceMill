@@ -94,7 +94,7 @@ export class PartyLedgerComponent implements OnInit {
     }
 
   }
-  
+
   getLedgerInfo(ledger: Ledger) {
     if (this.expandedId === ledger.id && this.expandedLedgerType === ledger.ledgerType) {
       this.expandedId = 0;
