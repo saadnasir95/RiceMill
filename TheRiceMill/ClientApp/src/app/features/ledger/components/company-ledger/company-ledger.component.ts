@@ -15,7 +15,7 @@ import { LedgerService } from '../../../../shared/services/ledger.service';
 @Component({
   selector: 'app-company-ledger',
   templateUrl: './company-ledger.component.html',
-  styleUrls: ['./company-ledger.component.scss'],animations: [
+  styleUrls: ['./company-ledger.component.scss'], animations: [
     trigger('detailExpand', [
       state('collapsed', style({ height: '0px', minHeight: '0' })),
       state('expanded', style({ height: '*' })),
@@ -25,13 +25,13 @@ import { LedgerService } from '../../../../shared/services/ledger.service';
 })
 export class CompanyLedgerComponent implements OnInit {
   displayedColumns: string[] = ['createdDate', 'ledgerType', 'credit', 'debit', 'balance'];
-  selected: {start: Moment, end: Moment};
+  selected: { start: Moment, end: Moment };
   expandedLedgerType: LedgerType = LedgerType.Purchase;
-  ledgerType = [{id:'0',value:"All"},{id:'1',value:"Sale"},{id:'2',value:"Purchase"}]
+  ledgerType = [{ id: '0', value: 'All' }, { id: '1', value: 'Sale' }, { id: '2', value: 'Purchase' }];
   dataSource: MatTableDataSource<Ledger>;
   ledgerData: LedgerData;
   isLoadingData: Boolean = false;
-  ledgerForm: FormGroup
+  ledgerForm: FormGroup;
   salePurchaseInfo = 0;
   ledgerInfo: LedgerInfo = null;
   bankTransactionInfo: BankTransactionInfo = {
@@ -39,9 +39,9 @@ export class CompanyLedgerComponent implements OnInit {
     accountNumber: '',
     chequeNumber: '',
     paymentType: 1
-  }; 
-  startDate 
-  endDate
+  };
+  startDate: string;
+  endDate: string;
   isLoading = false;
   expandedId = 0;
 
@@ -52,7 +52,7 @@ export class CompanyLedgerComponent implements OnInit {
     'Last 30 Days': [moment().subtract(29, 'days'), moment()],
     'This Month': [moment().startOf('month'), moment().endOf('month')],
     'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-  }
+  };
 
   locale = {
     format: 'MM/DD/YYYY',
@@ -66,7 +66,7 @@ export class CompanyLedgerComponent implements OnInit {
     daysOfWeek: moment.weekdaysMin(),
     monthNames: moment.monthsShort(),
     firstDay: 1 // first day is monday
-  }
+  };
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
   constructor(private ledgerService: LedgerService) { }
@@ -74,90 +74,93 @@ export class CompanyLedgerComponent implements OnInit {
   ngOnInit() {
     this.dataSource = new MatTableDataSource();
     this.paginator.pageSize = 25;
-    this.buildForm()
-    this.getLedgerList()
+    this.buildForm();
+    this.getLedgerList();
   }
 
-  buildForm(){
+  buildForm() {
     this.ledgerForm = new FormGroup({
       ledgerType: new FormControl('0'),
       date: new FormControl()
-    })
+    });
 
     this.ledgerForm.get('ledgerType').valueChanges.subscribe(response => {
-      if(response){
-        this.getLedgerList()
+      if (response) {
+        this.getLedgerList();
       }
-    })
+    });
 
     this.ledgerForm.get('date').valueChanges.subscribe(response => {
-        this.startDate = response.start ? moment(response.start).utc().format() : null,
-        this.endDate = response.end ? moment(response.end).utc().format(): null
-        this.getLedgerList()
-    })
+      this.startDate = response.start ? moment(response.start).utc().format() : null;
+      this.endDate = response.end ? moment(response.end).utc().format() : null;
+      this.getLedgerList();
+    });
 
 
+  }
+
+  changePage() {
+    this.getLedgerList();
   }
 
   getLedgerList() {
-    debugger
-      this.ledgerService
-        .getCompanyLedger(this.paginator.pageSize, this.paginator.pageIndex,
-          this.ledgerForm.get('ledgerType').value,
-          this.startDate,this.endDate)
+    this.ledgerService
+      .getCompanyLedger(this.paginator.pageSize, this.paginator.pageIndex,
+        this.ledgerForm.get('ledgerType').value,
+        this.startDate, this.endDate)
+      .subscribe(
+        (response: LedgerResponse) => {
+          this.ledgerData = response.data;
+          let previousBalance: number = this.ledgerData.previousBalance != null ? this.ledgerData.previousBalance : 0;
+          this.ledgerData.ledgerResponses.forEach(element => {
+            // if (element.credit !== 0) {
+            //   previousBalance += element.credit;
+            //   element.balance = previousBalance;
+            // } else {
+            //   previousBalance -= element.debit;
+            //   element.balance = previousBalance;
+            // }
+            previousBalance += element.amount;
+            element.balance = previousBalance;
+          });
+          this.dataSource.data = this.ledgerData.ledgerResponses;
+          this.paginator.length = response.count;
+        },
+        (error) => console.log(error)
+      );
+  }
+
+  getLedgerInfo(ledger: Ledger) {
+    if (this.expandedId === ledger.id && this.expandedLedgerType === ledger.ledgerType) {
+      this.expandedId = 0;
+      this.expandedLedgerType = LedgerType.Purchase;
+      this.salePurchaseInfo = 0;
+    } else {
+      this.isLoading = true;
+      if (ledger.ledgerType === LedgerType.Purchase || ledger.ledgerType === LedgerType.Sale) {
+        this.salePurchaseInfo = 1;
+      } else {
+        this.salePurchaseInfo = 2;
+      }
+      this.expandedId = ledger.id;
+      this.expandedLedgerType = ledger.ledgerType;
+      this.ledgerService.getLedgerDetails(ledger.ledgerType, ledger.id)
         .subscribe(
-          (response: LedgerResponse) => {
-            this.ledgerData = response.data;
-            let previousBalance: number = this.ledgerData.previousBalance != null ? this.ledgerData.previousBalance : 0;
-            this.ledgerData.ledgerResponses.forEach(element => {
-              // if (element.credit !== 0) {
-              //   previousBalance += element.credit;
-              //   element.balance = previousBalance;
-              // } else {
-              //   previousBalance -= element.debit;
-              //   element.balance = previousBalance;
-              // }
-              previousBalance += element.amount;
-              element.balance = previousBalance;
-            });
-            this.dataSource.data = this.ledgerData.ledgerResponses;
-            this.paginator.length = response.count;
+          (response: any) => {
+            if (this.salePurchaseInfo === 1) {
+              this.ledgerInfo = response.data as LedgerInfo;
+            } else {
+              this.bankTransactionInfo = response.data as BankTransactionInfo;
+            }
+            this.isLoading = false;
           },
-          (error) => console.log(error)
+          (error) => {
+            console.log(error);
+            this.isLoading = false;
+          }
         );
     }
-
-    getLedgerInfo(ledger: Ledger) {
-      if (this.expandedId === ledger.id && this.expandedLedgerType === ledger.ledgerType) {
-        this.expandedId = 0;
-        this.expandedLedgerType = LedgerType.Purchase;
-        this.salePurchaseInfo = 0;
-      } else {
-        this.isLoading = true;
-        if (ledger.ledgerType === LedgerType.Purchase || ledger.ledgerType === LedgerType.Sale) {
-          this.salePurchaseInfo = 1;
-        } else {
-          this.salePurchaseInfo = 2;
-        }
-        this.expandedId = ledger.id;
-        this.expandedLedgerType = ledger.ledgerType;
-        this.ledgerService.getLedgerDetails(ledger.ledgerType, ledger.id)
-          .subscribe(
-            (response: any) => {
-              if (this.salePurchaseInfo === 1) {
-                this.ledgerInfo = response.data as LedgerInfo;
-              } else {
-                this.bankTransactionInfo = response.data as BankTransactionInfo;
-              }
-              this.isLoading = false;
-            },
-            (error) => {
-              console.log(error);
-              this.isLoading = false;
-            }
-          );
-      }
-    }
-
   }
+
+}
 

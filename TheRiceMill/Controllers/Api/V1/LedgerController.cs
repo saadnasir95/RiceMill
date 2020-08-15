@@ -15,8 +15,8 @@ namespace TheRiceMill.Presentation.Controllers.Api.V1
             return StatusCode(response.Status, response.Response);
         }
 
-        [HttpGet("GetCompanyLedger")]
-        public async Task<IActionResult> GetCompanyLedger([FromQuery]GetCompanyLedgerRequestModel model)
+        [HttpPost("GetCompanyLedger")]
+        public async Task<IActionResult> GetCompanyLedger(GetCompanyLedgerRequestModel model)
         {
             var response = await Mediator.Send(model);
             return StatusCode(response.Status, response.Response);

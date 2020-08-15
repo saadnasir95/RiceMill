@@ -17,7 +17,6 @@ namespace TheRiceMill.Application.Ledger.Queries.GetCompanyLedger
 
         public void SetDefaultValue()
         {
-
         }
     }
 }

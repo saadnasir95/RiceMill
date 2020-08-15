@@ -13,24 +13,32 @@ export class LedgerService {
   constructor(private http: HttpClient, private tokenService: TokenService) { }
 
   getPartyLedger(partyId: number, pageSize: number, pageIndex: number)
-  : Observable<LedgerResponse> {
-  const params = new HttpParams()
-    .set('PartyId', partyId.toString())
-    .set('Page', (pageIndex + 1).toString())
-    .set('PageSize', pageSize.toString());
-  return this.http.get<LedgerResponse>(this.apiUrl + '/GetPartyLedger', { headers: this.tokenService.getHeaders(), params: params });
-}
-
-
-  getCompanyLedger(pageSize: number, pageIndex: number,ledgerType: number, fromDate: string,toDate: string)
     : Observable<LedgerResponse> {
     const params = new HttpParams()
+      .set('PartyId', partyId.toString())
       .set('Page', (pageIndex + 1).toString())
-      .set('PageSize', pageSize.toString())
-      .set('LedgerType',ledgerType.toString())
-      .set('ToDate',toDate ? toDate.toString(): null)
-      .set('FromDate',fromDate ? fromDate.toString(): null);
-    return this.http.get<LedgerResponse>(this.apiUrl + '/GetCompanyLedger', { headers: this.tokenService.getHeaders(), params: params });
+      .set('PageSize', pageSize.toString());
+    return this.http.get<LedgerResponse>(this.apiUrl + '/GetPartyLedger', { headers: this.tokenService.getHeaders(), params: params });
+  }
+
+
+  getCompanyLedger(pageSize: number, pageIndex: number, ledgerType: number, fromDate: string, toDate: string)
+    : Observable<LedgerResponse> {
+    const data: any = {
+      Page: (pageIndex + 1).toString(),
+      PageSize: pageSize.toString(),
+      LedgerType: ledgerType.toString(),
+      FromDate: fromDate ? fromDate : null,
+      ToDate: toDate ? toDate : null
+    };
+    // const params = new HttpParams()
+    //   .set('Page', (pageIndex + 1).toString())
+    //   .set('PageSize', pageSize.toString())
+    //   .set('LedgerType', ledgerType.toString())
+    //   .set('ToDate', toDate ? toDate : null)
+    //   .set('FromDate', fromDate ? fromDate : null);
+    // return this.http.get<LedgerResponse>(this.apiUrl + '/GetCompanyLedger', { headers: this.tokenService.getHeaders(), params: params });
+    return this.http.post<LedgerResponse>(this.apiUrl + '/GetCompanyLedger', JSON.stringify(data), { headers: this.tokenService.getHeaders() });
   }
 
   getLedgerDetails(ledgerType: number, id: number)
