@@ -8,6 +8,7 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TheRiceMill.Application.Enums;
 using TheRiceMill.Application.GatePasses.Models;
+using TheRiceMill.Common.Extensions;
 using TheRiceMill.Common.Response;
 using TheRiceMill.Common.Util;
 using TheRiceMill.Domain.Entities;
@@ -33,10 +34,34 @@ namespace TheRiceMill.Application.GatePasses.Queries
             Expression<Func<GatePass, bool>> query = null;
             if (request.InvoicePendingGatePass)
             {
-                query = p => (p.PurchaseId == null && p.SaleId == null) && (p.Party.Name.Contains(request.Search) ||
-                                    (p.Id + "" == request.Search) ||
-                                    p.Vehicle.PlateNo.Contains(request.Search) ||
-                                    p.Product.Name.Contains(request.Search));
+                if (request.GatePassType != GatePassType.None && request.PartyId == 0)
+                {
+                    query = p => (p.PurchaseId == null && p.SaleId == null) && (p.Party.Name.Contains(request.Search) ||
+                                        (p.Id + "" == request.Search) ||
+                                        p.Vehicle.PlateNo.Contains(request.Search) ||
+                                        p.Product.Name.Contains(request.Search)) && p.Type == request.GatePassType.ToInt();
+                }
+                else if (request.GatePassType != GatePassType.None && request.PartyId != 0)
+                {
+                    query = p => (p.PurchaseId == null && p.SaleId == null) && (p.Party.Name.Contains(request.Search) ||
+                                        (p.Id + "" == request.Search) ||
+                                        p.Vehicle.PlateNo.Contains(request.Search) ||
+                                        p.Product.Name.Contains(request.Search)) && p.Type == request.GatePassType.ToInt() && p.PartyId == request.PartyId;
+                }
+                else if (request.GatePassType == GatePassType.None && request.PartyId != 0)
+                {
+                    query = p => (p.PurchaseId == null && p.SaleId == null) && (p.Party.Name.Contains(request.Search) ||
+                                        (p.Id + "" == request.Search) ||
+                                        p.Vehicle.PlateNo.Contains(request.Search) ||
+                                        p.Product.Name.Contains(request.Search)) && p.PartyId == request.PartyId;
+                }
+                else
+                {
+                    query = p => (p.PurchaseId == null && p.SaleId == null) && (p.Party.Name.Contains(request.Search) ||
+                                        (p.Id + "" == request.Search) ||
+                                        p.Vehicle.PlateNo.Contains(request.Search) ||
+                                        p.Product.Name.Contains(request.Search));
+                }
             }
             else
             {
@@ -82,7 +107,9 @@ namespace TheRiceMill.Application.GatePasses.Queries
                     ProductId = p.ProductId,
                     VehicleId = p.VehicleId,
                     PurchaseId = p.PurchaseId,
-                    SaleId = p.SaleId
+                    SaleId = p.SaleId,
+                    BiltyNumber = p.BiltyNumber,
+                    LotNumber = p.LotNumber
                 }).ToList();
             var count = await _context.GatePasses.CountAsync(query, cancellationToken);
             return new ResponseViewModel().CreateOk(gatePasses, count);

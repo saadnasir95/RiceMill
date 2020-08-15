@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TheRiceMill.Persistence;
 
 namespace TheRiceMill.Persistence.Migrations
 {
     [DbContext(typeof(TheRiceMillDbContext))]
-    partial class TheRiceMillDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200815185241_Lot-BiltyNumber-In-Gatepass")]
+    partial class LotBiltyNumberInGatepass
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
+using TheRiceMill.Application.Enums;
 using TheRiceMill.Common.Constants;
 using TheRiceMill.Common.Response;
 
@@ -27,6 +28,8 @@ namespace TheRiceMill.Application.GatePasses.Models
         public int PageSize { get; set; }
         public string OrderBy { get; set; }
         public bool InvoicePendingGatePass { get; set; }
+        public GatePassType GatePassType { get; set; }
+        public int PartyId { get; set; }
     }
 
     public class GetGatePassRequestModelValidator : AbstractValidator<GetGatePassRequestModel>

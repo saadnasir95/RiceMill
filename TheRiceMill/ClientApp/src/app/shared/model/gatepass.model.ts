@@ -22,4 +22,6 @@ export class Gatepass {
   maund: number;
   saleId: number;
   purchaseId: number;
+  biltyNumber: string;
+  lotNumber: string;
 }

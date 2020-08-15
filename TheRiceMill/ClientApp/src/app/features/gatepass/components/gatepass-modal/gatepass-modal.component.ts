@@ -32,6 +32,8 @@ export class GatepassModalComponent implements OnInit {
     dateTime: new FormControl(moment.tz('Asia/Karachi').format().slice(0, 16), Validators.required),
     type: new FormControl(+GatePassType.InwardGatePass, Validators.required),
     broker: new FormControl(''),
+    biltyNumber: new FormControl(''),
+    lotNumber: new FormControl(''),
     partyGroup: new FormGroup({
       name: new FormControl('', Validators.required),
       address: new FormControl('', Validators.required),
@@ -210,6 +212,8 @@ export class GatepassModalComponent implements OnInit {
       dateTime: moment.utc(gatepass.dateTime).tz('Asia/Karachi').format().slice(0, 16),
       type: gatepass.type,
       broker: gatepass.broker,
+      biltyNumber: gatepass.biltyNumber,
+      lotNumber: gatepass.lotNumber,
       vehicleGroup: {
         plateNo: gatepass.vehicle.plateNo
       },
@@ -275,7 +279,13 @@ export class GatepassModalComponent implements OnInit {
       }
       this.gatepass.dateTime = moment(this.gatepassForm.value.dateTime).utc().format();
       this.gatepass.type = +this.gatepassForm.value.type;
-      this.gatepass.broker = this.gatepassForm.value.broker;
+      if (this.gatepassForm.value.broker) {
+        this.gatepass.broker = this.gatepassForm.value.broker;
+      } else {
+        this.gatepass.broker = this.gatepassForm.get('partyGroup').value.name;
+      }
+      this.gatepass.biltyNumber = this.gatepassForm.value.biltyNumber;
+      this.gatepass.lotNumber = this.gatepassForm.value.lotNumber;
       this.gatepass.product.id = +this.gatepass.productId;
       this.gatepass.product.name = this.gatepassForm.get('productGroup').value.name;
       this.gatepass.product.createdDate = moment.utc().format();

@@ -15,7 +15,7 @@ export class GatepassService {
 
   constructor(private http: HttpClient, private tokenService: TokenService) { }
 
-  getGatepassList(pageSize: number, pageIndex: number, search = '', sortDirection = 'false', orderBy = '', InvoicePendingGatePass = false)
+  getGatepassList(pageSize: number, pageIndex: number, search = '', sortDirection = 'false', orderBy = '', InvoicePendingGatePass = false, GatePassType = 0, PartyId = 0)
     : Observable<GatepassResponse> {
     const params = new HttpParams()
       .set('Page', (pageIndex + 1).toString())
@@ -23,7 +23,9 @@ export class GatepassService {
       .set('search', search + '')
       .set('isDescending', sortDirection)
       .set('orderBy', orderBy + '')
-      .set('InvoicePendingGatePass', InvoicePendingGatePass.toString());
+      .set('InvoicePendingGatePass', InvoicePendingGatePass.toString())
+      .set('GatePassType', GatePassType.toString())
+      .set('PartyId', PartyId.toString());
     return this.http.get<GatepassResponse>(this.apiUrl, { headers: this.tokenService.getHeaders(), params: params });
   }
 

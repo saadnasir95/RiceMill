@@ -36,5 +36,7 @@ namespace TheRiceMill.Application.GatePasses.Models
         public string Broker { get; set; }
         public int? PurchaseId { get; set; }
         public int? SaleId { get; set; }
+        public string BiltyNumber { get; set; }
+        public string LotNumber { get; set; }
     }
 }
