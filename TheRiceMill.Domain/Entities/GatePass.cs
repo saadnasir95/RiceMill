@@ -25,5 +25,7 @@ namespace TheRiceMill.Domain.Entities
         public double EmptyWeight { get; set; }
         public double NetWeight { get; set; }
         public double Maund { get; set; }
+        public string BiltyNumber { get; set; }
+        public string LotNumber { get; set; }
     }
 }

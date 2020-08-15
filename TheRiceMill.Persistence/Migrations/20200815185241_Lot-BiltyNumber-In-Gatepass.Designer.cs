@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TheRiceMill.Persistence;
 
 namespace TheRiceMill.Persistence.Migrations
 {
     [DbContext(typeof(TheRiceMillDbContext))]
-    partial class TheRiceMillDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200815185241_Lot-BiltyNumber-In-Gatepass")]
+    partial class LotBiltyNumberInGatepass
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -567,9 +569,17 @@ namespace TheRiceMill.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<double>("ActualBagWeight");
+
                     b.Property<double>("BagQuantity");
 
-                    b.Property<double>("BoriQuantity");
+                    b.Property<double>("BagWeight");
+
+                    b.Property<double>("BasePrice");
+
+                    b.Property<string>("BiltyNumber");
+
+                    b.Property<DateTime>("CheckOut");
 
                     b.Property<double>("Commission");
 
@@ -577,15 +587,27 @@ namespace TheRiceMill.Persistence.Migrations
 
                     b.Property<DateTime>("CreatedDate");
 
-                    b.Property<DateTime>("Date");
+                    b.Property<double>("ExpectedBagWeight");
 
-                    b.Property<int?>("PartyId");
+                    b.Property<double>("ExpectedEmptyBagWeight");
 
-                    b.Property<int?>("ProductId");
+                    b.Property<double>("KandaWeight");
 
-                    b.Property<double>("Rate");
+                    b.Property<int>("PartyId");
 
-                    b.Property<int>("RateBasedOn");
+                    b.Property<double>("PercentCommission");
+
+                    b.Property<int>("ProductId");
+
+                    b.Property<double>("RatePerKg");
+
+                    b.Property<double>("RatePerMaund");
+
+                    b.Property<double>("TotalActualBagWeight");
+
+                    b.Property<double>("TotalExpectedBagWeight");
+
+                    b.Property<double>("TotalExpectedEmptyBagWeight");
 
                     b.Property<double>("TotalMaund");
 
@@ -595,7 +617,7 @@ namespace TheRiceMill.Persistence.Migrations
 
                     b.Property<DateTime>("UpdatedDate");
 
-                    b.Property<int?>("VehicleId");
+                    b.Property<int>("VehicleId");
 
                     b.HasKey("Id");
 
@@ -856,17 +878,20 @@ namespace TheRiceMill.Persistence.Migrations
 
             modelBuilder.Entity("TheRiceMill.Domain.Entities.Sale", b =>
                 {
-                    b.HasOne("TheRiceMill.Domain.Entities.Party")
+                    b.HasOne("TheRiceMill.Domain.Entities.Party", "Party")
                         .WithMany("Sales")
-                        .HasForeignKey("PartyId");
+                        .HasForeignKey("PartyId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("TheRiceMill.Domain.Entities.Product")
+                    b.HasOne("TheRiceMill.Domain.Entities.Product", "Product")
                         .WithMany("Sales")
-                        .HasForeignKey("ProductId");
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
 
-                    b.HasOne("TheRiceMill.Domain.Entities.Vehicle")
+                    b.HasOne("TheRiceMill.Domain.Entities.Vehicle", "Vehicle")
                         .WithMany("Sales")
-                        .HasForeignKey("VehicleId");
+                        .HasForeignKey("VehicleId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("TheRiceMill.Domain.Entities.UserClaim", b =>

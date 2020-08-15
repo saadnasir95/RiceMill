@@ -43,6 +43,8 @@ namespace TheRiceMill.Application.GatePasses.Models
         public ProductRequestModel Product { get; set; }
         public DateTime DateTime { get; set; }
         public string Broker { get; set; }
+        public string BiltyNumber { get; set; }
+        public string LotNumber { get; set; }
     }
 
     public class UpdateGatePassRequestModelValidator : AbstractValidator<UpdateGatePassRequestModel>

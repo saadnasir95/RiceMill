@@ -44,6 +44,8 @@ namespace TheRiceMill.Application.GatePasses.Models
         public int ProductId { get; set; }
         public ProductRequestModel Product { get; set; }
         public DateTime DateTime { get; set; }
+        public string BiltyNumber { get; set; }
+        public string LotNumber { get; set; }
     }
 
     public class VehicleRequestModel

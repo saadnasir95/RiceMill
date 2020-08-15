@@ -41,6 +41,8 @@ namespace TheRiceMill.Application.GatePasses.Commands
                 NetWeight = request.NetWeight,
                 Maund = request.Maund,
                 Broker = request.Broker,
+                LotNumber = request.LotNumber,
+                BiltyNumber = request.BiltyNumber
             };
             Party party;
             Vehicle vehicle;
@@ -131,6 +133,8 @@ namespace TheRiceMill.Application.GatePasses.Commands
                 BagQuantity = request.BagQuantity,
                 BoriQuantity = request.BoriQuantity,
                 WeightPerBag = request.WeightPerBag,
+                EmptyWeight = request.EmptyWeight,
+                KandaWeight = request.KandaWeight,
                 NetWeight = request.NetWeight,
                 Maund = request.Maund,
                 DateTime = request.DateTime,
@@ -151,7 +155,9 @@ namespace TheRiceMill.Application.GatePasses.Commands
                 },
                 PartyId = party.Id,
                 ProductId = product.Id,
-                VehicleId = vehicle.Id
+                VehicleId = vehicle.Id,
+                BiltyNumber = request.BiltyNumber,
+                LotNumber = request.LotNumber
             });
         }
     }

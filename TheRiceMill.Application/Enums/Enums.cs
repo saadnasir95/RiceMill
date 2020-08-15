@@ -2,10 +2,11 @@
 {
     public enum GatePassType
     {
+        None,
         /// <summary>
         /// Sale
         /// </summary>
-        OutwardGatePass = 1,
+        OutwardGatePass,
         /// <summary>
         /// Purchase
         /// </summary>
