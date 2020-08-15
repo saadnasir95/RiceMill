@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
-import { GateinDirection, ProductType, RateBasedOn } from '../../../../shared/model/enums';
+import { GateinDirection, ProductType, RateBasedOn, GatePassType } from '../../../../shared/model/enums';
 import { MatDialogRef, MatAutocompleteSelectedEvent, MatChipInputEvent, MatSlideToggleChange } from '@angular/material';
 import { Vehicle } from '../../../../shared/model/vehicle.model';
 import { Product } from '../../../../shared/model/product.model';
@@ -101,7 +101,7 @@ export class PurchaseModalComponent implements OnInit {
     this.purchaseForm.controls['gatepass'].valueChanges.subscribe(
       (response: string) => {
         this.gatepassService
-        .getGatepassList(10, 0, response, 'false', '',true)
+        .getGatepassList(10, 0, response, 'false', '',true, GatePassType.InwardGatePass)
         .subscribe(
           (response: GatepassResponse) => {
             this.filteredGatepasses = response.data;

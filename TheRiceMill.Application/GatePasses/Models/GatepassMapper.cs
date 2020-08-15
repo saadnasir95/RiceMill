@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TheRiceMill.Application.Enums;
 using TheRiceMill.Domain.Entities;
 
 namespace TheRiceMill.Application.GatePasses.Models
@@ -51,6 +52,8 @@ namespace TheRiceMill.Application.GatePasses.Models
                 BagQuantity = _gatepass.BagQuantity,
                 BoriQuantity = _gatepass.BoriQuantity,
                 Broker = _gatepass.Broker,
+                LotNumber = _gatepass.LotNumber,
+                KandaWeight = _gatepass.KandaWeight,
                 EmptyWeight = _gatepass.EmptyWeight,
                 Maund = _gatepass.Maund,
                 Party = new PartyRequestModel()
@@ -71,6 +74,14 @@ namespace TheRiceMill.Application.GatePasses.Models
                 },
                 VehicleId = _gatepass.Vehicle.Id,
                 ProductId = _gatepass.Product.Id,
+                Type = (GatePassType)_gatepass.Type,
+                WeightPerBag = _gatepass.WeightPerBag,
+                NetWeight = _gatepass.NetWeight,
+                DateTime = _gatepass.DateTime,
+                Id = _gatepass.Id,
+                PartyId = _gatepass.PartyId,
+                PurchaseId = _gatepass.PurchaseId,
+                SaleId = _gatepass.SaleId
             };
         }
     }

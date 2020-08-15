@@ -69,7 +69,7 @@ namespace TheRiceMill.Application.Sales.Commands.CreateSale
             {
                 gatepass = _context.GatePasses.GetBy(q => q.Id == id, p => p.Include(pr => pr.Party).Include(pr => pr.Product).Include(pr => pr.Vehicle));
                 gatepasses.Add(gatepass);
-                gatepass.PurchaseId = sale.Id;
+                gatepass.SaleId = sale.Id;
 
             }
             await _context.SaveChangesAsync(cancellationToken);

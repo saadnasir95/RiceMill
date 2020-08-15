@@ -19,88 +19,111 @@
       </div>
     </div>
 
-  <div class="invoice-content row px-5 pt-5">
-    <div class="col-3">
-      <h5 class="gray-ish">Invoiced to:</h5>
-      <p class="gray-ish">{{sale.party.name}}</p>
-      <p class="gray-ish">{{sale.party.address}}</p>
-      <p class="gray-ish">{{sale.party.phoneNumber}}</p>
+    <div class="invoice-content row px-5 pt-5">
+      <!-- <div class="col-3">
+        <h5 class="gray-ish">Invoiced to:</h5>
+        <p class="gray-ish">{{sale.party.name}}</p>
+        <p class="gray-ish">{{sale.party.address}}</p>
+        <p class="gray-ish">{{sale.party.phoneNumber}}</p>
+      </div> -->
+      <div class="col-6">
+        <h5 class="gray-ish">Sale's Invoice number:</h5>
+        <p class="gray-ish">{{sale.id}}</p>
+      </div>
+  
+      <div class="col-6">
+        <h5 class="gray-ish d-flex justify-content-end">Sale's Date</h5>
+        <p class="gray-ish d-flex justify-content-end">{{sale.date | localDatetime}}</p>
+      </div>
+      <!-- <div class="col-6 text-right total-field">
+        <h4 class="gray-ish">Sale Total</h4>
+        <h1 class="gray-ish">{{sale.totalPrice | currency:'Rs '}}</h1>
+      </div> -->
     </div>
-    <div class="col-3">
-      <h5 class="gray-ish">Sale number:</h5>
-      <p class="gray-ish">{{sale.id}}</p>
-
-      <h5 class="gray-ish">Sale Date</h5>
-      <p class="gray-ish">{{sale.checkOut | localDatetime}}</p>
-
+  
+    <div class="row mt-5">
+      <div class="col-10 offset-1 invoice-table pt-1">
+        <table class="table table-hover">
+          <thead class="thead splitForPrint">
+            <tr>
+              <th scope="col gray-ish">#</th>
+              <th scope="col gray-ish">Party</th>
+              <th scope="col gray-ish">Product</th>
+              <th scope="col gray-ish">Maund</th>
+              <th scope="col gray-ish">Bori Qty</th>
+              <th scope="col gray-ish">Bag Qty</th>
+              <th scope="col gray-ish">Kanda Weight</th>
+              <!-- <th scope="col gray-ish">Total Actual Bag Weight</th> -->
+              <!-- <th scope="col gray-ish">Rate per Maund</th> -->
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let gatepass of sale.gatepasses; let i= index">
+              <td>{{i + 1}}</td>
+              <td>{{gatepass?.party?.name}}</td>
+              <td>{{gatepass?.product?.name}}</td>
+              <td>{{gatepass.maund}}</td>
+              <td>{{gatepass.boriQuantity}}</td>
+              <td>{{gatepass.bagQuantity}}</td>
+              <td>{{gatepass.kandaWeight}}</td>
+              <!-- <td>{{gatepass.totalActualBagWeight| currency:'KG '}}</td> -->
+              <!-- <td>{{sale.rate | currency:'Rs '}}</td> -->
+            </tr>
+          </tbody>
+          <tfoot>
+            <tr>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td></td>
+              <td>Brokery</td>
+              <td>{{sale.commission | currency: 'Rs '}}</td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
     </div>
-    <div class="col-6 text-right total-field">
-      <h4 class="gray-ish">Sale Total</h4>
-      <h1 class="gray-ish">{{sale.totalPrice | currency:'Rs '}}</h1>
+    <div class="row invoice_details">
+      <!-- invoiced to details -->
+      <div class="col-4 offset-1 pt-3">
+        <!-- <h4 class="gray-ish">Invoice Summary & Notes</h4>
+       <p class="pt-3 almost-gray">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras purus sapien, ullamcorper quis orci eu, consectetur congue nulla. In a fermentum est, ornare maximus neque. Phasellus metus risus, mattis ac sapien in, volutpat laoreet lectus. Maecenas tincidunt condimentum quam, ut porttitor dui ultricies nec.</p> -->
+      </div>
+      <!-- Invoice assets and total -->
+      <div class="offset-1 col-5 mb-3 pr-4 sub-table">
+        <table class="table table-borderless">
+          <tbody>
+            <!-- <tr>
+              <th scope="row gray-ish">Subtotal</th>
+              <td class="text-right">{{sale.basePrice | currency:'Rs '}}</td>
+            </tr> -->
+            <tr>
+              <th scope="row gray-ish">Rate Per {{ sale?.rateBasedOn == '1' ? 'Maund' : 'Bag' }}</th>
+              <td class="text-right">{{sale.rate | currency:'Rs '}}</td>
+            </tr>
+            <!-- <tr>
+              <th scope="row gray-ish">Brokery</th>
+              <td class="text-right">{{sale.commission | currency: 'Rs '}}</td>
+            </tr> -->
+  
+            <tr *ngFor="let charge of sale.additionalCharges">
+              <th scope="row gray-ish">{{charge.task}}</th>
+              <td class="text-right">{{charge.total | currency:'Rs '}}</td>
+            </tr>
+            <tr class="last-row">
+              <th scope="row">
+                <h4>Total</h4>
+              </th>
+              <td class="text-right">
+                <h4>{{sale.totalPrice | currency:'Rs '}}</h4>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
+    <!-- <p class="text-center pb-3"><em> Taxes will be calculated in &euro; regarding transport and other taxable
+        services.</em></p> -->
   </div>
-
-  <div class="row mt-5">
-    <div class="col-10 offset-1 invoice-table pt-1">
-      <table class="table table-hover">
-        <thead class="thead splitForPrint">
-          <tr>
-            <th scope="col gray-ish">Product</th>
-            <th scope="col gray-ish">Bag Qty</th>
-            <th scope="col gray-ish">Kanda Weight</th>
-            <th scope="col gray-ish">Total Actual Bag Weight</th>
-            <th scope="col gray-ish">Total Maund</th>
-            <th scope="col gray-ish">Rate per Maund</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>{{sale.product.name}}</td>
-            <td>{{sale.bagQuantity}}</td>
-            <td>{{sale.kandaWeight}}</td>
-            <td>{{sale.totalActualBagWeight| currency:'KG '}}</td>
-            <td>{{sale.totalMaund}}</td>
-            <td>{{sale.ratePerMaund | currency:'Rs '}}</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <div class="row invoice_details">
-    <!-- invoiced to details -->
-    <div class="col-4 offset-1 pt-3">
-      <!-- <h4 class="gray-ish">Invoice Summary & Notes</h4>
-     <p class="pt-3 almost-gray">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras purus sapien, ullamcorper quis orci eu, consectetur congue nulla. In a fermentum est, ornare maximus neque. Phasellus metus risus, mattis ac sapien in, volutpat laoreet lectus. Maecenas tincidunt condimentum quam, ut porttitor dui ultricies nec.</p> -->
-    </div>
-    <!-- Invoice assets and total -->
-    <div class="offset-1 col-5 mb-3 pr-4 sub-table">
-      <table class="table table-borderless">
-        <tbody>
-          <tr>
-            <th scope="row gray-ish">Subtotal</th>
-            <td class="text-right">{{sale.basePrice | currency:'Rs '}}</td>
-          </tr>
-          <tr>
-            <th scope="row gray-ish">Commission</th>
-            <td class="text-right">{{sale.commission | currency: 'Rs '}}</td>
-          </tr>
-
-          <tr *ngFor="let charge of sale.additionalCharges">
-            <th scope="row gray-ish">{{charge.task}}</th>
-            <td class="text-right">{{charge.total | currency:'Rs '}}</td>
-          </tr>
-          <tr class="last-row">
-            <th scope="row">
-              <h4>Total</h4>
-            </th>
-            <td class="text-right">
-              <h4>{{sale.totalPrice | currency:'Rs '}}</h4>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-  <!-- <p class="text-center pb-3"><em> Taxes will be calculated in &euro; regarding transport and other taxable
-      services.</em></p> -->
-</div>
+  

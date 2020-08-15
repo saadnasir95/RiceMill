@@ -21,6 +21,7 @@ namespace TheRiceMill.Application.Sales.Queries.GetSales
     public class GetSalesRequestHandler : IRequestHandler<GetSalesRequestModel, ResponseViewModel>
     {
         private readonly TheRiceMillDbContext _context;
+        GatepassMapper gatepassMapper = new GatepassMapper();
 
         public GetSalesRequestHandler(TheRiceMillDbContext context)
         {
@@ -29,6 +30,7 @@ namespace TheRiceMill.Application.Sales.Queries.GetSales
 
         public async Task<ResponseViewModel> Handle(GetSalesRequestModel request, CancellationToken cancellationToken)
         {
+            request.SetDefaultValue();
             Expression<Func<Sale, bool>> query = null;
             if (request.Search.Length > 0)
             {
@@ -59,6 +61,8 @@ namespace TheRiceMill.Application.Sales.Queries.GetSales
                         WeightPerBag = gp.WeightPerBag,
                         NetWeight = gp.NetWeight,
                         Maund = gp.Maund,
+                        KandaWeight = gp.KandaWeight,
+                        LotNumber = gp.LotNumber,
                         DateTime = gp.DateTime,
                         Broker = gp.Broker,
                         Id = gp.Id,

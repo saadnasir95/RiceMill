@@ -61,6 +61,8 @@ namespace TheRiceMill.Application.Purchases.Queries
                         Maund = gp.Maund,
                         DateTime = gp.DateTime,
                         Broker = gp.Broker,
+                        KandaWeight = gp.KandaWeight,
+                        LotNumber = gp.LotNumber,
                         Id = gp.Id,
                         Party = new PartyRequestModel()
                         {
