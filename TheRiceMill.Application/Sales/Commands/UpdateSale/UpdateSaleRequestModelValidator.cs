@@ -2,11 +2,11 @@ using FluentValidation;
 using TheRiceMill.Application.Extensions;
 using TheRiceMill.Common.Constants;
 
-namespace TheRiceMill.Application.Purchases.Commands.UpdatePurchase
+namespace TheRiceMill.Application.Sales.Commands.UpdateSale
 {
-    public class UpdatePurchaseRequestModelValidator : AbstractValidator<UpdatePurchaseRequestModel>
+    public class UpdateSaleRequestModelValidator : AbstractValidator<UpdateSaleRequestModel>
     {
-        public UpdatePurchaseRequestModelValidator()
+        public UpdateSaleRequestModelValidator()
         {
             RuleFor(p => p.TotalMaund).Required();
             RuleFor(p => p.Rate).Required();

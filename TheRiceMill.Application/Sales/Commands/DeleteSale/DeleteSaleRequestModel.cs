@@ -1,7 +1,7 @@
 using MediatR;
 using TheRiceMill.Common.Response;
 
-namespace TheRiceMill.Application.Sale.Commands.DeleteSale
+namespace TheRiceMill.Application.Sales.Commands.DeleteSale
 {
 
     public class DeleteSaleRequestModel : IRequest<ResponseViewModel>

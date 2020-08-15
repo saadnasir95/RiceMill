@@ -14,7 +14,7 @@ import { SaleReceiptComponent } from '../sale-receipt/sale-receipt.component';
   styleUrls: ['./sale.component.scss']
 })
 export class SaleComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['Id', 'party.name', 'product.name', 'bagQuantity', 'kandaWeight', 'totalActualBagWeight', 'totalMaund', 'ratePerMaund', 'totalPrice', 'createdDate', 'Action'];
+  displayedColumns: string[] = ['Id', 'createdDate','totalMaund','boriQuantity','bagQuantity', 'brokery','rate', 'totalPrice','totalGatepasses', 'Action'];
   dataSource: MatTableDataSource<Sale>;
   saleList: Sale[];
   isLoadingData: Boolean = false;
@@ -55,14 +55,17 @@ export class SaleComponent implements OnInit, OnDestroy {
     this.saleSearch = filterValue.trim().toLowerCase();
     this.getSaleList();
   }
+  
   sortData() {
     this.paginator.pageIndex = 0;
     this.sortDirection = this.sort.direction === 'desc' ? 'true' : 'false';
     this.sortOrderBy = this.sort.active;
     this.getSaleList();
   }
+  
   changePage() {
   }
+  
   openModal() {
     this.dialogRef = this.matDialog.open(SaleModalComponent, {
       disableClose: true,
@@ -70,6 +73,7 @@ export class SaleComponent implements OnInit, OnDestroy {
     });
     this.dialogRef.componentInstance.modalRef = this.dialogRef;
   }
+  
   editSale(sale: Sale) {
     this.dialogRef = this.matDialog.open(SaleModalComponent, {
       disableClose: true,
@@ -78,6 +82,7 @@ export class SaleComponent implements OnInit, OnDestroy {
     this.dialogRef.componentInstance.modalRef = this.dialogRef;
     this.dialogRef.componentInstance.editSale(sale);
   }
+  
   printSale(sale: Sale) {
     this.saleReceiptComponent.sale = sale;
     setTimeout(() => {
@@ -85,6 +90,7 @@ export class SaleComponent implements OnInit, OnDestroy {
       window.print();
     }, 500);
   }
+  
   deleteSale(sale: Sale) {
     this.dialogRef = this.matDialog.open(SaleModalComponent, {
       disableClose: true,
@@ -93,6 +99,7 @@ export class SaleComponent implements OnInit, OnDestroy {
     this.dialogRef.componentInstance.modalRef = this.dialogRef;
     this.dialogRef.componentInstance.deleteSale(sale);
   }
+
   getSaleList() {
     this.saleService
       .getSaleList(this.paginator.pageSize, this.paginator.pageIndex, this.saleSearch, this.sortDirection, this.sortOrderBy)

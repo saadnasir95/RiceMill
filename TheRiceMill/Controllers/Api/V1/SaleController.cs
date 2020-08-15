@@ -1,10 +1,10 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using TheRiceMill.Application.Sale.Commands.CreateSale;
-using TheRiceMill.Application.Sale.Commands.DeleteSale;
-using TheRiceMill.Application.Sale.Commands.UpdateSale;
-using TheRiceMill.Application.Sale.Queries.GetSales;
+using TheRiceMill.Application.Sales.Commands.CreateSale;
+using TheRiceMill.Application.Sales.Commands.DeleteSale;
+using TheRiceMill.Application.Sales.Commands.UpdateSale;
+using TheRiceMill.Application.Sales.Queries.GetSales;
 
 namespace TheRiceMill.Presentation.Controllers.Api.V1
 {

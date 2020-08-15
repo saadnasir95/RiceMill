@@ -1,7 +1,7 @@
 using FluentValidation;
 using TheRiceMill.Application.Extensions;
 
-namespace TheRiceMill.Application.Sale.Commands.DeleteSale
+namespace TheRiceMill.Application.Sales.Commands.DeleteSale
 {
     public class DeleteSaleRequestModelValidator : AbstractValidator<DeleteSaleRequestModel>
     {

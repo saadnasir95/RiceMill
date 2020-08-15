@@ -1,0 +1,27 @@
+.custom-height {
+    height: auto;
+}
+
+.grand-total {
+    font-weight: 600;
+    padding: 8px;
+}
+
+.container {
+    p {
+        b{
+            font-weight: 600;
+        }
+    }
+}
+
+.mat-checkbox {
+    font-family: Roboto,"Helvetica Neue",sans-serif;
+    padding: 0.2rem !important;
+}
+
+
+.mat-button-toggle-checked {
+    background: linear-gradient(60deg, #ab47bc, #8e24aa);
+    color: white;
+  }

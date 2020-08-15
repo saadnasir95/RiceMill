@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
@@ -7,38 +7,38 @@ using MediatR;
 using Microsoft.EntityFrameworkCore;
 using TheRiceMill.Application.Enums;
 using TheRiceMill.Application.GatePasses.Models;
-using TheRiceMill.Application.Purchases.Models;
-using TheRiceMill.Application.Purchases.Shared;
+using TheRiceMill.Application.Products.Models;
 using TheRiceMill.Application.Sales.Commands.CreateSale;
+using TheRiceMill.Application.Sales.Shared;
 using TheRiceMill.Common.Response;
 using TheRiceMill.Common.Util;
 using TheRiceMill.Domain.Entities;
 using TheRiceMill.Persistence;
 using TheRiceMill.Persistence.Extensions;
 
-namespace TheRiceMill.Application.Purchases.Queries
+namespace TheRiceMill.Application.Sales.Queries.GetSales
 {
-    public class GetPurchaseRequestHandler : IRequestHandler<GetPurchaseRequestModel, ResponseViewModel>
+    public class GetSalesRequestHandler : IRequestHandler<GetSalesRequestModel, ResponseViewModel>
     {
         private readonly TheRiceMillDbContext _context;
 
-        public GetPurchaseRequestHandler(TheRiceMillDbContext context)
+        public GetSalesRequestHandler(TheRiceMillDbContext context)
         {
             _context = context;
         }
 
-        public Task<ResponseViewModel> Handle(GetPurchaseRequestModel request, CancellationToken cancellationToken)
+        public async Task<ResponseViewModel> Handle(GetSalesRequestModel request, CancellationToken cancellationToken)
         {
-            request.SetDefaultValue();
-            Expression<Func<Purchase, bool>> query = null;
+            Expression<Func<Sale, bool>> query = null;
             if (request.Search.Length > 0)
             {
                 query = p => p.Id.ToString() == request.Search;
-            }else
+            }
+            else
             {
                 query = p => p.Id != 0;
             }
-            var purchase = _context.Purchases.GetMany(
+            var sale = _context.Sales.GetMany(
                     query,
                     request.OrderBy, request.Page, request.PageSize, request.IsDescending,
                     p => p.Include(pr => pr.GatePasses))
@@ -97,7 +97,7 @@ namespace TheRiceMill.Application.Purchases.Queries
                 }).ToList();
             var count = _context.Purchases.Count(p =>
                 p.Id.ToString().Contains(request.Search));
-            return Task.FromResult(new ResponseViewModel().CreateOk(purchase, count));
+            return await Task.FromResult(new ResponseViewModel().CreateOk(sale, count));
         }
     }
 }

@@ -2,7 +2,7 @@ using System;
 using MediatR;
 using TheRiceMill.Application.Enums;
 using TheRiceMill.Application.GatePasses.Models;
-using TheRiceMill.Application.Sale.Commands.CreateSale;
+using TheRiceMill.Application.Sales.Commands.CreateSale;
 using TheRiceMill.Common.Response;
 
 namespace TheRiceMill.Application.Purchases.Models

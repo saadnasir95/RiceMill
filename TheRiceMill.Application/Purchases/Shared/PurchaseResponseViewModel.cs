@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 using TheRiceMill.Application.GatePasses.Models;
-using TheRiceMill.Application.Sale.Commands.CreateSale;
+using TheRiceMill.Application.Sales.Commands.CreateSale;
 
 namespace TheRiceMill.Application.Purchases.Shared
 {

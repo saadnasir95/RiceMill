@@ -8,7 +8,7 @@ using TheRiceMill.Common.Response;
 using TheRiceMill.Persistence;
 using TheRiceMill.Persistence.Extensions;
 
-namespace TheRiceMill.Application.Sale.Commands.DeleteSale
+namespace TheRiceMill.Application.Sales.Commands.DeleteSale
 {
 
     public class DeleteSaleRequestHandler : IRequestHandler<DeleteSaleRequestModel, ResponseViewModel>

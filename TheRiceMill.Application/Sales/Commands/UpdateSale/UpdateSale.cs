@@ -4,12 +4,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
 using TheRiceMill.Application.Constants;
 using TheRiceMill.Application.Enums;
 using TheRiceMill.Application.Exceptions;
-using TheRiceMill.Application.GatePasses.Models;
-using TheRiceMill.Application.Purchases.Shared;
 using TheRiceMill.Application.Sales.Shared;
 using TheRiceMill.Common.Extensions;
 using TheRiceMill.Common.Response;
@@ -18,45 +15,45 @@ using TheRiceMill.Domain.Entities;
 using TheRiceMill.Persistence;
 using TheRiceMill.Persistence.Extensions;
 
-namespace TheRiceMill.Application.Purchases.Commands.UpdatePurchase
+namespace TheRiceMill.Application.Sales.Commands.UpdateSale
 {
 
-    public class UpdatePurchaseRequestHandler : IRequestHandler<UpdatePurchaseRequestModel, ResponseViewModel>
+    public class UpdateSaleRequestHandler : IRequestHandler<UpdateSaleRequestModel, ResponseViewModel>
     {
         private readonly TheRiceMillDbContext _context;
 
-        public UpdatePurchaseRequestHandler(TheRiceMillDbContext context)
+        public UpdateSaleRequestHandler(TheRiceMillDbContext context)
         {
             _context = context;
         }
 
-        public async Task<ResponseViewModel> Handle(UpdatePurchaseRequestModel request, CancellationToken cancellationToken)
+        public async Task<ResponseViewModel> Handle(UpdateSaleRequestModel request, CancellationToken cancellationToken)
         {
-            var purchase = _context.Purchases.GetBy(p => p.Id == request.Id, p => p.Include(pr => pr.Charges));
-            if (purchase == null)
+            var sale = _context.Sales.GetBy(p => p.Id == request.Id, p => p.Include(pr => pr.Charges));
+            if (sale == null)
             {
                 throw new NotFoundException(nameof(Domain.Entities.Sale), request.Id);
             }
-            var partyledger = _context.Ledgers.GetBy(p => p.Id == request.Id && p.LedgerType == (int)LedgerType.Purchase && p.TransactionType == TransactionType.Party.ToInt());
-            var companyLedger = _context.Ledgers.GetBy(p => p.Id == request.Id && p.LedgerType == (int)LedgerType.Purchase && p.TransactionType == TransactionType.Company.ToInt());
+            var partyledger = _context.Ledgers.GetBy(p => p.Id == request.Id && p.LedgerType == (int)LedgerType.Sale && p.TransactionType == TransactionType.Party.ToInt());
+            var companyLedger = _context.Ledgers.GetBy(p => p.Id == request.Id && p.LedgerType == (int)LedgerType.Sale && p.TransactionType == TransactionType.Company.ToInt());
             if (partyledger == null || companyLedger == null)
             {
                 throw new NotFoundException(nameof(Domain.Entities.Ledger), request.Id);
             }
-            request.Copy(purchase);
+            request.Copy(sale);
             if (request.AdditionalCharges != null)
             {
-                if (purchase.Charges != null && purchase.Charges.Any())
+                if (sale.Charges != null && sale.Charges.Any())
                 {
-                    _context.Charges.RemoveRange(purchase.Charges);
+                    _context.Charges.RemoveRange(sale.Charges);
                     await _context.SaveChangesAsync(cancellationToken);
-                    purchase.Charges.Clear();
+                    sale.Charges.Clear();
                 }
                 else
-                    purchase.Charges = new List<Charge>();
+                    sale.Charges = new List<Charge>();
                 foreach (var charge in request.AdditionalCharges)
                 {
-                    purchase.Charges.Add(new Charge()
+                    sale.Charges.Add(new Charge()
                     {
                         BagQuantity = charge.BagQuantity,
                         Rate = charge.Rate,
@@ -66,54 +63,55 @@ namespace TheRiceMill.Application.Purchases.Commands.UpdatePurchase
                     });
                 }
             }
-            _context.Purchases.Update(purchase);
+            _context.Sales.Update(sale);
             {
 
-                var gatepasses = _context.GatePasses.Where(q => q.PurchaseId == purchase.Id).ToList();
+                var gatepasses = _context.GatePasses.Where(q => q.SaleId == sale.Id).ToList();
                 gatepasses.ForEach(gatepass =>
                 {
                     var _gatepass = _context.GatePasses.Find(gatepass.Id);
-                    _gatepass.PurchaseId = null;
+                    _gatepass.SaleId = null;
                     _context.GatePasses.Update(_gatepass);
                 });
 
                 foreach (var id in request.GatepassIds)
                 {
                     var gatepass = _context.GatePasses.GetBy(q => q.Id == id);
-                    gatepass.PurchaseId = purchase.Id;
+                    gatepass.SaleId = sale.Id;
                     _context.GatePasses.Update(gatepass);
                 }
 
                 partyledger.Amount = request.TotalPrice - request.Commission;
-                partyledger.Date = purchase.Date;
+                partyledger.Date = sale.Date;
                 companyLedger.Amount = -request.TotalPrice;
-                companyLedger.Date = purchase.Date;
+                companyLedger.Date = sale.Date;
 
                 _context.Ledgers.Update(companyLedger);
                 _context.Ledgers.Update(partyledger);
 
-                purchase.RateBasedOn = request.RateBasedOn == 1 ? RateBasedOn.Maund : RateBasedOn.Bag;
-                purchase.BoriQuantity = request.BoriQuantity;
-                purchase.BagQuantity = request.BagQuantity;
-                purchase.TotalMaund = request.TotalMaund;
+                sale.RateBasedOn = request.RateBasedOn == 1 ? RateBasedOn.Maund : RateBasedOn.Bag;
+                sale.BoriQuantity = request.BoriQuantity;
+                sale.BagQuantity = request.BagQuantity;
+                sale.TotalMaund = request.TotalMaund;
                 await _context.SaveChangesAsync(cancellationToken);
-                return new ResponseViewModel().CreateOk(new PurchaseResponseViewModel()
+                return new ResponseViewModel().CreateOk(new SaleResponseViewModel()
                 {
 
                     /*                    BagWeight = request.BagWeight,
                                         KandaWeight = request.KandaWeight,*/
                     TotalMaund = request.TotalMaund,
-                    Id = purchase.Id,
-                    Date = new DateConverter().ConvertToDateTimeIso(purchase.Date),
-                    Commission = purchase.Commission,
+                    Id = sale.Id,
+                    Date = new DateConverter().ConvertToDateTimeIso(sale.Date),
+                    Commission = sale.Commission,
                     AdditionalCharges = request.AdditionalCharges,
-                    TotalPrice = purchase.TotalPrice,
-                    Rate = purchase.Rate,
-                    BagQuantity = purchase.BagQuantity,
-                    BoriQuantity = purchase.BoriQuantity,
-                    CreatedDate = new DateConverter().ConvertToDateTimeIso(purchase.CreatedDate)
+                    TotalPrice = sale.TotalPrice,
+                    Rate = sale.Rate,
+                    BagQuantity = sale.BagQuantity,
+                    BoriQuantity = sale.BoriQuantity,
+                    CreatedDate = new DateConverter().ConvertToDateTimeIso(sale.CreatedDate)
                 });
             }
         }
     }
+
 }

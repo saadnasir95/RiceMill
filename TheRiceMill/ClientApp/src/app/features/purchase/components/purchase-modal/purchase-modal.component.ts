@@ -37,11 +37,9 @@ export class PurchaseModalComponent implements OnInit {
   removable = true;
   addOnBlur = false;
   selectedRateOnText: string 
-  // rateBasedOn: RateBasedOn; 
   separatorKeysCodes: number[] = [ENTER, COMMA];
   filteredGatepasses: Gatepass[];
   gatepasses: Gatepass[] = [];
-
   vehicleSuggestions: Vehicle[];
   partySuggestions: Party[];
   productSuggestions: Product[];
@@ -56,22 +54,7 @@ export class PurchaseModalComponent implements OnInit {
     // Credit Debit Form Control
     // credit: new FormControl(0, [Validators.required, Validators.min(0)]),
     // debit: new FormControl(0, [Validators.required, Validators.min(0)]),
-
-  //   direction: new FormControl(null, Validators.required),
-  //   companyGroup: new FormGroup({
-  //     name: new FormControl('', Validators.required),
-  //     address: new FormControl('', Validators.required),
-  //     phoneNumber: new FormControl(null, [Validators.required, Validators.maxLength(12)])
-  //   }),
-  //   vehicleGroup: new FormGroup({
-  //     name: new FormControl(null, Validators.required),
-  //     plateNo: new FormControl(null, Validators.required)
-  //   }),
-  //   productGroup: new FormGroup({
-  //     name: new FormControl(null, Validators.required),
-  //     price: new FormControl(null, [Validators.required, Validators.min(0)]),
-  //     type: new FormControl(+ProductType.Purchase, Validators.required)
-  //   }),
+    // direction: new FormControl(null, Validators.required),
     weightPriceGroup: new FormGroup({
       isMaundBasedRate: new FormControl("1"),
       bagQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
@@ -115,185 +98,6 @@ export class PurchaseModalComponent implements OnInit {
      }
 
   ngOnInit() {
-    // this.purchaseForm.get('weightPriceGroup.bagQuantity').valueChanges.subscribe(
-    //   (value) => {
-    //     const totalEmptyBagWeight = +value * +this.purchaseForm.get('weightPriceGroup.emptyBagWeight').value;
-    //     const bagWeight = +this.purchaseForm.get('weightPriceGroup.bagWeight').value;
-    //     const vibration = 0.2 * +value;
-    //     const kandaWeight = +this.purchaseForm.get('weightPriceGroup.kandaWeight').value;
-    //     const expectedBagWeight = kandaWeight / (+value === 0 ? 1 : +value);
-    //     const totalActualBagWeight = kandaWeight - totalEmptyBagWeight - vibration;
-    //     const ratePerMaund = +this.purchaseForm.get('weightPriceGroup.ratePerMaund').value;
-    //     const totalMaund = totalActualBagWeight / 40;
-    //     const percentCommission = +this.purchaseForm.get('weightPriceGroup.percentCommission').value;
-    //     this.basePrice = Math.round(totalActualBagWeight * (+ratePerMaund / 40));
-    //     this.commission = Math.round(totalMaund * percentCommission);
-    //     this.purchaseForm.get('weightPriceGroup').patchValue({
-    //       vibration: vibration,
-    //       totalEmptyBagWeight: totalEmptyBagWeight,
-    //       expectedBagWeight: +expectedBagWeight.toFixed(3),
-    //       totalExpectedBagWeight: +(expectedBagWeight * +value).toFixed(3),
-    //       totalActualBagWeight: +totalActualBagWeight.toFixed(3),
-    //       actualBagWeight: +((totalActualBagWeight / (+value === 0 ? 1 : +value)).toFixed(3)),
-    //       totalMaund: +totalMaund.toFixed(3),
-    //       ratePerKg: ratePerMaund / 40,
-    //       commission: this.commission,
-    //       totalPrice: this.basePrice + +this.additionalCharges + this.commission,
-    //       actualBags: Math.round(totalActualBagWeight / (bagWeight === 0 ? 1 : bagWeight))
-    //     }, { emitEvent: false });
-    //     this.purchaseForm.get('productGroup.price').setValue(ratePerMaund);
-    //   }
-    // );
-
-    // this.purchaseForm.get('weightPriceGroup.kandaWeight').valueChanges.subscribe(
-    //   (value) => {
-    //     const bagQuantity = +this.purchaseForm.get('weightPriceGroup.bagQuantity').value;
-    //     const totalEmptyBagWeight = +this.purchaseForm.get('weightPriceGroup.totalEmptyBagWeight').value;
-    //     const bagWeight = +this.purchaseForm.get('weightPriceGroup.bagWeight').value;
-    //     const vibration = +bagQuantity * 0.2;
-    //     const expectedBagWeight = +value / (+bagQuantity === 0 ? 1 : +bagQuantity);
-    //     const totalActualBagWeight = +value - totalEmptyBagWeight - vibration;
-    //     const totalMaund = totalActualBagWeight / 40;
-    //     const percentCommission = +this.purchaseForm.get('weightPriceGroup.percentCommission').value;
-    //     const ratePerMaund = +this.purchaseForm.get('weightPriceGroup.ratePerMaund').value;
-    //     this.basePrice = Math.round(totalActualBagWeight * (+ratePerMaund / 40));
-    //     this.commission = Math.round(totalMaund * percentCommission);
-    //     this.purchaseForm.get('weightPriceGroup').patchValue({
-    //       vibration: vibration,
-    //       expectedBagWeight: +expectedBagWeight.toFixed(3),
-    //       totalExpectedBagWeight: +(expectedBagWeight * +bagQuantity).toFixed(3),
-    //       totalActualBagWeight: +totalActualBagWeight.toFixed(3),
-    //       actualBagWeight: +((totalActualBagWeight / (+bagQuantity === 0 ? 1 : +bagQuantity)).toFixed(3)),
-    //       totalMaund: +totalMaund.toFixed(3),
-    //       ratePerKg: ratePerMaund / 40,
-    //       commission: this.commission,
-    //       totalPrice: this.basePrice + +this.additionalCharges + this.commission,
-    //       actualBags: Math.round(totalActualBagWeight / (bagWeight === 0 ? 1 : bagWeight))
-    //     }, { emitEvent: false });
-    //     this.purchaseForm.get('productGroup.price').setValue(ratePerMaund);
-    //   }
-    // );
-
-    // this.purchaseForm.get('weightPriceGroup.emptyBagWeight').valueChanges.subscribe(
-    //   (value) => {
-    //     const bagQuantity = +this.purchaseForm.get('weightPriceGroup.bagQuantity').value;
-    //     const totalEmptyBagWeight = bagQuantity * +value;
-    //     const bagWeight = +this.purchaseForm.get('weightPriceGroup.bagWeight').value;
-    //     const vibration = +this.purchaseForm.get('weightPriceGroup.vibration').value;
-    //     const kandaWeight = +this.purchaseForm.get('weightPriceGroup.kandaWeight').value;
-    //     const totalActualBagWeight = +kandaWeight - totalEmptyBagWeight - vibration;
-    //     const totalMaund = totalActualBagWeight / 40;
-    //     const percentCommission = +this.purchaseForm.get('weightPriceGroup.percentCommission').value;
-    //     const ratePerMaund = +this.purchaseForm.get('weightPriceGroup.ratePerMaund').value;
-    //     this.basePrice = Math.round(totalActualBagWeight * (+ratePerMaund / 40));
-    //     this.commission = Math.round(totalMaund * percentCommission);
-    //     this.purchaseForm.get('weightPriceGroup').patchValue({
-    //       totalEmptyBagWeight: totalEmptyBagWeight,
-    //       totalActualBagWeight: +totalActualBagWeight.toFixed(3),
-    //       actualBagWeight: +((totalActualBagWeight / (+bagQuantity === 0 ? 1 : +bagQuantity)).toFixed(3)),
-    //       totalMaund: +totalMaund.toFixed(3),
-    //       ratePerKg: ratePerMaund / 40,
-    //       commission: this.commission,
-    //       totalPrice: this.basePrice + +this.additionalCharges + this.commission,
-    //       actualBags: Math.round(totalActualBagWeight / (bagWeight === 0 ? 1 : bagWeight))
-    //     }, { emitEvent: false });
-    //     this.purchaseForm.get('productGroup.price').setValue(ratePerMaund);
-    //   }
-    // );
-
-    // this.purchaseForm.get('weightPriceGroup.vibration').valueChanges.subscribe(
-    //   (value) => {
-    //     const bagQuantity = +this.purchaseForm.get('weightPriceGroup.bagQuantity').value;
-    //     const totalEmptyBagWeight = +this.purchaseForm.get('weightPriceGroup.totalEmptyBagWeight').value;
-    //     const bagWeight = +this.purchaseForm.get('weightPriceGroup.bagWeight').value;
-    //     const kandaWeight = +this.purchaseForm.get('weightPriceGroup.kandaWeight').value;
-    //     const totalActualBagWeight = +kandaWeight - totalEmptyBagWeight - +value;
-    //     const totalMaund = totalActualBagWeight / 40;
-    //     const percentCommission = +this.purchaseForm.get('weightPriceGroup.percentCommission').value;
-    //     const ratePerMaund = +this.purchaseForm.get('weightPriceGroup.ratePerMaund').value;
-    //     this.basePrice = Math.round(totalActualBagWeight * (+ratePerMaund / 40));
-    //     this.commission = Math.round(totalMaund * percentCommission);
-    //     this.purchaseForm.get('weightPriceGroup').patchValue({
-    //       totalActualBagWeight: +totalActualBagWeight.toFixed(3),
-    //       actualBagWeight: +((totalActualBagWeight / (+bagQuantity === 0 ? 1 : +bagQuantity)).toFixed(3)),
-    //       totalMaund: +totalMaund.toFixed(3),
-    //       ratePerKg: ratePerMaund / 40,
-    //       commission: this.commission,
-    //       totalPrice: this.basePrice + +this.additionalCharges + this.commission,
-    //       actualBags: Math.round(totalActualBagWeight / (bagWeight === 0 ? 1 : bagWeight))
-    //     }, { emitEvent: false });
-    //     this.purchaseForm.get('productGroup.price').setValue(ratePerMaund);
-    //   }
-    // );
-
-    // this.purchaseForm.get('weightPriceGroup.ratePerMaund').valueChanges.subscribe(
-    //   (value) => {
-    //     const totalActualBagWeight = +this.purchaseForm.get('weightPriceGroup.totalActualBagWeight').value;
-    //     const totalMaund = totalActualBagWeight / 40;
-    //     const percentCommission = +this.purchaseForm.get('weightPriceGroup.percentCommission').value;
-    //     this.basePrice = Math.round(totalActualBagWeight * (+value / 40));
-    //     this.commission = Math.round(totalMaund * percentCommission);
-    //     this.purchaseForm.get('weightPriceGroup').patchValue({
-    //       ratePerKg: +value / 40,
-    //       commission: this.commission,
-    //       totalPrice: this.basePrice + +this.additionalCharges + this.commission,
-    //     }, { emitEvent: false });
-    //     this.purchaseForm.get('productGroup.price').setValue(+value);
-    //   }
-    // );
-
-    // this.purchaseForm.get('weightPriceGroup.percentCommission').valueChanges.subscribe(
-    //   (value) => {
-    //     if(value){
-    //       const totalActualBagWeight = +this.purchaseForm.get('weightPriceGroup.totalActualBagWeight').value;
-    //       const totalMaund = totalActualBagWeight / 40;
-    //       const ratePerMaund = +this.purchaseForm.get('weightPriceGroup.ratePerMaund').value;
-    //       this.basePrice = Math.round(totalActualBagWeight * (+ratePerMaund / 40));
-    //       this.commission = Math.round(totalMaund * +value);
-    //       this.purchaseForm.get('weightPriceGroup').patchValue({
-    //         ratePerKg: +ratePerMaund / 40,
-    //         commission: this.commission,
-    //         totalPrice: this.basePrice + +this.additionalCharges + this.commission,
-    //       }, { emitEvent: false });
-    //       this.purchaseForm.get('productGroup.price').setValue(+ratePerMaund);
-    //     } 
-    //     }
-    // );
-
-    // this.purchaseForm.get('weightPriceGroup.bagWeight').valueChanges.subscribe(
-    //   (value) => {
-    //     const bagQuantity = +this.purchaseForm.get('weightPriceGroup.bagQuantity').value;
-    //     const totalEmptyBagWeight = 0;
-    //     const emptyBagWeight = 0;
-    //     // const vibration = 0;
-    //     const vibration = +this.purchaseForm.get('weightPriceGroup.vibration').value;
-    //     const kandaWeight = bagQuantity * +value;
-    //     const expectedBagWeight = kandaWeight / (+bagQuantity === 0 ? 1 : +bagQuantity);
-    //     const totalActualBagWeight = kandaWeight - totalEmptyBagWeight - vibration;
-    //     const ratePerMaund = +this.purchaseForm.get('weightPriceGroup.ratePerMaund').value;
-    //     const totalMaund = totalActualBagWeight / 40;
-    //     const percentCommission = +this.purchaseForm.get('weightPriceGroup.percentCommission').value;
-    //     this.basePrice = Math.round(totalActualBagWeight * (+ratePerMaund / 40));
-    //     this.commission = Math.round(totalMaund * percentCommission);
-    //     this.purchaseForm.get('weightPriceGroup').patchValue({
-    //       kandaWeight: kandaWeight,
-    //       vibration: vibration,
-    //       emptyBagWeight: emptyBagWeight,
-    //       totalEmptyBagWeight: totalEmptyBagWeight,
-    //       expectedBagWeight: +expectedBagWeight.toFixed(3),
-    //       totalExpectedBagWeight: +(expectedBagWeight * +bagQuantity).toFixed(3),
-    //       totalActualBagWeight: +totalActualBagWeight.toFixed(3),
-    //       actualBagWeight: +((totalActualBagWeight / (bagQuantity === 0 ? 1 : bagQuantity)).toFixed(3)),
-    //       totalMaund: +totalMaund.toFixed(3),
-    //       ratePerKg: ratePerMaund / 40,
-    //       commission: this.commission,
-    //       totalPrice: this.basePrice + +this.additionalCharges + this.commission,
-    //       actualBags: Math.round(totalActualBagWeight / (+value === 0 ? 1 : +value))
-    //     }, { emitEvent: false });
-    //     this.purchaseForm.get('productGroup.price').setValue(ratePerMaund);
-    //   }
-    // );
-
     this.purchaseForm.controls['gatepass'].valueChanges.subscribe(
       (response: string) => {
         this.gatepassService
@@ -301,9 +105,6 @@ export class PurchaseModalComponent implements OnInit {
         .subscribe(
           (response: GatepassResponse) => {
             this.filteredGatepasses = response.data;
-            // this.gatepassList = response.data;
-            // this.dataSource.data = this.gatepassList;
-            // this.paginator.length = response.count;
           }
     )
   })
@@ -311,11 +112,9 @@ export class PurchaseModalComponent implements OnInit {
   this.purchaseForm.get('weightPriceGroup.isMaundBasedRate').valueChanges.subscribe(
     (response: string) => {
       if(+response == RateBasedOn.Maund){
-        // this.rateBasedOn +response
         this.selectedRateOnText = "Maund";
       } 
       else if(+response == RateBasedOn.Bag) {
-        // this.rateBasedOn +response
         this.selectedRateOnText = "Bag"; 
       }
   })
@@ -334,90 +133,9 @@ export class PurchaseModalComponent implements OnInit {
           }
 
           this.purchaseForm.get('additionalCharges').setValue(value, { emitEvent: false });
-          // this.purchaseForm.get('weightPriceGroup.totalPrice').setValue(
-          //   this.purchaseForm.get('weightPriceGroup.totalPrice').value
-          // )
         }
-        // const netPrice = +this.basePrice + +this.additionalCharges + +this.commission;
-        // this.purchaseForm.get('weightPriceGroup.totalPrice').setValue(netPrice, { eventEmit: false, onlySelf: true });
       }
     );
-
-    // this.purchaseForm.get('weightPriceGroup.ratePerMaund').valueChanges.subscribe(ratePerMaund => {
-    //   this.purchaseForm.get('weightPriceGroup.totalPrice').setValue(
-    //     this.purchaseForm.get('weightPriceGroup.totalPrice').value + ratePerMaund
-    //   )
-    // }
-    // )
-
-      //  this.purchaseForm.get('weightPriceGroup.commission').valueChanges.subscribe(
-      // (commission) => {
-      //   this.purchaseForm.get('weightPriceGroup.totalPrice').setValue(
-      //     this.purchaseForm.get('weightPriceGroup.totalPrice').value + commission
-      //   ) 
-      // })
-
-    // this.purchaseForm.get('partyGroup.name').valueChanges.subscribe(
-    //   (value: string) => {
-    //     if (this.purchase === undefined || this.purchase === null) {
-    //       this.purchase = new Purchase();
-    //     }
-    //     if (this.purchase.party === undefined || this.purchase.party === null) {
-    //       this.purchase.party = new Party();
-    //     }
-    //     this.purchase.partyId = 0;
-    //     this.purchaseForm.get('partyGroup.phoneNumber').reset();
-    //     this.purchaseForm.get('partyGroup.address').reset();
-    //     if (value) {
-    //       this.partyService.getParties(5, 0, value).subscribe(
-    //         (response: PartyResponse) => {
-    //           this.partySuggestions = response.data;
-    //         },
-    //         (error) => console.log(error)
-    //       );
-    //     }
-    //   });
-
-    // this.purchaseForm.get('productGroup.name').valueChanges.subscribe(
-    //   (value: string) => {
-    //     if (this.purchase === undefined || this.purchase === null) {
-    //       this.purchase = new Purchase();
-    //     }
-    //     if (this.purchase.product === undefined || this.purchase.product === null) {
-    //       this.purchase.product = new Product();
-    //     }
-    //     this.purchase.productId = 0;
-    //     this.purchaseForm.get('productGroup.price').reset(0);
-    //     this.purchaseForm.get('weightPriceGroup.ratePerMaund').reset(0);
-    //     if (value) {
-    //       this.productService.getProducts(5, 0, value).subscribe(
-    //         (response: ProductResponse) => {
-    //           this.productSuggestions = response.data;
-    //         },
-    //         (error) => console.log(error)
-    //       );
-    //     }
-    //   });
-
-    // this.purchaseForm.get('vehicleGroup.name').valueChanges.subscribe(
-    //   (value: string) => {
-    //     if (this.purchase === undefined || this.purchase === null) {
-    //       this.purchase = new Purchase();
-    //     }
-    //     if (this.purchase.vehicle === undefined || this.purchase.vehicle === null) {
-    //       this.purchase.vehicle = new Vehicle();
-    //     }
-    //     this.purchase.vehicleId = 0;
-    //     this.purchaseForm.get('vehicleGroup.plateNo').reset();
-    //     if (value) {
-    //       this.vehicleService.getVehicles(5, 0, value).subscribe(
-    //         (response: VehicleResponse) => {
-    //           this.vehicleSuggestions = response.data;
-    //         },
-    //         (error) => console.log(error)
-    //       );
-    //     }
-    //   });
   }
 
   add(event: MatChipInputEvent): void {
@@ -501,20 +219,6 @@ export class PurchaseModalComponent implements OnInit {
     this.purchaseForm.patchValue({
       date: moment.utc(purchase.date).tz('Asia/Karachi').format().slice(0, 16),
       // direction: purchase.direction,
-      // vehicleGroup: {
-      //   name: purchase.vehicle.name,
-      //   plateNo: purchase.vehicle.plateNo
-      // },
-      // productGroup: {
-      //   name: purchase.product.name,
-      //   price: purchase.product.price,
-      //   type: purchase.product.price
-      // },
-      // partyGroup: {
-      //   name: purchase.party.name,
-      //   address: purchase.party.address,
-      //   phoneNumber: purchase.party.phoneNumber
-      // },
       weightPriceGroup: {
         // bagQuantity: purchase.bagQuantity,
         // bagWeight: purchase.bagWeight,
@@ -649,107 +353,6 @@ export class PurchaseModalComponent implements OnInit {
     }
   }
 
-
-  oldSubmit() {
-    if (this.purchaseForm.valid) {
-      this.spinner.isLoading = true;
-      if (this.purchase === undefined || this.purchase === null) {
-        this.purchase = new Purchase();
-      }
-      if (this.purchase.party === undefined || this.purchase.party === null) {
-        this.purchase.party = new Party();
-      }
-      if (this.purchase.product === undefined || this.purchase.product === null) {
-        this.purchase.product = new Product();
-      }
-      if (this.purchase.vehicle === undefined || this.purchase.vehicle === null) {
-        this.purchase.vehicle = new Vehicle();
-      }
-      if (this.purchase.additionalCharges === undefined || this.purchase.additionalCharges === null) {
-        this.purchase.additionalCharges = [];
-      }
-
-      this.purchase.date = moment(this.purchaseForm.value.date).utc().format();
-      this.purchase.direction = +this.purchaseForm.value.direction;
-
-      // this.purchase.productId = +this.purchase.product.id;
-      this.purchase.product.id = +this.purchase.productId;
-      this.purchase.product.name = this.purchaseForm.get('productGroup').value.name;
-      this.purchase.product.createdDate = moment.utc().format();
-
-      // this.purchase.vehicleId = +this.purchase.vehicle.id;
-      this.purchase.vehicle.id = +this.purchase.vehicleId;
-      this.purchase.vehicle.plateNo = this.purchaseForm.get('vehicleGroup').value.plateNo;
-      this.purchase.vehicle.createdDate = moment.utc().format();
-
-      // this.purchase.partyId = +this.purchase.partyId;
-      this.purchase.party.id = +this.purchase.partyId;
-      this.purchase.party.name = this.purchaseForm.get('partyGroup').value.name;
-      this.purchase.party.phoneNumber = this.purchaseForm.get('partyGroup').value.phoneNumber;
-      this.purchase.party.address = this.purchaseForm.get('partyGroup').value.address;
-      this.purchase.party.createdDate = moment.utc().format();
-
-      this.purchase.bagQuantity = this.purchaseForm.get('weightPriceGroup').value.bagQuantity;
-      this.purchase.bagWeight = this.purchaseForm.get('weightPriceGroup').value.bagWeight;
-      this.purchase.kandaWeight = this.purchaseForm.get('weightPriceGroup').value.kandaWeight;
-      this.purchase.expectedEmptyBagWeight = this.purchaseForm.get('weightPriceGroup').value.emptyBagWeight;
-      this.purchase.totalExpectedEmptyBagWeight = this.purchaseForm.get('weightPriceGroup').value.totalEmptyBagWeight;
-      this.purchase.expectedBagWeight = this.purchaseForm.get('weightPriceGroup').value.expectedBagWeight;
-      this.purchase.totalExpectedBagWeight = this.purchaseForm.get('weightPriceGroup').value.totalExpectedBagWeight;
-      this.purchase.actualBagWeight = this.purchaseForm.get('weightPriceGroup').value.actualBagWeight;
-      this.purchase.totalActualBagWeight = this.purchaseForm.get('weightPriceGroup').value.totalActualBagWeight;
-      this.purchase.vibration = this.purchaseForm.get('weightPriceGroup').value.vibration;
-      this.purchase.totalMaund = this.purchaseForm.get('weightPriceGroup').value.totalMaund;
-      this.purchase.ratePerKg = this.purchaseForm.get('weightPriceGroup').value.ratePerKg;
-      this.purchase.rate = this.purchaseForm.get('weightPriceGroup').value.rate;
-      this.purchase.totalPrice = this.purchaseForm.get('weightPriceGroup').value.totalPrice;
-      this.purchase.actualBags = this.purchaseForm.get('weightPriceGroup').value.actualBags;
-      this.purchase.percentCommission = this.purchaseForm.get('weightPriceGroup').value.percentCommission;
-      this.purchase.commission = this.purchaseForm.get('weightPriceGroup').value.commission;
-      this.purchase.basePrice = this.basePrice;
-
-      if (this.purchase.additionalCharges.length >= 0 && (this.purchaseForm.get('additionalCharges') as FormArray).length >= 0) {
-        for (let i = 0; i < (this.purchaseForm.get('additionalCharges') as FormArray).length; i++) {
-          this.purchase.additionalCharges[i].id = (this.purchaseForm.get('additionalCharges') as FormArray).at(i).value.id;
-          this.purchase.additionalCharges[i].addPrice = (this.purchaseForm.get('additionalCharges') as FormArray).at(i).value.addPrice;
-          this.purchase.additionalCharges[i].task = (this.purchaseForm.get('additionalCharges') as FormArray).at(i).value.task;
-          this.purchase.additionalCharges[i].bagQuantity = (this.purchaseForm.get('additionalCharges') as FormArray).at(i).value.bagQuantity;
-          this.purchase.additionalCharges[i].rate = (this.purchaseForm.get('additionalCharges') as FormArray).at(i).value.rate;
-          this.purchase.additionalCharges[i].total = (this.purchaseForm.get('additionalCharges') as FormArray).at(i).value.total;
-        }
-      }
-
-      if (this.isNew) {
-        this.purchaseService.addPurchase(this.purchase).subscribe(
-          (response: PurchaseResponse) => {
-            this.spinner.isLoading = false;
-            this.notificationService.successNotifcation('Purchase added successfully');
-            this.modalRef.close();
-            this.purchaseService.purchaseEmitter.emit(response.data);
-          },
-          (error) => {
-            console.log(error);
-            this.spinner.isLoading = false;
-            this.notificationService.errorNotifcation('Something went wrong');
-          });
-
-      } else {
-        this.purchaseService.updatePurchase(this.purchase).subscribe(
-          (data) => {
-            this.spinner.isLoading = false;
-            this.notificationService.successNotifcation('Purchase updated successfully');
-            this.purchaseService.purchaseEmitter.emit(true);
-            this.modalRef.close();
-          },
-          (error) => {
-            this.spinner.isLoading = false;
-            console.log(error);
-            this.notificationService.errorNotifcation('Something went wrong');
-          });
-      }
-    }
-  }
-
   selectedParty(event: MatAutocompleteSelectedEvent) {
     this.purchaseForm.get('partyGroup').setValue({
       name: event.option.value.name,
@@ -811,25 +414,11 @@ export class PurchaseModalComponent implements OnInit {
     }
     this.purchase.additionalCharges.push(new AdditionalCharges());
   }
+  
   deleteCharges(id: number) {
     (this.purchaseForm.get('additionalCharges') as FormArray).removeAt(id);
     this.purchase.additionalCharges.splice(id, 1);
   }
-
-  // updateRateType(type: number): string{
-  //   this.rateBasedOn = type
-  //   if(type == RateBasedOn.Maund) return this.selectedRateOnText = "Maund"; 
-
-  //   if(type == RateBasedOn.Bori) return this.selectedRateOnText = "Bori"; 
- 
-  //   if(type == RateBasedOn.Bag) return this.selectedRateOnText = "Bag"; 
-  // }
-
-  // onToggle(event: MatSlideToggleChange){
-  //   if(event.checked) return this.selectedRateOnText = "Maund"
-
-  //   if(!event.checked) return this.selectedRateOnText = "Bag"
-  // }
 
   getRateBasedOnTotal():number{
     return this.purchaseForm.get('weightPriceGroup.isMaundBasedRate').value == '1' ? 

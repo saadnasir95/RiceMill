@@ -1,15 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Internal;
+using Newtonsoft.Json;
 using TheRiceMill.Application.Constants;
 using TheRiceMill.Application.Enums;
 using TheRiceMill.Application.GatePasses.Models;
-using TheRiceMill.Application.Purchases.Models;
-using TheRiceMill.Application.Purchases.Shared;
 using TheRiceMill.Application.Sales.Shared;
 using TheRiceMill.Common.Extensions;
 using TheRiceMill.Common.Response;
@@ -18,23 +17,23 @@ using TheRiceMill.Domain.Entities;
 using TheRiceMill.Persistence;
 using TheRiceMill.Persistence.Extensions;
 
-namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
+namespace TheRiceMill.Application.Sales.Commands.CreateSale
 {
 
-    public class CreatePurchaseRequestHandler : IRequestHandler<CreatePurchaseRequestModel, ResponseViewModel>
+    public class CreateSaleRequestHandler : IRequestHandler<CreateSaleRequestModel, ResponseViewModel>
     {
         private readonly TheRiceMillDbContext _context;
         GatepassMapper gatepassMapper = new GatepassMapper();
 
-        public CreatePurchaseRequestHandler(TheRiceMillDbContext context)
+        public CreateSaleRequestHandler(TheRiceMillDbContext context)
         {
             _context = context;
         }
 
-        public async Task<ResponseViewModel> Handle(CreatePurchaseRequestModel request, CancellationToken cancellationToken)
+        public async Task<ResponseViewModel> Handle(CreateSaleRequestModel request, CancellationToken cancellationToken)
         {
-            var purchase = new Purchase();
-            request.Copy(purchase);
+            var sale = new Domain.Entities.Sale();
+            request.Copy(sale);
             List<Charge> charges = new List<Charge>();
             if (request.AdditionalCharges != null && request.AdditionalCharges.Any())
             {
@@ -52,17 +51,17 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
                 }
             }
 
-            purchase.Charges = new List<Charge>();
-            purchase.Charges = charges;
-            purchase.RateBasedOn = request.RateBasedOn == 1 ? RateBasedOn.Maund : RateBasedOn.Bag;
-            purchase.Commission = request.Commission;
-            purchase.Rate = request.Rate;
-            purchase.TotalPrice = request.TotalPrice;
-            purchase.TotalMaund = request.TotalMaund;
-            purchase.BoriQuantity = request.BoriQuantity;
-            purchase.BagQuantity = request.BagQuantity;
-            purchase.Date = request.Date;
-            _context.Purchases.Add(purchase);
+            sale.Charges = new List<Charge>();
+            sale.Charges = charges;
+            sale.RateBasedOn = request.RateBasedOn == 1 ? RateBasedOn.Maund : RateBasedOn.Bag;
+            sale.Commission = request.Commission;
+            sale.Rate = request.Rate;
+            sale.TotalPrice = request.TotalPrice;
+            sale.TotalMaund = request.TotalMaund;
+            sale.BoriQuantity = request.BoriQuantity;
+            sale.BagQuantity = request.BagQuantity;
+            sale.Date = request.Date;
+            _context.Sales.Add(sale);
 
             List<GatePass> gatepasses = new List<GatePass>();
             GatePass gatepass = null;
@@ -70,7 +69,7 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
             {
                 gatepass = _context.GatePasses.GetBy(q => q.Id == id, p => p.Include(pr => pr.Party).Include(pr => pr.Product).Include(pr => pr.Vehicle));
                 gatepasses.Add(gatepass);
-                gatepass.PurchaseId = purchase.Id;
+                gatepass.PurchaseId = sale.Id;
 
             }
             await _context.SaveChangesAsync(cancellationToken);
@@ -79,26 +78,26 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
             {
                 PartyId = gatepass.PartyId,
                 Amount = -request.TotalPrice,
-                Id = purchase.Id,
+                Id = sale.Id,
                 TransactionType = TransactionType.Company.ToInt(),
-                LedgerType = (int)LedgerType.Purchase,
+                LedgerType = (int)LedgerType.Sale,
                 TransactionId = transactionId,
-                Date = purchase.Date
+                Date = sale.Date
             };
             var partyLedger = new Domain.Entities.Ledger()
             {
                 PartyId = gatepass.PartyId,
                 Amount = request.TotalPrice - request.Commission,
-                Id = purchase.Id,
+                Id = sale.Id,
                 TransactionType = TransactionType.Party.ToInt(),
-                LedgerType = (int)LedgerType.Purchase,
+                LedgerType = (int)LedgerType.Sale,
                 TransactionId = transactionId,
-                Date = purchase.Date
+                Date = sale.Date
             };
             _context.Add(companyLedger);
             _context.Add(partyLedger);
             await _context.SaveChangesAsync(cancellationToken);
-            return new ResponseViewModel().CreateOk(new PurchaseResponseViewModel()
+            return new ResponseViewModel().CreateOk(new SaleResponseViewModel()
             {
                 /*BagQuantity = request.BagQuantity,
                 BagWeight = request.BagWeight,
@@ -120,16 +119,15 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
                 BagQuantity = request.BagQuantity,
                 BoriQuantity = request.BoriQuantity,
                 Gatepasses = gatepassMapper.MapFull(gatepasses),
-                Id = purchase.Id,
-                RateBasedOn = (int)purchase.RateBasedOn,
-                Commission = purchase.Commission,
+                Id = sale.Id,
+                RateBasedOn = (int)sale.RateBasedOn,
+                Commission = sale.Commission,
                 AdditionalCharges = request.AdditionalCharges,
-                TotalPrice = purchase.TotalPrice,
-                Rate = purchase.Rate,
-                Date = new DateConverter().ConvertToDateTimeIso(purchase.Date),
-                CreatedDate = new DateConverter().ConvertToDateTimeIso(purchase.CreatedDate)
-            }); ;
+                TotalPrice = sale.TotalPrice,
+                Rate = sale.Rate,
+                Date = new DateConverter().ConvertToDateTimeIso(sale.Date),
+                CreatedDate = new DateConverter().ConvertToDateTimeIso(sale.CreatedDate)
+            });
         }
     }
-
 }

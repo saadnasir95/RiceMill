@@ -1,7 +1,7 @@
 using MediatR;
 using TheRiceMill.Common.Response;
 
-namespace TheRiceMill.Application.Sale.Queries.GetSales
+namespace TheRiceMill.Application.Sales.Queries.GetSales
 {
 
     public class GetSalesRequestModel : IRequest<ResponseViewModel>

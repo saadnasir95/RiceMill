@@ -1,14 +1,13 @@
 using System;
 using MediatR;
-using TheRiceMill.Application.Enums;
 using TheRiceMill.Application.GatePasses.Models;
 using TheRiceMill.Application.Sales.Commands.CreateSale;
 using TheRiceMill.Common.Response;
 
-namespace TheRiceMill.Application.Purchases.Commands.UpdatePurchase
+namespace TheRiceMill.Application.Sales.Commands.UpdateSale
 {
 
-    public class UpdatePurchaseRequestModel : IRequest<ResponseViewModel>
+    public class UpdateSaleRequestModel : IRequest<ResponseViewModel>
     {
         public int Id { get; set; }
         public int[] GatepassIds { get; set; }

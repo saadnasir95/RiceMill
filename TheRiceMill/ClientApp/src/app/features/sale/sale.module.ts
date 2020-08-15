@@ -7,11 +7,14 @@ import { SharedModule } from '../../shared/shared.module';
 import { SaleModalComponent } from './components/sale-modal/sale-modal.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SaleReceiptComponent } from './components/sale-receipt/sale-receipt.component';
+import { MatIconModule, MatChipsModule } from '@angular/material';
 
 @NgModule({
   declarations: [SaleComponent, SaleModalComponent, SaleReceiptComponent],
   imports: [
     CommonModule,
+    MatChipsModule,
+    MatIconModule,
     SaleRoutingModule,
     SharedModule,
     ReactiveFormsModule
