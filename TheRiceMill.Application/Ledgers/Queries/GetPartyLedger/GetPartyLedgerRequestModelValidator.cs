@@ -1,7 +1,7 @@
 using FluentValidation;
 using TheRiceMill.Application.Extensions;
 
-namespace TheRiceMill.Application.Ledger.Queries.GetLedgers
+namespace TheRiceMill.Application.Ledgers.Queries.GetLedgers
 {
     public class GetPartyLedgerRequestModelValidator : AbstractValidator<GetPartyLedgerRequestModel>
     {

@@ -37,7 +37,8 @@ export class PartyLedgerComponent implements OnInit {
   };
   partyList: Party[];
   selectedPartyId = 0;
-  displayedColumns: string[] = ['createdDate', 'ledgerType', 'credit', 'debit', 'balance'];
+  displayedColumns: string[] = ['createdDate', 'ledgerType', 'credit', 'debit', 'balance','product','gatepassIds','boriQuantity',
+  'bagQuantity','totalMaund','rate','rateBasedOn','commission'];
   dataSource: MatTableDataSource<Ledger>;
   ledgerData: LedgerData;
   isLoadingData: Boolean = false;

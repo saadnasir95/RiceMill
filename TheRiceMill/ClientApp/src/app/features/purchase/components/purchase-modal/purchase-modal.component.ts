@@ -1,19 +1,13 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
-import { GateinDirection, ProductType, RateBasedOn, GatePassType } from '../../../../shared/model/enums';
+import { GateinDirection, RateBasedOn, GatePassType } from '../../../../shared/model/enums';
 import { MatDialogRef, MatAutocompleteSelectedEvent, MatChipInputEvent, MatSlideToggleChange } from '@angular/material';
 import { Vehicle } from '../../../../shared/model/vehicle.model';
 import { Product } from '../../../../shared/model/product.model';
 import { Party } from '../../../../shared/model/party.model';
-import { PartyService } from '../../../../shared/services/party.service';
-import { VehicleService } from '../../../../shared/services/vehicle.service';
-import { ProductService } from '../../../../shared/services/product.service';
 import { Purchase } from '../../../../shared/model/purchase.model';
 import { PurchaseService } from '../../../../shared/services/purchase.service';
 import { AdditionalCharges } from '../../../../shared/model/additionalcharges.model';
-import { PartyResponse } from '../../../../shared/model/party-response.model';
-import { ProductResponse } from '../../../../shared/model/product-response.model';
-import { VehicleResponse } from '../../../../shared/model/vehicle-response.model';
 import * as moment from 'moment';
 import 'moment-timezone';
 import { NotificationService } from '../../../../shared/services/notification.service';
@@ -36,7 +30,8 @@ export class PurchaseModalComponent implements OnInit {
   selectable = true;
   removable = true;
   addOnBlur = false;
-  selectedRateOnText: string 
+  selectedRateOnText: string;
+  selectedPartyId: number = 0; 
   separatorKeysCodes: number[] = [ENTER, COMMA];
   filteredGatepasses: Gatepass[];
   gatepasses: Gatepass[] = [];
@@ -59,22 +54,10 @@ export class PurchaseModalComponent implements OnInit {
       isMaundBasedRate: new FormControl("1"),
       bagQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
       boriQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
-      // bagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
-      // kandaWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
-      // expectedBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
-      // totalExpectedBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
-      // emptyBagWeight: new FormControl(0, [Validators.required, Validators.min(0), Validators.max(2)]),
-      // totalEmptyBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
-      // actualBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
-      // totalActualBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
       totalMaund: new FormControl(0, [Validators.required, Validators.min(0)]),
-      // vibration: new FormControl(0, [Validators.required, Validators.min(0)]),
-      // ratePerKg: new FormControl(0, [Validators.required, Validators.min(0)]),
       rate: new FormControl(0, [Validators.required, Validators.min(0)]),
       commission: new FormControl(0, [Validators.required, Validators.min(0)]),
-      // percentCommission: new FormControl(0, [Validators.required, Validators.min(0)]),
       totalPrice: new FormControl(0, [Validators.required, Validators.min(0)]),
-      // actualBags: new FormControl(0, [Validators.required, Validators.min(0)]),
     })
   });
   public GateinDirectionTypes = [
@@ -89,9 +72,6 @@ export class PurchaseModalComponent implements OnInit {
 
   constructor(
     private purchaseService: PurchaseService,
-    private partyService: PartyService,
-    private vehicleService: VehicleService,
-    private productService: ProductService,
     private notificationService: NotificationService,
     private gatepassService: GatepassService,
     public spinner: SpinnerService) {
@@ -101,7 +81,7 @@ export class PurchaseModalComponent implements OnInit {
     this.purchaseForm.controls['gatepass'].valueChanges.subscribe(
       (response: string) => {
         this.gatepassService
-        .getGatepassList(10, 0, response, 'false', '',true, GatePassType.InwardGatePass)
+        .getGatepassList(10, 0, response, 'false', '',true, GatePassType.InwardGatePass,this.selectedPartyId)
         .subscribe(
           (response: GatepassResponse) => {
             this.filteredGatepasses = response.data;
@@ -177,6 +157,10 @@ export class PurchaseModalComponent implements OnInit {
         (this.purchaseForm.get('weightPriceGroup.bagQuantity').value - gatepass.bagQuantity).toFixed(2)
       );
     }
+
+    if(this.gatepasses.length === 0){
+      this.selectedPartyId = 0
+    }
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
@@ -193,8 +177,8 @@ export class PurchaseModalComponent implements OnInit {
       this.purchaseForm.get('weightPriceGroup.bagQuantity').setValue(
         +this.purchaseForm.get('weightPriceGroup.bagQuantity').value + event.option.value.bagQuantity
       );
+      this.selectedPartyId = event.option.value.party.id
     };
-    // this.updateRateType(RateBasedOn.Maund);
     this.gatepassInput.nativeElement.value = '';
     this.purchaseForm.controls['gatepass'].setValue(null);
   }
@@ -214,25 +198,9 @@ export class PurchaseModalComponent implements OnInit {
     Object.assign(this.purchase, purchase);
     this.commission = this.purchase.commission;
     this.gatepasses = this.purchase.gatepasses;
-    // this.updateRateType(this.purchase.rateBasedOn);
-    // this.basePrice = this.purchase.basePrice;
     this.purchaseForm.patchValue({
       date: moment.utc(purchase.date).tz('Asia/Karachi').format().slice(0, 16),
-      // direction: purchase.direction,
       weightPriceGroup: {
-        // bagQuantity: purchase.bagQuantity,
-        // bagWeight: purchase.bagWeight,
-        // kandaWeight: purchase.kandaWeight,
-        // emptyBagWeight: purchase.expectedEmptyBagWeight,
-        // totalEmptyBagWeight: purchase.totalExpectedEmptyBagWeight,
-        // expectedBagWeight: purchase.expectedBagWeight,
-        // totalExpectedBagWeight: purchase.totalExpectedBagWeight,
-        // actualBagWeight: purchase.actualBagWeight,
-        // totalActualBagWeight: purchase.totalActualBagWeight,
-        // vibration: purchase.vibration,
-        // actualBags: purchase.actualBags,
-        // percentCommission: purchase.percentCommission,
-        // ratePerKg: purchase.ratePerKg,
         isMaundBasedRate: purchase.rateBasedOn.toString(),
         totalMaund: purchase.totalMaund,
         bagQuantity: purchase.bagQuantity,

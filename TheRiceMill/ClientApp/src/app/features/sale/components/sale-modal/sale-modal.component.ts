@@ -31,7 +31,7 @@ import { Purchase } from '../../../../shared/model/purchase.model';
 })
 export class SaleModalComponent implements OnInit {
   @ViewChild('gatepassInput') gatepassInput: ElementRef<HTMLInputElement>;
-
+  selectedPartyId: number = 0;
   vehicleSuggestions: Vehicle[];
   partySuggestions: Party[];
   productSuggestions: Product[];
@@ -162,6 +162,10 @@ export class SaleModalComponent implements OnInit {
         (this.saleForm.get('weightPriceGroup.bagQuantity').value - gatepass.bagQuantity).toFixed(2)
       );
     }
+
+    if(this.gatepasses.length === 0){
+      this.selectedPartyId = 0
+    }
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
@@ -178,8 +182,8 @@ export class SaleModalComponent implements OnInit {
       this.saleForm.get('weightPriceGroup.bagQuantity').setValue(
         +this.saleForm.get('weightPriceGroup.bagQuantity').value + event.option.value.bagQuantity
       );
+      this.selectedPartyId = event.option.value.party.id
     };
-    // this.updateRateType(RateBasedOn.Maund);
     this.gatepassInput.nativeElement.value = '';
     this.saleForm.controls['gatepass'].setValue(null);
   }

@@ -10,6 +10,7 @@ import { LedgerData, LedgerResponse } from '../../../../shared/model/ledger-resp
 import { BankTransactionInfo } from '../../../../shared/model/bank-transaction-info.model';
 import { LedgerInfo } from '../../../../shared/model/ledger-info.model';
 import { LedgerService } from '../../../../shared/services/ledger.service';
+import { GridOptions } from 'ag-grid-community';
 
 
 @Component({
@@ -24,7 +25,8 @@ import { LedgerService } from '../../../../shared/services/ledger.service';
   ],
 })
 export class CompanyLedgerComponent implements OnInit {
-  displayedColumns: string[] = ['createdDate', 'ledgerType', 'credit', 'debit', 'balance'];
+  displayedColumns: string[] = ['createdDate', 'ledgerType', 'credit', 'debit', 'balance','product','gatepassIds','boriQuantity',
+  'bagQuantity','totalMaund','rate','rateBasedOn','commission'];
   selected: { start: Moment, end: Moment };
   expandedLedgerType: LedgerType = LedgerType.Purchase;
   ledgerType = [{ id: '0', value: 'All' }, { id: '1', value: 'Sale' }, { id: '2', value: 'Purchase' }];
@@ -34,6 +36,7 @@ export class CompanyLedgerComponent implements OnInit {
   ledgerForm: FormGroup;
   salePurchaseInfo = 0;
   ledgerInfo: LedgerInfo = null;
+  gridOptions: GridOptions;
   bankTransactionInfo: BankTransactionInfo = {
     bank: '',
     accountNumber: '',
@@ -72,10 +75,104 @@ export class CompanyLedgerComponent implements OnInit {
   constructor(private ledgerService: LedgerService) { }
 
   ngOnInit() {
+    this.gridOptions = {
+      rowData: [],
+      columnDefs: [
+      {
+        headerName: "Created Date",
+        field: 'date', 
+        sortable: true, 
+        filter: true
+      },
+      {
+        headerName: "Description",
+        field: 'ledgerType', 
+        sortable: true, 
+        filter: true
+      },
+      {
+        headerName: "Credit",
+        field: 'amount', 
+        sortable: true, 
+        filter: true 
+      },
+      {
+        headerName: "Debit",
+        field: 'amount', 
+        sortable: true, 
+        filter: true
+      },
+      {
+        headerName: "Balance",
+        field: 'balance', 
+        sortable: true, 
+        filter: true
+      },
+      {
+        headerName: "Product",
+        field: 'product', 
+        sortable: true, 
+        filter: true
+      },
+      {
+        headerName: "GatepassIds",
+        field: 'gatepassIds', 
+        sortable: true, 
+        filter: true
+      },
+      {
+        headerName: "Bori Quantity",
+        field: 'boriQuantity', 
+        sortable: true, 
+        filter: true
+      },
+      {
+        headerName: "Bag Quantity",   
+        field: 'bagQuantity', 
+        sortable: true, 
+        filter: true
+      },
+      {
+        headerName: "Total Maund",
+        field: 'totalMaund', 
+        sortable: true, 
+        filter: true 
+      },
+      {
+        headerName: "Rate",
+        field: 'rate', 
+        sortable: true, 
+        filter: true
+      },
+      {
+        headerName: "Rate BasedOn",   
+        field: 'rateBasedOn', 
+        sortable: true, 
+        filter: true
+      },
+      {
+        headerName: "Commission",
+        field: 'commission', 
+        sortable: true, 
+        filter: true
+      }],
+      onPaginationChanged: params => this.onPaginationChanged(params),
+      paginationPageSize: 10,
+      rowSelection: 'multiple',
+      rowGroupPanelShow: 'always',
+      pivotPanelShow: 'always',
+      enableRangeSelection: true,
+      pagination: true,
+    
+    }
     this.dataSource = new MatTableDataSource();
     this.paginator.pageSize = 25;
     this.buildForm();
     this.getLedgerList();
+  }
+
+  onPaginationChanged(params){
+    console.log(params)
   }
 
   buildForm() {
@@ -123,6 +220,7 @@ export class CompanyLedgerComponent implements OnInit {
             previousBalance += element.amount;
             element.balance = previousBalance;
           });
+          // this.gridOptions.api.setRowData(this.ledgerData.ledgerResponses);
           this.dataSource.data = this.ledgerData.ledgerResponses;
           this.paginator.length = response.count;
         },

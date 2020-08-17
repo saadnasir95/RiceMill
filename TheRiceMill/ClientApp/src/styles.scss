@@ -1,4 +1,9 @@
 @import "~@angular/material/prebuilt-themes/indigo-pink.css";
+// Ag Grid Imports
+@import "~ag-grid-community/dist/styles/ag-grid.css";
+@import "~ag-grid-community/dist/styles/ag-theme-balham.css";
+@import "~ag-grid-community/dist/styles/ag-theme-balham-dark.css";
+
 html,
 body {
   height: 100%;
