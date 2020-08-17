@@ -162,9 +162,7 @@ export class CompanyLedgerComponent implements OnInit {
       rowSelection: 'multiple',
       rowGroupPanelShow: 'always',
       pivotPanelShow: 'always',
-      enableRangeSelection: true,
-      pagination: true,
-    
+      enableRangeSelection: true    
     }
     this.dataSource = new MatTableDataSource();
     this.paginator.pageSize = 25;
