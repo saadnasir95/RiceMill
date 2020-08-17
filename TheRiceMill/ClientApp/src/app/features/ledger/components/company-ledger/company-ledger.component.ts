@@ -156,8 +156,9 @@ export class CompanyLedgerComponent implements OnInit {
         sortable: true, 
         filter: true
       }],
-      onPaginationChanged: params => this.onPaginationChanged(params),
-      paginationPageSize: 10,
+      onGridReady: () => {
+        this.getLedgerList();
+      },
       rowSelection: 'multiple',
       rowGroupPanelShow: 'always',
       pivotPanelShow: 'always',
@@ -168,7 +169,7 @@ export class CompanyLedgerComponent implements OnInit {
     this.dataSource = new MatTableDataSource();
     this.paginator.pageSize = 25;
     this.buildForm();
-    this.getLedgerList();
+    // this.getLedgerList();
   }
 
   onPaginationChanged(params){
@@ -220,7 +221,7 @@ export class CompanyLedgerComponent implements OnInit {
             previousBalance += element.amount;
             element.balance = previousBalance;
           });
-          // this.gridOptions.api.setRowData(this.ledgerData.ledgerResponses);
+          this.gridOptions.api.setRowData(this.ledgerData.ledgerResponses);
           this.dataSource.data = this.ledgerData.ledgerResponses;
           this.paginator.length = response.count;
         },
