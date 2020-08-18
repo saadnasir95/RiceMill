@@ -39,7 +39,7 @@ namespace TheRiceMill.Application.Ledger.Queries.GetCompanyLedger
         public async Task<ResponseViewModel> Handle(GetCompanyLedgerRequestModel request, CancellationToken cancellationToken)
         {
             request.SetDefaultValue();
-            Expression<Func<Domain.Entities.Ledger, bool>> query ;
+            Expression<Func<Domain.Entities.Ledger, bool>> query;
             query = CreateQuery(request);
 
             var dateConverter = new DateConverter();
@@ -58,8 +58,9 @@ namespace TheRiceMill.Application.Ledger.Queries.GetCompanyLedger
                          TransactionId = p.TransactionId,
                      }).ToListAsync(cancellationToken);
 
-            list.ForEach(l => {
-                 this.GetLedgerDetail(l);
+            list.ForEach(l =>
+            {
+                this.GetLedgerDetail(l);
             });
             var count = await _context.Ledgers.CountAsync(query, cancellationToken);
             var netBalance = await _context.Ledgers.SumAsync(query, p => p.Amount, cancellationToken);
@@ -119,19 +120,19 @@ namespace TheRiceMill.Application.Ledger.Queries.GetCompanyLedger
         {
             if (request.ToDate != null && request.FromDate != null && request.LedgerType != 0)
             {
-                return p => p.TransactionType == TransactionType.Company.ToInt() && p.LedgerType == request.LedgerType && p.Date >= request.FromDate && p.Date <= request.ToDate;
+                return p => p.TransactionType == TransactionType.Company.ToInt() && p.LedgerType == request.LedgerType && p.Date >= request.FromDate && p.Date <= request.ToDate && p.CompanyId == request.CompanyId.ToInt();
             }
             if (request.ToDate != null && request.FromDate != null)
             {
-                return p => p.TransactionType == TransactionType.Company.ToInt() && p.Date >= request.FromDate && p.Date <= request.ToDate;
+                return p => p.TransactionType == TransactionType.Company.ToInt() && p.Date >= request.FromDate && p.Date <= request.ToDate && p.CompanyId == request.CompanyId.ToInt();
             }
             if (request.LedgerType != 0)
             {
-                return p => p.TransactionType == TransactionType.Company.ToInt() && p.LedgerType == request.LedgerType;
+                return p => p.TransactionType == TransactionType.Company.ToInt() && p.LedgerType == request.LedgerType && p.CompanyId == request.CompanyId.ToInt();
             }
             else
             {
-                return p => p.TransactionType == TransactionType.Company.ToInt();
+                return p => p.TransactionType == TransactionType.Company.ToInt() && p.CompanyId == request.CompanyId.ToInt();
             }
         }
 

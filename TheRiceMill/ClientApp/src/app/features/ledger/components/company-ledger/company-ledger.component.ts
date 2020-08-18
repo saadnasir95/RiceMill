@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { Moment } from 'moment';
 import moment = require('moment');
 import { MatPaginator, MatTableDataSource } from '@angular/material';
@@ -11,6 +11,8 @@ import { BankTransactionInfo } from '../../../../shared/model/bank-transaction-i
 import { LedgerInfo } from '../../../../shared/model/ledger-info.model';
 import { LedgerService } from '../../../../shared/services/ledger.service';
 import { GridOptions } from 'ag-grid-community';
+import { Subscription } from 'rxjs';
+import { CompanyService } from '../../../../shared/services/company.service';
 
 
 @Component({
@@ -24,9 +26,9 @@ import { GridOptions } from 'ag-grid-community';
     ]),
   ],
 })
-export class CompanyLedgerComponent implements OnInit {
-  displayedColumns: string[] = ['createdDate', 'ledgerType', 'credit', 'debit', 'balance','product','gatepassIds','boriQuantity',
-  'bagQuantity','totalMaund','rate','rateBasedOn','commission'];
+export class CompanyLedgerComponent implements OnInit, OnDestroy {
+  displayedColumns: string[] = ['createdDate', 'ledgerType', 'credit', 'debit', 'balance', 'product', 'gatepassIds', 'boriQuantity',
+    'bagQuantity', 'totalMaund', 'rate', 'rateBasedOn', 'commission'];
   selected: { start: Moment, end: Moment };
   expandedLedgerType: LedgerType = LedgerType.Purchase;
   ledgerType = [{ id: '0', value: 'All' }, { id: '1', value: 'Sale' }, { id: '2', value: 'Purchase' }];
@@ -47,7 +49,8 @@ export class CompanyLedgerComponent implements OnInit {
   endDate: string;
   isLoading = false;
   expandedId = 0;
-
+  companyId = 0;
+  companySubscription: Subscription;
   ranges: any = {
     'Today': [moment(), moment()],
     'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
@@ -72,106 +75,120 @@ export class CompanyLedgerComponent implements OnInit {
   };
   @ViewChild(MatPaginator) paginator: MatPaginator;
 
-  constructor(private ledgerService: LedgerService) { }
+  constructor(
+    private ledgerService: LedgerService,
+    private companyService: CompanyService) { }
 
   ngOnInit() {
     this.gridOptions = {
       rowData: [],
       columnDefs: [
-      {
-        headerName: "Created Date",
-        field: 'date', 
-        sortable: true, 
-        filter: true
-      },
-      {
-        headerName: "Description",
-        field: 'ledgerType', 
-        sortable: true, 
-        filter: true
-      },
-      {
-        headerName: "Credit",
-        field: 'amount', 
-        sortable: true, 
-        filter: true 
-      },
-      {
-        headerName: "Debit",
-        field: 'amount', 
-        sortable: true, 
-        filter: true
-      },
-      {
-        headerName: "Balance",
-        field: 'balance', 
-        sortable: true, 
-        filter: true
-      },
-      {
-        headerName: "Product",
-        field: 'product', 
-        sortable: true, 
-        filter: true
-      },
-      {
-        headerName: "GatepassIds",
-        field: 'gatepassIds', 
-        sortable: true, 
-        filter: true
-      },
-      {
-        headerName: "Bori Quantity",
-        field: 'boriQuantity', 
-        sortable: true, 
-        filter: true
-      },
-      {
-        headerName: "Bag Quantity",   
-        field: 'bagQuantity', 
-        sortable: true, 
-        filter: true
-      },
-      {
-        headerName: "Total Maund",
-        field: 'totalMaund', 
-        sortable: true, 
-        filter: true 
-      },
-      {
-        headerName: "Rate",
-        field: 'rate', 
-        sortable: true, 
-        filter: true
-      },
-      {
-        headerName: "Rate BasedOn",   
-        field: 'rateBasedOn', 
-        sortable: true, 
-        filter: true
-      },
-      {
-        headerName: "Commission",
-        field: 'commission', 
-        sortable: true, 
-        filter: true
-      }],
+        {
+          headerName: 'Created Date',
+          field: 'date',
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: 'Description',
+          field: 'ledgerType',
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: 'Credit',
+          field: 'amount',
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: 'Debit',
+          field: 'amount',
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: 'Balance',
+          field: 'balance',
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: 'Product',
+          field: 'product',
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: 'GatepassIds',
+          field: 'gatepassIds',
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: 'Bori Quantity',
+          field: 'boriQuantity',
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: 'Bag Quantity',
+          field: 'bagQuantity',
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: 'Total Maund',
+          field: 'totalMaund',
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: 'Rate',
+          field: 'rate',
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: 'Rate BasedOn',
+          field: 'rateBasedOn',
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: 'Commission',
+          field: 'commission',
+          sortable: true,
+          filter: true
+        }],
       onGridReady: () => {
         this.getLedgerList();
       },
       rowSelection: 'multiple',
       rowGroupPanelShow: 'always',
       pivotPanelShow: 'always',
-      enableRangeSelection: true    
-    }
+      enableRangeSelection: true
+    };
     this.dataSource = new MatTableDataSource();
     this.paginator.pageSize = 25;
     this.buildForm();
-    // this.getLedgerList();
+    this.companySubscription = this.companyService.companySubject.subscribe(
+      (companyId: number) => {
+        if (this.companyId !== companyId) {
+          this.companyId = companyId;
+          this.paginator.pageIndex = 0;
+          this.getLedgerList();
+        }
+      }
+    );
   }
-
-  onPaginationChanged(params){
-    console.log(params)
+  ngOnDestroy() {
+    if (this.companySubscription) {
+      this.companySubscription.unsubscribe();
+    }
+  }
+  onPaginationChanged(params) {
+    console.log(params);
   }
 
   buildForm() {

@@ -4,17 +4,22 @@ import { TokenService } from './token.service';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { LedgerResponse } from '../model/ledger-response.model';
+import { CompanyService } from './company.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class LedgerService {
   apiUrl = environment.baseUrl + '/api/v1/Ledger';
-  constructor(private http: HttpClient, private tokenService: TokenService) { }
+  constructor(
+    private http: HttpClient,
+    private tokenService: TokenService,
+    private companyService: CompanyService) { }
 
   getPartyLedger(partyId: number, pageSize: number, pageIndex: number)
     : Observable<LedgerResponse> {
     const params = new HttpParams()
+      .set('CompanyId', this.companyService.getCompanyId().toString())
       .set('PartyId', partyId.toString())
       .set('Page', (pageIndex + 1).toString())
       .set('PageSize', pageSize.toString());
@@ -29,7 +34,8 @@ export class LedgerService {
       PageSize: pageSize.toString(),
       LedgerType: ledgerType.toString(),
       FromDate: fromDate ? fromDate : null,
-      ToDate: toDate ? toDate : null
+      ToDate: toDate ? toDate : null,
+      CompanyId: this.companyService.getCompanyId().toString()
     };
     // const params = new HttpParams()
     //   .set('Page', (pageIndex + 1).toString())

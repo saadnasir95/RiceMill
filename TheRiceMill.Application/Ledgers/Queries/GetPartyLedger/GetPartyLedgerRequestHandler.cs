@@ -37,7 +37,7 @@ namespace TheRiceMill.Application.Ledgers.Queries.GetLedgers
         public async Task<ResponseViewModel> Handle(GetPartyLedgerRequestModel request, CancellationToken cancellationToken)
         {
             request.SetDefaultValue();
-            Expression<Func<Domain.Entities.Ledger, bool>> query = p => p.PartyId == request.PartyId && p.TransactionType == TransactionType.Party.ToInt();
+            Expression<Func<Domain.Entities.Ledger, bool>> query = p => p.PartyId == request.PartyId && p.TransactionType == TransactionType.Party.ToInt() && p.CompanyId == request.CompanyId.ToInt();
 
             //PrevBalance = 10000
 

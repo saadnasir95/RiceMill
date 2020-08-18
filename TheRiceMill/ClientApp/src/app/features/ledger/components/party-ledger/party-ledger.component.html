@@ -26,10 +26,7 @@
                 {{(ledgerData.netBalance) | localCurrency}}</h4>
             </div>
           </div>
-          <ag-grid-angular
-            style="height: 500px;"
-            class="ag-theme-balham w-100"
-            [gridOptions]="gridOptions">
+          <ag-grid-angular style="height: 500px;" class="ag-theme-balham w-100" [gridOptions]="gridOptions">
           </ag-grid-angular>
           <mat-paginator [pageSizeOptions]="[10,25, 50, 100,200]" [showFirstLastButtons]="true" (page)="changePage()">
           </mat-paginator>

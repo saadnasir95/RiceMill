@@ -10,7 +10,7 @@ import { CompanyLedgerComponent } from './components/company-ledger/company-ledg
 import { AgGridModule } from 'ag-grid-angular';
 
 @NgModule({
-  declarations: [PartyLedgerComponent,CompanyLedgerComponent],
+  declarations: [PartyLedgerComponent, CompanyLedgerComponent],
   imports: [
     ReactiveFormsModule,
     NgxDaterangepickerMd.forRoot(),
