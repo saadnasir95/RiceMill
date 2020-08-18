@@ -10,6 +10,7 @@ using TheRiceMill.Application.GatePasses.Models;
 using TheRiceMill.Application.Purchases.Models;
 using TheRiceMill.Application.Purchases.Shared;
 using TheRiceMill.Application.Sales.Commands.CreateSale;
+using TheRiceMill.Common.Extensions;
 using TheRiceMill.Common.Response;
 using TheRiceMill.Common.Util;
 using TheRiceMill.Domain.Entities;
@@ -33,10 +34,11 @@ namespace TheRiceMill.Application.Purchases.Queries
             Expression<Func<Purchase, bool>> query = null;
             if (request.Search.Length > 0)
             {
-                query = p => p.Id.ToString() == request.Search;
-            }else
+                query = p => p.Id.ToString() == request.Search && p.CompanyId == request.CompanyId.ToInt();
+            }
+            else
             {
-                query = p => p.Id != 0;
+                query = p => p.Id != 0 && p.CompanyId == request.CompanyId.ToInt();
             }
             var purchase = _context.Purchases.GetMany(
                     query,
@@ -57,6 +59,7 @@ namespace TheRiceMill.Application.Purchases.Queries
                         BagQuantity = gp.BagQuantity,
                         BoriQuantity = gp.BoriQuantity,
                         WeightPerBag = gp.WeightPerBag,
+                        EmptyWeight = gp.EmptyWeight,
                         NetWeight = gp.NetWeight,
                         Maund = gp.Maund,
                         DateTime = gp.DateTime,
@@ -68,25 +71,31 @@ namespace TheRiceMill.Application.Purchases.Queries
                         {
                             Address = gp.Party.Address,
                             Name = gp.Party.Name,
-                            PhoneNumber = gp.Party.PhoneNumber
+                            PhoneNumber = gp.Party.PhoneNumber,
+                            CompanyId = (CompanyType)gp.Party.CompanyId
                         },
                         Product = new ProductRequestModel()
                         {
-                            Name = gp.Product.Name
+                            Name = gp.Product.Name,
+                            CompanyId = (CompanyType)gp.Product.CompanyId
                         },
                         Vehicle = new VehicleRequestModel()
                         {
-                            PlateNo = gp.Vehicle.PlateNo
+                            PlateNo = gp.Vehicle.PlateNo,
+                            CompanyId = (CompanyType)gp.Vehicle.CompanyId
                         },
                         PartyId = gp.PartyId,
                         ProductId = gp.ProductId,
                         VehicleId = gp.VehicleId,
                         PurchaseId = gp.PurchaseId,
-                        SaleId = gp.SaleId
+                        SaleId = gp.SaleId,
+                        CompanyId = (CompanyType)gp.CompanyId,
+                        BiltyNumber = gp.BiltyNumber
                     }).ToList(),
                     CreatedDate = new DateConverter().ConvertToDateTimeIso(p.Date),
                     Commission = p.Commission,
                     Id = p.Id,
+                    CompanyId = (CompanyType)p.CompanyId,
                     AdditionalCharges = p.Charges.Select(pr => new ChargeRequestViewModel()
                     {
                         Id = pr.Id,
@@ -98,7 +107,7 @@ namespace TheRiceMill.Application.Purchases.Queries
                     }).ToArray()
                 }).ToList();
             var count = _context.Purchases.Count(p =>
-                p.Id.ToString().Contains(request.Search));
+                p.Id.ToString().Contains(request.Search) && p.CompanyId == request.CompanyId.ToInt());
             return Task.FromResult(new ResponseViewModel().CreateOk(purchase, count));
         }
     }

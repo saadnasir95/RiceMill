@@ -2,8 +2,10 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using TheRiceMill.Application.Enums;
 using TheRiceMill.Application.Exceptions;
 using TheRiceMill.Application.Products.Models;
+using TheRiceMill.Common.Extensions;
 using TheRiceMill.Common.Response;
 using TheRiceMill.Common.Util;
 using TheRiceMill.Domain.Entities;
@@ -39,12 +41,14 @@ namespace TheRiceMill.Application.Products.Commands
 
             product.Name = request.Name;
             product.NormalizedName = request.Name.ToUpper();
+            product.CompanyId = request.CompanyId.ToInt();
             _context.Products.Update(product);
             await _context.SaveChangesAsync(cancellationToken);
             return new ResponseViewModel().CreateOk(new ProductInfoResponseModel()
             {
                 Name = product.Name,
                 Id = product.Id,
+                CompanyId = (CompanyType)product.CompanyId,
                 CreatedDate = new DateConverter().ConvertToDateTimeIso(product.CreatedDate),
             });
         }

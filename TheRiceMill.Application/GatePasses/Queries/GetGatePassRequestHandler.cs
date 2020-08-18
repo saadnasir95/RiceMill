@@ -39,28 +39,32 @@ namespace TheRiceMill.Application.GatePasses.Queries
                     query = p => (p.PurchaseId == null && p.SaleId == null) && (p.Party.Name.Contains(request.Search) ||
                                         (p.Id + "" == request.Search) ||
                                         p.Vehicle.PlateNo.Contains(request.Search) ||
-                                        p.Product.Name.Contains(request.Search)) && p.Type == request.GatePassType.ToInt();
+                                        p.Product.Name.Contains(request.Search)) && p.Type == request.GatePassType.ToInt()
+                                        && p.CompanyId == request.CompanyId.ToInt();
                 }
                 else if (request.GatePassType != GatePassType.None && request.PartyId != 0)
                 {
                     query = p => (p.PurchaseId == null && p.SaleId == null) && (p.Party.Name.Contains(request.Search) ||
                                         (p.Id + "" == request.Search) ||
                                         p.Vehicle.PlateNo.Contains(request.Search) ||
-                                        p.Product.Name.Contains(request.Search)) && p.Type == request.GatePassType.ToInt() && p.PartyId == request.PartyId;
+                                        p.Product.Name.Contains(request.Search)) && p.Type == request.GatePassType.ToInt() && p.PartyId == request.PartyId
+                                        && p.CompanyId == request.CompanyId.ToInt();
                 }
                 else if (request.GatePassType == GatePassType.None && request.PartyId != 0)
                 {
                     query = p => (p.PurchaseId == null && p.SaleId == null) && (p.Party.Name.Contains(request.Search) ||
                                         (p.Id + "" == request.Search) ||
                                         p.Vehicle.PlateNo.Contains(request.Search) ||
-                                        p.Product.Name.Contains(request.Search)) && p.PartyId == request.PartyId;
+                                        p.Product.Name.Contains(request.Search)) && p.PartyId == request.PartyId
+                                        && p.CompanyId == request.CompanyId.ToInt();
                 }
                 else
                 {
                     query = p => (p.PurchaseId == null && p.SaleId == null) && (p.Party.Name.Contains(request.Search) ||
                                         (p.Id + "" == request.Search) ||
                                         p.Vehicle.PlateNo.Contains(request.Search) ||
-                                        p.Product.Name.Contains(request.Search));
+                                        p.Product.Name.Contains(request.Search))
+                                        && p.CompanyId == request.CompanyId.ToInt();
                 }
             }
             else
@@ -68,7 +72,8 @@ namespace TheRiceMill.Application.GatePasses.Queries
                 query = p => (p.Party.Name.Contains(request.Search) ||
                                     (p.Id + "" == request.Search) ||
                                     p.Vehicle.PlateNo.Contains(request.Search) ||
-                                    p.Product.Name.Contains(request.Search));
+                                    p.Product.Name.Contains(request.Search))
+                                    && p.CompanyId == request.CompanyId.ToInt();
             }
 
             List<GatePassResponseModel> gatePasses = _context.GatePasses

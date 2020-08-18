@@ -2,7 +2,9 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using TheRiceMill.Application.Enums;
 using TheRiceMill.Application.Vehicles.Models;
+using TheRiceMill.Common.Extensions;
 using TheRiceMill.Common.Response;
 using TheRiceMill.Common.Util;
 using TheRiceMill.Persistence;
@@ -25,13 +27,14 @@ namespace TheRiceMill.Application.Vehicles.Queries
         {
             request.SetDefaultValue();
             var list = _context.Vehicles.GetMany(
-                p => p.PlateNo.Contains(request.Search), p => p.PlateNo,
+                p => p.PlateNo.Contains(request.Search) && p.CompanyId == request.CompanyId.ToInt(), p => p.PlateNo,
                 1,
                 request.PageSize, true).Select(vehicle => new VehicleComboBoxInfoResponseModel()
-            {
-                Id = vehicle.Id,
-                PlateNo = vehicle.PlateNo,
-            }).ToList();
+                {
+                    Id = vehicle.Id,
+                    PlateNo = vehicle.PlateNo,
+                    CompanyId = (CompanyType)vehicle.CompanyId
+                }).ToList();
             return Task.FromResult(new ResponseViewModel().CreateOk(list));
         }
     }

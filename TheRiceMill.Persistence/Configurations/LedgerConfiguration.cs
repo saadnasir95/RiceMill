@@ -14,6 +14,7 @@ namespace TheRiceMill.Persistence.Configurations
                 .HasForeignKey(p => p.PartyId);
 
             builder.HasKey(p => new { p.LedgerType, p.Id, p.TransactionType });
+            builder.Property(p => p.CompanyId).HasDefaultValue(1);
         }
     }
 

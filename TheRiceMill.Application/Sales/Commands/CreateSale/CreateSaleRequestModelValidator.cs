@@ -16,6 +16,7 @@ namespace TheRiceMill.Application.Sales.Commands.CreateSale
             RuleFor(p => p.Rate).Required();
             RuleFor(p => p.GatepassIds).NotEmpty();
             RuleFor(p => p.TotalPrice).Required();
+            RuleFor(p => p.CompanyId).IsInEnum().WithMessage(Messages.IncorrectValue);
         }
     }
 }

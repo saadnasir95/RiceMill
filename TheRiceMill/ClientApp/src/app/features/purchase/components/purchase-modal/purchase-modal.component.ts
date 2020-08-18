@@ -19,7 +19,7 @@ import 'moment-timezone';
 import { NotificationService } from '../../../../shared/services/notification.service';
 import { PurchaseResponse } from '../../../../shared/model/purchase-response.model';
 import { SpinnerService } from '../../../../shared/services/spinner.service';
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { GatepassService } from '../../../../shared/services/gatepass.service';
 import { GatepassResponse } from '../../../../shared/model/gatepass-response.model';
 import { Gatepass } from '../../../../shared/model/gatepass.model';
@@ -36,7 +36,7 @@ export class PurchaseModalComponent implements OnInit {
   selectable = true;
   removable = true;
   addOnBlur = false;
-  selectedRateOnText: string 
+  selectedRateOnText: string
   separatorKeysCodes: number[] = [ENTER, COMMA];
   filteredGatepasses: Gatepass[];
   gatepasses: Gatepass[] = [];
@@ -95,29 +95,29 @@ export class PurchaseModalComponent implements OnInit {
     private notificationService: NotificationService,
     private gatepassService: GatepassService,
     public spinner: SpinnerService) {
-     }
+  }
 
   ngOnInit() {
     this.purchaseForm.controls['gatepass'].valueChanges.subscribe(
       (response: string) => {
         this.gatepassService
-        .getGatepassList(10, 0, response, 'false', '',true, GatePassType.InwardGatePass)
-        .subscribe(
-          (response: GatepassResponse) => {
-            this.filteredGatepasses = response.data;
-          }
-    )
-  })
+          .getGatepassList(10, 0, response, 'false', '', true, GatePassType.InwardGatePass)
+          .subscribe(
+            (response: GatepassResponse) => {
+              this.filteredGatepasses = response.data;
+            }
+          )
+      })
 
-  this.purchaseForm.get('weightPriceGroup.isMaundBasedRate').valueChanges.subscribe(
-    (response: string) => {
-      if(+response == RateBasedOn.Maund){
-        this.selectedRateOnText = "Maund";
-      } 
-      else if(+response == RateBasedOn.Bag) {
-        this.selectedRateOnText = "Bag"; 
-      }
-  })
+    this.purchaseForm.get('weightPriceGroup.isMaundBasedRate').valueChanges.subscribe(
+      (response: string) => {
+        if (+response == RateBasedOn.Maund) {
+          this.selectedRateOnText = "Maund";
+        }
+        else if (+response == RateBasedOn.Bag) {
+          this.selectedRateOnText = "Bag";
+        }
+      })
 
     this.purchaseForm.get('additionalCharges').valueChanges.subscribe(
       (value: Array<any>) => {
@@ -155,9 +155,9 @@ export class PurchaseModalComponent implements OnInit {
   }
 
   remove(gatepass: Gatepass): void {
-    let index = 0     
-    this.gatepasses.find((_gatepass,i) => {
-      if(_gatepass.id == gatepass.id){
+    let index = 0
+    this.gatepasses.find((_gatepass, i) => {
+      if (_gatepass.id == gatepass.id) {
         index = i
         return true
       }
@@ -180,7 +180,7 @@ export class PurchaseModalComponent implements OnInit {
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    if(!this.isGatepassExists(event.option.value)){
+    if (!this.isGatepassExists(event.option.value)) {
       this.gatepasses.push(event.option.value)
       this.purchaseForm.get('weightPriceGroup.totalMaund').setValue(
         +this.purchaseForm.get('weightPriceGroup.totalMaund').value + event.option.value.maund
@@ -199,9 +199,9 @@ export class PurchaseModalComponent implements OnInit {
     this.purchaseForm.controls['gatepass'].setValue(null);
   }
 
-  isGatepassExists(gatepass: Gatepass): boolean{
+  isGatepassExists(gatepass: Gatepass): boolean {
     const findGatePass = this.gatepasses.find(_gatepass => _gatepass.id == gatepass.id)
-    return findGatePass ? true : false 
+    return findGatePass ? true : false
   }
 
   closeModal() {
@@ -286,9 +286,9 @@ export class PurchaseModalComponent implements OnInit {
       });
   }
 
-  submit(){
+  submit() {
     if (this.purchaseForm.valid) {
-      if(this.gatepasses.length == 0){
+      if (this.gatepasses.length == 0) {
         return
       }
 
@@ -296,12 +296,12 @@ export class PurchaseModalComponent implements OnInit {
       if (this.purchase === undefined || this.purchase === null) {
         this.purchase = new Purchase();
       }
-     
+
       if (this.purchase.additionalCharges === undefined || this.purchase.additionalCharges === null) {
         this.purchase.additionalCharges = [];
       }
 
-      this.purchase.date = moment(this.purchaseForm.value.date).utc().format(); 
+      this.purchase.date = moment(this.purchaseForm.value.date).utc().format();
       this.purchase.gatepassIds = this.gatepasses.map(gatepass => gatepass.id);
       this.purchase.rateBasedOn = this.purchaseForm.get('weightPriceGroup').value.isMaundBasedRate;
       this.purchase.totalMaund = this.purchaseForm.get('weightPriceGroup').value.totalMaund;
@@ -414,17 +414,17 @@ export class PurchaseModalComponent implements OnInit {
     }
     this.purchase.additionalCharges.push(new AdditionalCharges());
   }
-  
+
   deleteCharges(id: number) {
     (this.purchaseForm.get('additionalCharges') as FormArray).removeAt(id);
     this.purchase.additionalCharges.splice(id, 1);
   }
 
-  getRateBasedOnTotal():number{
-    return this.purchaseForm.get('weightPriceGroup.isMaundBasedRate').value == '1' ? 
-    +this.purchaseForm.get('weightPriceGroup.rate').value * +this.purchaseForm.get('weightPriceGroup.totalMaund').value :  
-    +this.purchaseForm.get('weightPriceGroup.rate').value * (+this.purchaseForm.get('weightPriceGroup.bagQuantity').value + 
-    +this.purchaseForm.get('weightPriceGroup.boriQuantity').value)
+  getRateBasedOnTotal(): number {
+    return this.purchaseForm.get('weightPriceGroup.isMaundBasedRate').value == '1' ?
+      +this.purchaseForm.get('weightPriceGroup.rate').value * +this.purchaseForm.get('weightPriceGroup.totalMaund').value :
+      +this.purchaseForm.get('weightPriceGroup.rate').value * (+this.purchaseForm.get('weightPriceGroup.bagQuantity').value +
+        +this.purchaseForm.get('weightPriceGroup.boriQuantity').value)
   }
 
 }

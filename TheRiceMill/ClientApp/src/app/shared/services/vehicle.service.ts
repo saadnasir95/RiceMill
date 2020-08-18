@@ -5,6 +5,7 @@ import { Observable } from 'rxjs';
 import { VehicleResponse } from '../model/vehicle-response.model';
 import { TokenService } from './token.service';
 import { environment } from '../../../environments/environment';
+import { CompanyService } from './company.service';
 
 @Injectable({
   providedIn: 'root'
@@ -12,11 +13,15 @@ import { environment } from '../../../environments/environment';
 export class VehicleService {
   vehicleEmitter = new EventEmitter<boolean>();
   apiUrl = environment.baseUrl + '/api/v1/Vehicle';
-  constructor(private http: HttpClient, private tokenService: TokenService) { }
+  constructor(
+    private http: HttpClient,
+    private tokenService: TokenService,
+    private companyService: CompanyService) { }
 
   getVehicles(pageSize: number, pageIndex: number, search = '', sortDirection = 'false', orderBy = '')
     : Observable<VehicleResponse> {
     const params = new HttpParams()
+      .set('CompanyId', this.companyService.getCompanyId().toString())
       .set('Page', (pageIndex + 1).toString())
       .set('PageSize', pageSize.toString())
       .set('search', search + '')
@@ -26,10 +31,12 @@ export class VehicleService {
   }
 
   addVehicle(vehicle: Vehicle): Observable<any> {
+    vehicle.companyId = this.companyService.getCompanyId();
     return this.http.post(this.apiUrl, JSON.stringify(vehicle), { headers: this.tokenService.getHeaders() });
   }
 
   updateVehicle(vehicle: Vehicle): Observable<any> {
+    vehicle.companyId = this.companyService.getCompanyId();
     return this.http.put(this.apiUrl, JSON.stringify(vehicle), { headers: this.tokenService.getHeaders() });
   }
 

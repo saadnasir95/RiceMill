@@ -1,4 +1,6 @@
-﻿namespace TheRiceMill.Application.Purchases.Models
+﻿using TheRiceMill.Application.Enums;
+
+namespace TheRiceMill.Application.Purchases.Models
 {
     public class PurchaseInfoResponseModel
     {
@@ -58,6 +60,7 @@
         /// Total Price of Product
         /// </summary>
         public double TotalPrice { get; set; }
+        public CompanyType CompanyId { get; set; }
 
     }
 }

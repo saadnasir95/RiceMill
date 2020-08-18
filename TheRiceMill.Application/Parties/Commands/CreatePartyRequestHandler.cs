@@ -4,8 +4,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using TheRiceMill.Application.Companies.Models;
+using TheRiceMill.Application.Enums;
 using TheRiceMill.Application.Exceptions;
 using TheRiceMill.Application.Products.Models;
+using TheRiceMill.Common.Extensions;
 using TheRiceMill.Common.Response;
 using TheRiceMill.Common.Util;
 using TheRiceMill.Domain.Entities;
@@ -28,22 +30,24 @@ namespace TheRiceMill.Application.Companies.Commands
             {
                 throw new AlreadyExistsException(nameof(Party), nameof(request.Name), request.Name);
             }
-            var company = new Party()
+            var party = new Party()
             {
                 Name = request.Name,
                 NormalizedName = request.Name.ToUpper(),
                 Address = request.Address,
                 PhoneNumber = request.PhoneNumber,
+                CompanyId = request.CompanyId.ToInt()
             };
-            _context.Add(company);
+            _context.Add(party);
             await _context.SaveChangesAsync(cancellationToken);
             return new ResponseViewModel().CreateOk(new PartyInfoResponseModel()
             {
-                Name = company.Name,
-                Id = company.Id,
-                CreatedDate = new DateConverter().ConvertToDateTimeIso(company.CreatedDate),
-                Address = company.Address,
-                PhoneNumber = company.PhoneNumber
+                Name = party.Name,
+                Id = party.Id,
+                CreatedDate = new DateConverter().ConvertToDateTimeIso(party.CreatedDate),
+                Address = party.Address,
+                PhoneNumber = party.PhoneNumber,
+                CompanyId = (CompanyType)party.CompanyId
             });
         }
     }

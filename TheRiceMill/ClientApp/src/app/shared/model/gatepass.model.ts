@@ -1,8 +1,9 @@
 import { Party } from './party.model';
 import { Vehicle } from './vehicle.model';
 import { Product } from './product.model';
+import { Base } from './base.model';
 
-export class Gatepass {
+export class Gatepass extends Base {
   id: number;
   dateTime: string;
   type: number;

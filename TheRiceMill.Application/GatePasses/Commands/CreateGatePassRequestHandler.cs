@@ -30,6 +30,7 @@ namespace TheRiceMill.Application.GatePasses.Commands
             {
                 Type = request.Type.ToInt(),
                 PartyId = request.PartyId,
+                CompanyId = request.CompanyId.ToInt(),
                 VehicleId = request.VehicleId,
                 DateTime = request.DateTime,
                 ProductId = request.ProductId,
@@ -49,7 +50,7 @@ namespace TheRiceMill.Application.GatePasses.Commands
             Product product;
             if (!string.IsNullOrEmpty(request.Party?.Name))
             {
-                party = _context.Parties.GetBy(p => p.NormalizedName.Equals(request.Party.Name.ToUpper()));
+                party = _context.Parties.GetBy(p => p.NormalizedName.Equals(request.Party.Name.ToUpper()) && p.CompanyId == request.CompanyId.ToInt());
                 if (party == null)
                 {
                     gatePass.Party = new Party()
@@ -57,7 +58,8 @@ namespace TheRiceMill.Application.GatePasses.Commands
                         Name = request.Party.Name,
                         NormalizedName = request.Party.Name.ToUpper(),
                         PhoneNumber = request.Party.PhoneNumber,
-                        Address = request.Party.Address
+                        Address = request.Party.Address,
+                        CompanyId = request.CompanyId.ToInt()
                     };
                     party = gatePass.Party;
                 }
@@ -68,7 +70,7 @@ namespace TheRiceMill.Application.GatePasses.Commands
             }
             else
             {
-                party = _context.Parties.GetBy(p => p.Id == request.PartyId);
+                party = _context.Parties.GetBy(p => p.Id == request.PartyId && p.CompanyId == request.CompanyId.ToInt());
                 if (party == null)
                 {
                     throw new NotFoundException(nameof(Party), request.PartyId);
@@ -76,12 +78,13 @@ namespace TheRiceMill.Application.GatePasses.Commands
             }
             if (!string.IsNullOrEmpty(request.Vehicle?.PlateNo))
             {
-                vehicle = _context.Vehicles.GetBy(p => p.PlateNo.Equals(request.Vehicle.PlateNo.ToUpper()));
+                vehicle = _context.Vehicles.GetBy(p => p.PlateNo.Equals(request.Vehicle.PlateNo.ToUpper()) && p.CompanyId == request.CompanyId.ToInt());
                 if (vehicle == null)
                 {
                     gatePass.Vehicle = new Vehicle()
                     {
                         PlateNo = request.Vehicle.PlateNo.ToUpper(),
+                        CompanyId = request.CompanyId.ToInt()
                     };
                     vehicle = gatePass.Vehicle;
                 }
@@ -92,7 +95,7 @@ namespace TheRiceMill.Application.GatePasses.Commands
             }
             else
             {
-                vehicle = _context.Vehicles.GetBy(p => p.Id == request.VehicleId);
+                vehicle = _context.Vehicles.GetBy(p => p.Id == request.VehicleId && p.CompanyId == request.CompanyId.ToInt());
                 if (vehicle == null)
                 {
                     throw new NotFoundException(nameof(Vehicle), request.VehicleId);
@@ -101,13 +104,14 @@ namespace TheRiceMill.Application.GatePasses.Commands
 
             if (!string.IsNullOrEmpty(request.Product?.Name))
             {
-                product = _context.Products.GetBy(p => p.Name.Equals(request.Product.Name.ToUpper()));
+                product = _context.Products.GetBy(p => p.Name.Equals(request.Product.Name.ToUpper()) && p.CompanyId == request.CompanyId.ToInt());
                 if (product == null)
                 {
                     gatePass.Product = new Product()
                     {
                         Name = request.Product.Name,
-                        NormalizedName = request.Product.Name.ToUpper()
+                        NormalizedName = request.Product.Name.ToUpper(),
+                        CompanyId = request.CompanyId.ToInt()
                     };
                     product = gatePass.Product;
                 }
@@ -118,7 +122,7 @@ namespace TheRiceMill.Application.GatePasses.Commands
             }
             else
             {
-                product = _context.Products.GetBy(p => p.Id == request.ProductId);
+                product = _context.Products.GetBy(p => p.Id == request.ProductId && p.CompanyId == request.CompanyId.ToInt());
                 if (product == null)
                 {
                     throw new NotFoundException(nameof(Product), request.ProductId);
@@ -129,6 +133,7 @@ namespace TheRiceMill.Application.GatePasses.Commands
             return new ResponseViewModel().CreateOk(new GatePassResponseModel()
             {
                 Type = request.Type,
+                CompanyId = request.CompanyId,
                 Broker = request.Broker,
                 BagQuantity = request.BagQuantity,
                 BoriQuantity = request.BoriQuantity,
@@ -143,15 +148,18 @@ namespace TheRiceMill.Application.GatePasses.Commands
                 {
                     Address = party.Address,
                     Name = party.Name,
-                    PhoneNumber = party.PhoneNumber
+                    PhoneNumber = party.PhoneNumber,
+                    CompanyId = request.CompanyId
                 },
                 Product = new ProductRequestModel()
                 {
-                    Name = product.Name
+                    Name = product.Name,
+                    CompanyId = request.CompanyId
                 },
                 Vehicle = new VehicleRequestModel()
                 {
-                    PlateNo = vehicle.PlateNo
+                    PlateNo = vehicle.PlateNo,
+                    CompanyId = request.CompanyId
                 },
                 PartyId = party.Id,
                 ProductId = product.Id,

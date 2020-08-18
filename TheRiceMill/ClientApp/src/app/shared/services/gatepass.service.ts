@@ -5,6 +5,7 @@ import { HttpClient, HttpParams } from '@angular/common/http';
 import { GatepassResponse } from '../model/gatepass-response.model';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
+import { CompanyService } from './company.service';
 
 @Injectable({
   providedIn: 'root'
@@ -13,11 +14,15 @@ export class GatepassService {
   gatepassEmitter = new EventEmitter<any>();
   apiUrl = environment.baseUrl + '/api/v1/Gatepass';
 
-  constructor(private http: HttpClient, private tokenService: TokenService) { }
+  constructor(
+    private http: HttpClient,
+    private tokenService: TokenService,
+    private companyService: CompanyService) { }
 
   getGatepassList(pageSize: number, pageIndex: number, search = '', sortDirection = 'false', orderBy = '', InvoicePendingGatePass = false, GatePassType = 0, PartyId = 0)
     : Observable<GatepassResponse> {
     const params = new HttpParams()
+      .set('CompanyId', this.companyService.getCompanyId().toString())
       .set('Page', (pageIndex + 1).toString())
       .set('PageSize', pageSize.toString())
       .set('search', search + '')
@@ -30,10 +35,12 @@ export class GatepassService {
   }
 
   addGatepass(gatepass: Gatepass): Observable<any> {
+    gatepass.companyId = this.companyService.getCompanyId();
     return this.http.post(this.apiUrl, JSON.stringify(gatepass), { headers: this.tokenService.getHeaders() });
   }
 
   updateGatepass(gatepass: Gatepass): Observable<any> {
+    gatepass.companyId = this.companyService.getCompanyId();
     return this.http.put(this.apiUrl, JSON.stringify(gatepass), { headers: this.tokenService.getHeaders() });
   }
 

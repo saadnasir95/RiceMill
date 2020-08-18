@@ -3,8 +3,9 @@ import { Vehicle } from './vehicle.model';
 import { Product } from './product.model';
 import { AdditionalCharges } from './additionalcharges.model';
 import { Gatepass } from './gatepass.model';
+import { Base } from './base.model';
 
-export class Sale {
+export class Sale extends Base {
   id: number;
   gatepassIds: Array<number>;
   gatepasses: Array<Gatepass>;

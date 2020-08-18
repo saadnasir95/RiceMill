@@ -34,6 +34,7 @@ namespace TheRiceMill.Application.GatePasses.Commands
             }
             request.Copy(gatePass);
             gatePass.Type = request.Type.ToInt();
+            gatePass.CompanyId = request.CompanyId.ToInt();
             Party party;
             Vehicle vehicle;
             Product product;
@@ -47,7 +48,8 @@ namespace TheRiceMill.Application.GatePasses.Commands
                         Name = request.Party.Name,
                         NormalizedName = request.Party.Name.ToUpper(),
                         PhoneNumber = request.Party.PhoneNumber,
-                        Address = request.Party.Address
+                        Address = request.Party.Address,
+                        CompanyId = request.CompanyId.ToInt()
                     };
                     party = gatePass.Party;
                 }
@@ -68,6 +70,7 @@ namespace TheRiceMill.Application.GatePasses.Commands
                     gatePass.Vehicle = new Vehicle()
                     {
                         PlateNo = request.Vehicle.PlateNo.ToUpper(),
+                        CompanyId = request.CompanyId.ToInt()
                     };
                     vehicle = gatePass.Vehicle;
                 }
@@ -89,7 +92,8 @@ namespace TheRiceMill.Application.GatePasses.Commands
                     gatePass.Product = new Product()
                     {
                         Name = request.Product.Name,
-                        NormalizedName = request.Product.Name.ToUpper()
+                        NormalizedName = request.Product.Name.ToUpper(),
+                        CompanyId = request.CompanyId.ToInt()
                     };
                     product = gatePass.Product;
                 }
@@ -106,7 +110,8 @@ namespace TheRiceMill.Application.GatePasses.Commands
             await _context.SaveChangesAsync(cancellationToken);
             return new ResponseViewModel().CreateOk(new GatePassResponseModel()
             {
-                Type = (GatePassType)request.Type,
+                Type = request.Type,
+                CompanyId = request.CompanyId,
                 BagQuantity = request.BagQuantity,
                 BoriQuantity = request.BoriQuantity,
                 WeightPerBag = request.WeightPerBag,
@@ -121,15 +126,18 @@ namespace TheRiceMill.Application.GatePasses.Commands
                 {
                     Address = party.Address,
                     Name = party.Name,
-                    PhoneNumber = party.PhoneNumber
+                    PhoneNumber = party.PhoneNumber,
+                    CompanyId = request.CompanyId
                 },
                 Product = new ProductRequestModel()
                 {
-                    Name = product.Name
+                    Name = product.Name,
+                    CompanyId = request.CompanyId
                 },
                 Vehicle = new VehicleRequestModel()
                 {
-                    PlateNo = vehicle.PlateNo
+                    PlateNo = vehicle.PlateNo,
+                    CompanyId = request.CompanyId
                 },
                 PartyId = party.Id,
                 ProductId = product.Id,

@@ -14,6 +14,7 @@ namespace TheRiceMill.Application.GatePasses.Models
         /// The Type of the GatePass 1 = GetOut and 2 = GetIn
         /// </summary>
         public GatePassType Type { get; set; }
+        public CompanyType CompanyId { get; set; }
         public int PartyId { get; set; }
         public PartyRequestModel Party { get; set; }
         public int VehicleId { get; set; }
@@ -52,17 +53,19 @@ namespace TheRiceMill.Application.GatePasses.Models
     {
         public string Name { get; set; }
         public string PlateNo { get; set; }
+        public CompanyType CompanyId { get; set; }
     }
     public class PartyRequestModel
     {
         public string Name { get; set; }
         public string PhoneNumber { get; set; }
         public string Address { get; set; }
+        public CompanyType CompanyId { get; set; }
     }
 
     public class BankRequestModel
     {
-        
+
     }
     public class ProductRequestModel
     {
@@ -70,12 +73,14 @@ namespace TheRiceMill.Application.GatePasses.Models
         /// Navigation Property for Product
         /// </summary>
         public string Name { get; set; }
+        public CompanyType CompanyId { get; set; }
     }
     public class CreateGatePassRequestModelValidator : AbstractValidator<CreateGatePassRequestModel>
     {
         public CreateGatePassRequestModelValidator()
         {
             RuleFor(p => p.Type).IsInEnum().WithMessage(Messages.IncorrectValue);
+            RuleFor(p => p.CompanyId).IsInEnum().WithMessage(Messages.IncorrectValue);
             RuleFor(p => p.PartyId).Must(p => p > 0).When(p => p.Party == null).WithMessage(Messages.IncorrectValue);
             RuleFor(p => p.ProductId).Must(p => p > 0).When(p => p.Product == null).WithMessage(Messages.IncorrectValue);
             RuleFor(p => p.VehicleId).Must(p => p > 0).When(p => p.Vehicle == null).WithMessage(Messages.IncorrectValue);

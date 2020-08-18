@@ -1,6 +1,7 @@
 using System;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
+using TheRiceMill.Application.Enums;
 using TheRiceMill.Application.GatePasses.Models;
 using TheRiceMill.Common.Response;
 using TheRiceMill.Domain.Entities;
@@ -48,6 +49,7 @@ namespace TheRiceMill.Application.Sales.Commands.CreateSale
         public double Commission { get; set; }
         public DateTime Date { get; set; }
         public ChargeRequestViewModel[] AdditionalCharges { get; set; }
+        public CompanyType CompanyId { get; set; }
     }
 
     public class ChargeRequestViewModel

@@ -7,6 +7,7 @@ import { Gatepass } from '../../../../shared/model/gatepass.model';
 import { GatepassResponse } from '../../../../shared/model/gatepass-response.model';
 import { GatepassReceiptComponent } from '../gatepass-receipt/gatepass-receipt.component';
 import { NotificationService } from '../../../../shared/services/notification.service';
+import { CompanyService } from '../../../../shared/services/company.service';
 
 @Component({
   selector: 'app-gatepass',
@@ -22,19 +23,21 @@ export class GatepassComponent implements OnInit, OnDestroy {
   isLoadingData: Boolean = false;
   dialogRef: MatDialogRef<GatepassModalComponent>;
   gatepassSubscription: Subscription;
+  companySubscription: Subscription;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(GatepassReceiptComponent) gatepassReceiptComponent: GatepassReceiptComponent;
+  companyId = 0;
   gatepassSearch = '';
   sortDirection = 'false';
   sortOrderBy = '';
   constructor(
     private gatepassService: GatepassService,
     private matDialog: MatDialog,
-    private notificationService: NotificationService) { }
+    private notificationService: NotificationService,
+    private companyService: CompanyService) { }
 
   ngOnInit() {
-
     this.dataSource = new MatTableDataSource();
     this.paginator.pageSize = 10;
     this.getGatepassList();
@@ -47,10 +50,24 @@ export class GatepassComponent implements OnInit, OnDestroy {
         }
       }
     );
+    this.companySubscription = this.companyService.companySubject.subscribe(
+      (companyId: number) => {
+        if (this.companyId !== companyId) {
+          this.companyId = companyId;
+          this.paginator.pageIndex = 0;
+          this.getGatepassList();
+        }
+      }
+    );
   }
 
   ngOnDestroy() {
-    this.gatepassSubscription.unsubscribe();
+    if (this.gatepassSubscription) {
+      this.gatepassSubscription.unsubscribe();
+    }
+    if (this.companySubscription) {
+      this.companySubscription.unsubscribe();
+    }
   }
 
   applyFilter(filterValue: string) {

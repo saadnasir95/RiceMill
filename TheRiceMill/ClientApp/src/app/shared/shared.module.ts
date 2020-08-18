@@ -31,6 +31,7 @@ import { LedgerTypePipe } from './pipes/ledger-type.pipe';
 import { PaymentTypePipe } from './pipes/payment-type.pipe';
 import { LocalCurrencyPipe } from './pipes/local-currency.pipe';
 import { RateBasedOnPipe } from './pipes/rate-based-on.pipe';
+import { CompanyTypePipe } from './pipes/company-type.pipe';
 
 @NgModule({
   declarations: [
@@ -44,7 +45,8 @@ import { RateBasedOnPipe } from './pipes/rate-based-on.pipe';
     LedgerTypePipe,
     PaymentTypePipe,
     LocalCurrencyPipe,
-    RateBasedOnPipe
+    RateBasedOnPipe,
+    CompanyTypePipe
   ],
   imports: [
     CommonModule,
@@ -98,7 +100,8 @@ import { RateBasedOnPipe } from './pipes/rate-based-on.pipe';
     PaymentTypePipe,
     LocalCurrencyPipe,
     MatButtonToggleModule,
-    RateBasedOnPipe
+    RateBasedOnPipe,
+    CompanyTypePipe
   ],
   entryComponents: [ModalComponent]
 })

@@ -61,6 +61,7 @@ namespace TheRiceMill.Application.Sales.Commands.CreateSale
             sale.BoriQuantity = request.BoriQuantity;
             sale.BagQuantity = request.BagQuantity;
             sale.Date = request.Date;
+            sale.CompanyId = request.CompanyId.ToInt();
             _context.Sales.Add(sale);
 
             List<GatePass> gatepasses = new List<GatePass>();
@@ -82,7 +83,8 @@ namespace TheRiceMill.Application.Sales.Commands.CreateSale
                 TransactionType = TransactionType.Company.ToInt(),
                 LedgerType = (int)LedgerType.Sale,
                 TransactionId = transactionId,
-                Date = sale.Date
+                Date = sale.Date,
+                CompanyId = request.CompanyId.ToInt()
             };
             var partyLedger = new Domain.Entities.Ledger()
             {
@@ -92,7 +94,8 @@ namespace TheRiceMill.Application.Sales.Commands.CreateSale
                 TransactionType = TransactionType.Party.ToInt(),
                 LedgerType = (int)LedgerType.Sale,
                 TransactionId = transactionId,
-                Date = sale.Date
+                Date = sale.Date,
+                CompanyId = request.CompanyId.ToInt()
             };
             _context.Add(companyLedger);
             _context.Add(partyLedger);
@@ -126,7 +129,8 @@ namespace TheRiceMill.Application.Sales.Commands.CreateSale
                 TotalPrice = sale.TotalPrice,
                 Rate = sale.Rate,
                 Date = new DateConverter().ConvertToDateTimeIso(sale.Date),
-                CreatedDate = new DateConverter().ConvertToDateTimeIso(sale.CreatedDate)
+                CreatedDate = new DateConverter().ConvertToDateTimeIso(sale.CreatedDate),
+                CompanyId = (CompanyType)sale.CompanyId
             });
         }
     }

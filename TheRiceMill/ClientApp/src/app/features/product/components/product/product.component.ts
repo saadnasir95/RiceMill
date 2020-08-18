@@ -5,6 +5,7 @@ import { ProductModalComponent } from '../product-modal/product-modal.component'
 import { Subscription } from 'rxjs';
 import { ProductService } from '../../../../shared/services/product.service';
 import { ProductResponse } from '../../../../shared/model/product-response.model';
+import { CompanyService } from '../../../../shared/services/company.service';
 
 @Component({
   selector: 'app-product',
@@ -18,12 +19,17 @@ export class ProductComponent implements OnInit, OnDestroy {
   isLoadingData: Boolean = false;
   dialogRef: MatDialogRef<ProductModalComponent>;
   productSubscription: Subscription;
+  companySubscription: Subscription;
   productSearch = '';
   sortDirection = 'false';
   sortOrderBy = '';
+  companyId = 0;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  constructor(private productService: ProductService, private matDialog: MatDialog) { }
+  constructor(
+    private productService: ProductService,
+    private matDialog: MatDialog,
+    private companyService: CompanyService) { }
 
   ngOnInit() {
     this.dataSource = new MatTableDataSource();
@@ -35,10 +41,24 @@ export class ProductComponent implements OnInit, OnDestroy {
         this.getProducts();
       }
     );
+    this.companySubscription = this.companyService.companySubject.subscribe(
+      (companyId: number) => {
+        if (this.companyId !== companyId) {
+          this.companyId = companyId;
+          this.paginator.pageIndex = 0;
+          this.getProducts();
+        }
+      }
+    );
   }
 
   ngOnDestroy() {
-    this.productSubscription.unsubscribe();
+    if (this.productSubscription) {
+      this.productSubscription.unsubscribe();
+    }
+    if (this.companySubscription) {
+      this.companySubscription.unsubscribe();
+    }
   }
 
   applyFilter(filterValue: string) {

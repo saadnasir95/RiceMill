@@ -1,5 +1,6 @@
 using System;
 using MediatR;
+using TheRiceMill.Application.Enums;
 using TheRiceMill.Application.GatePasses.Models;
 using TheRiceMill.Application.Sales.Commands.CreateSale;
 using TheRiceMill.Common.Response;
@@ -20,5 +21,6 @@ namespace TheRiceMill.Application.Sales.Commands.UpdateSale
         public double Commission { get; set; }
         public DateTime Date { get; set; }
         public ChargeRequestViewModel[] AdditionalCharges { get; set; }
+        public CompanyType CompanyId { get; set; }
     }
 }

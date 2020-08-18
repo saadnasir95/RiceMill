@@ -10,6 +10,7 @@ namespace TheRiceMill.Persistence.Configurations
         {
             builder.Property(p => p.Name).IsRequired().HasMaxLength(50);
             builder.Property(p => p.NormalizedName).IsRequired().HasMaxLength(50);
+            builder.Property(p => p.CompanyId).HasDefaultValue(1);
         }
     }
 }

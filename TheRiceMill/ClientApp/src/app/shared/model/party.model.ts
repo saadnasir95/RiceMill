@@ -1,4 +1,6 @@
-export class Party {
+import { Base } from "./base.model";
+
+export class Party extends Base {
   id: number;
   name: string;
   phoneNumber: string;

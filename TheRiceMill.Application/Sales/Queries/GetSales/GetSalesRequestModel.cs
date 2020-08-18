@@ -1,4 +1,5 @@
 using MediatR;
+using TheRiceMill.Application.Enums;
 using TheRiceMill.Common.Response;
 
 namespace TheRiceMill.Application.Sales.Queries.GetSales
@@ -23,5 +24,6 @@ namespace TheRiceMill.Application.Sales.Queries.GetSales
         public int Page { get; set; }
         public int PageSize { get; set; }
         public string OrderBy { get; set; }
+        public CompanyType CompanyId { get; set; }
     }
 }

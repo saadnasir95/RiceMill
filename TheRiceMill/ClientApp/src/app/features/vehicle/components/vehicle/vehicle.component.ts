@@ -5,6 +5,7 @@ import { MatTableDataSource, MatSort, MatPaginator, MatDialog, MatDialogRef } fr
 import { VehicleModalComponent } from '../vehicle-modal/vehicle-modal.component';
 import { Subscription } from 'rxjs';
 import { VehicleResponse } from '../../../../shared/model/vehicle-response.model';
+import { CompanyService } from '../../../../shared/services/company.service';
 
 @Component({
   selector: 'app-vehicle',
@@ -18,12 +19,17 @@ export class VehicleComponent implements OnInit, OnDestroy {
   isLoadingData: Boolean = false;
   dialogRef: MatDialogRef<VehicleModalComponent>;
   vehicleSubscription: Subscription;
+  companySubscription: Subscription;
   vehicleSearch = '';
   sortDirection = 'false';
   sortOrderBy = '';
+  companyId = 0;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  constructor(private vehicleService: VehicleService, private matDialog: MatDialog) { }
+  constructor(
+    private vehicleService: VehicleService,
+    private matDialog: MatDialog,
+    private companyService: CompanyService) { }
 
   ngOnInit() {
     this.dataSource = new MatTableDataSource();
@@ -35,10 +41,24 @@ export class VehicleComponent implements OnInit, OnDestroy {
         this.getVehicles();
       }
     );
+    this.companySubscription = this.companyService.companySubject.subscribe(
+      (companyId: number) => {
+        if (this.companyId !== companyId) {
+          this.companyId = companyId;
+          this.paginator.pageIndex = 0;
+          this.getVehicles();
+        }
+      }
+    );
   }
 
   ngOnDestroy() {
-    this.vehicleSubscription.unsubscribe();
+    if (this.vehicleSubscription) {
+      this.vehicleSubscription.unsubscribe();
+    }
+    if (this.companySubscription) {
+      this.companySubscription.unsubscribe();
+    }
   }
 
   applyFilter(filterValue: string) {

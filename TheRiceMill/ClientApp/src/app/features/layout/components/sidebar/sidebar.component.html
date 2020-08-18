@@ -1,10 +1,19 @@
 <div class="logo">
-  <a href="https://www.creative-tim.com" class="simple-text">
+  <a [routerLink]="['/admin']" class="simple-text">
     <div class="logo-img">
       <img src="/assets/img/logo.png" />
     </div>
     Rice Mill
   </a>
+  <div class="text-center d-block my-2">
+    <mat-button-toggle-group name="companyId" aria-label="companyId" (valueChange)="onCompanyChange()"
+      [(ngModel)]="companyId">
+      <mat-button-toggle [value]="+companyType.ABRiceMill">{{companyType.ABRiceMill | companyType}}
+      </mat-button-toggle>
+      <mat-button-toggle [value]="+companyType.GDTrading">{{companyType.GDTrading | companyType}}
+      </mat-button-toggle>
+    </mat-button-toggle-group>
+  </div>
 </div>
 <div class="sidebar-wrapper">
   <div *ngIf="isMobileMenu()">

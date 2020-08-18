@@ -2,9 +2,11 @@
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using TheRiceMill.Application.Enums;
 using TheRiceMill.Application.Exceptions;
 using TheRiceMill.Application.Products.Models;
 using TheRiceMill.Application.Vehicles.Models;
+using TheRiceMill.Common.Extensions;
 using TheRiceMill.Common.Response;
 using TheRiceMill.Common.Util;
 using TheRiceMill.Domain.Entities;
@@ -39,12 +41,14 @@ namespace TheRiceMill.Application.Vehicles.Commands
             }
 
             vehicle.PlateNo = request.PlateNo.ToUpper();
+            vehicle.CompanyId = request.CompanyId.ToInt();
             _context.Update(vehicle);
             await _context.SaveChangesAsync(cancellationToken);
             return new ResponseViewModel().CreateOk(new VehicleInfoResponseModel()
             {
                 Id = vehicle.Id,
                 PlateNo = vehicle.PlateNo,
+                CompanyId = (CompanyType)vehicle.CompanyId,
                 CreatedDate = new DateConverter().ConvertToDateTimeIso(vehicle.CreatedDate),
             });
         }

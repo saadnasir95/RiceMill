@@ -3,8 +3,10 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using TheRiceMill.Application.Enums;
 using TheRiceMill.Application.Products.Models;
 using TheRiceMill.Application.Vehicles.Models;
+using TheRiceMill.Common.Extensions;
 using TheRiceMill.Common.Response;
 using TheRiceMill.Common.Util;
 using TheRiceMill.Persistence;
@@ -26,15 +28,16 @@ namespace TheRiceMill.Application.Vehicles.Queries
         {
             request.SetDefaultValue();
             List<VehicleInfoResponseModel> list = _context.Vehicles.GetMany(
-                p => p.PlateNo.Contains(request.Search), request.OrderBy,
+                p => p.PlateNo.Contains(request.Search) && p.CompanyId == request.CompanyId.ToInt(), request.OrderBy,
                 request.Page,
                 request.PageSize, request.IsDescending).Select(vehicle => new VehicleInfoResponseModel()
-            {
-                Id = vehicle.Id,
-                PlateNo = vehicle.PlateNo,
-                CreatedDate = new DateConverter().ConvertToDateTimeIso(vehicle.CreatedDate),
-            }).ToList();
-            var count = _context.Vehicles.Count(p => p.PlateNo.Contains(request.Search));
+                {
+                    Id = vehicle.Id,
+                    PlateNo = vehicle.PlateNo,
+                    CompanyId = (CompanyType)vehicle.CompanyId,
+                    CreatedDate = new DateConverter().ConvertToDateTimeIso(vehicle.CreatedDate),
+                }).ToList();
+            var count = _context.Vehicles.Count(p => p.PlateNo.Contains(request.Search) && p.CompanyId == request.CompanyId.ToInt());
             return Task.FromResult(new ResponseViewModel().CreateOk(list, count));
         }
     }

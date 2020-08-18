@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Internal;
 using TheRiceMill.Application.Constants;
@@ -85,8 +86,10 @@ namespace TheRiceMill.Application.Purchases.Commands.UpdatePurchase
                 }
 
                 partyledger.Amount = request.TotalPrice - request.Commission;
+                partyledger.CompanyId = request.CompanyId.ToInt();
                 partyledger.Date = purchase.Date;
                 companyLedger.Amount = -request.TotalPrice;
+                companyLedger.CompanyId = request.CompanyId.ToInt();
                 companyLedger.Date = purchase.Date;
 
                 _context.Ledgers.Update(companyLedger);
@@ -96,6 +99,7 @@ namespace TheRiceMill.Application.Purchases.Commands.UpdatePurchase
                 purchase.BoriQuantity = request.BoriQuantity;
                 purchase.BagQuantity = request.BagQuantity;
                 purchase.TotalMaund = request.TotalMaund;
+                purchase.CompanyId = purchase.CompanyId.ToInt();
                 await _context.SaveChangesAsync(cancellationToken);
                 return new ResponseViewModel().CreateOk(new PurchaseResponseViewModel()
                 {
@@ -111,7 +115,8 @@ namespace TheRiceMill.Application.Purchases.Commands.UpdatePurchase
                     Rate = purchase.Rate,
                     BagQuantity = purchase.BagQuantity,
                     BoriQuantity = purchase.BoriQuantity,
-                    CreatedDate = new DateConverter().ConvertToDateTimeIso(purchase.CreatedDate)
+                    CreatedDate = new DateConverter().ConvertToDateTimeIso(purchase.CreatedDate),
+                    CompanyId = (CompanyType)purchase.CompanyId
                 });
             }
         }

@@ -11,6 +11,7 @@ namespace TheRiceMill.Application.GatePasses.Models
     public class UpdateGatePassRequestModel : IRequest<ResponseViewModel>
     {
         public int Id { get; set; }
+        public CompanyType CompanyId { get; set; }
         /// <summary>
         /// The Type of the GatePass 1 = OutwardGatePass and 2 = InwardGatePass
         /// </summary>
@@ -52,6 +53,7 @@ namespace TheRiceMill.Application.GatePasses.Models
         public UpdateGatePassRequestModelValidator()
         {
             RuleFor(p => p.Type).IsInEnum().WithMessage(Messages.IncorrectValue);
+            RuleFor(p => p.CompanyId).IsInEnum().WithMessage(Messages.IncorrectValue);
             RuleFor(p => p.PartyId).Must(p => p > 0).When(p => p.Party == null).WithMessage(Messages.IncorrectValue);
             RuleFor(p => p.ProductId).Must(p => p > 0).When(p => p.Product == null).WithMessage(Messages.IncorrectValue);
             RuleFor(p => p.VehicleId).Must(p => p > 0).When(p => p.Vehicle == null).WithMessage(Messages.IncorrectValue);

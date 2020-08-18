@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TheRiceMill.Persistence;
 
 namespace TheRiceMill.Persistence.Migrations
 {
     [DbContext(typeof(TheRiceMillDbContext))]
-    partial class TheRiceMillDbContextModelSnapshot : ModelSnapshot
+    [Migration("20200816135449_remove-sale-relation-from-product-party-vehicle")]
+    partial class removesalerelationfromproductpartyvehicle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -209,8 +211,6 @@ namespace TheRiceMill.Persistence.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("CompanyId");
-
                     b.Property<string>("CreatedBy");
 
                     b.Property<DateTime>("CreatedDate");
@@ -236,8 +236,6 @@ namespace TheRiceMill.Persistence.Migrations
                     b.Property<string>("AccountNumber");
 
                     b.Property<int>("BankId");
-
-                    b.Property<int>("CompanyId");
 
                     b.Property<string>("CreatedBy");
 
@@ -265,8 +263,6 @@ namespace TheRiceMill.Persistence.Migrations
                     b.Property<int>("BankAccountId");
 
                     b.Property<string>("ChequeNumber");
-
-                    b.Property<int>("CompanyId");
 
                     b.Property<string>("CreatedBy");
 
@@ -348,10 +344,6 @@ namespace TheRiceMill.Persistence.Migrations
 
                     b.Property<string>("Broker");
 
-                    b.Property<int>("CompanyId")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(1);
-
                     b.Property<string>("CreatedBy");
 
                     b.Property<DateTime>("CreatedDate");
@@ -411,10 +403,6 @@ namespace TheRiceMill.Persistence.Migrations
 
                     b.Property<double>("Amount");
 
-                    b.Property<int>("CompanyId")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(1);
-
                     b.Property<string>("CreatedBy");
 
                     b.Property<DateTime>("CreatedDate");
@@ -445,10 +433,6 @@ namespace TheRiceMill.Persistence.Migrations
                     b.Property<string>("Address")
                         .HasMaxLength(255);
 
-                    b.Property<int>("CompanyId")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(1);
-
                     b.Property<string>("CreatedBy");
 
                     b.Property<DateTime>("CreatedDate");
@@ -478,10 +462,6 @@ namespace TheRiceMill.Persistence.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CompanyId")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(1);
 
                     b.Property<string>("CreatedBy");
 
@@ -515,10 +495,6 @@ namespace TheRiceMill.Persistence.Migrations
                     b.Property<double>("BoriQuantity");
 
                     b.Property<double>("Commission");
-
-                    b.Property<int>("CompanyId")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(1);
 
                     b.Property<string>("CreatedBy");
 
@@ -599,10 +575,6 @@ namespace TheRiceMill.Persistence.Migrations
 
                     b.Property<double>("Commission");
 
-                    b.Property<int>("CompanyId")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(1);
-
                     b.Property<string>("CreatedBy");
 
                     b.Property<DateTime>("CreatedDate");
@@ -631,8 +603,6 @@ namespace TheRiceMill.Persistence.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CompanyId");
 
                     b.Property<string>("CreatedBy");
 
@@ -750,10 +720,6 @@ namespace TheRiceMill.Persistence.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<int>("CompanyId")
-                        .ValueGeneratedOnAdd()
-                        .HasDefaultValue(1);
 
                     b.Property<string>("CreatedBy");
 

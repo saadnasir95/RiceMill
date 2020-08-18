@@ -6,6 +6,7 @@ namespace TheRiceMill.Application.GatePasses.Models
     public class GatePassResponseModel
     {
         public int Id { get; set; }
+        public CompanyType CompanyId { get; set; }
         /// <summary>
         /// The Type of the GatePass 1 = OutwardGatePass and 2 = InwardGatePass
         /// </summary>

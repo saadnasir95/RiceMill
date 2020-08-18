@@ -8,6 +8,7 @@ namespace TheRiceMill.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Vehicle> builder)
         {
+            builder.Property(v => v.CompanyId).HasDefaultValue(1);
         }
     }
 }

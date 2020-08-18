@@ -14,7 +14,7 @@ namespace TheRiceMill.Persistence.Configurations
             builder.HasOne(p => p.Purchase)
                 .WithMany(b => b.Charges)
                 .HasForeignKey(p => p.PurchaseId);
-
+            builder.Ignore(c => c.CompanyId);
         }
     }
 }

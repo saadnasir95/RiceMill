@@ -62,6 +62,7 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
             purchase.BoriQuantity = request.BoriQuantity;
             purchase.BagQuantity = request.BagQuantity;
             purchase.Date = request.Date;
+            purchase.CompanyId = request.CompanyId.ToInt();
             _context.Purchases.Add(purchase);
 
             List<GatePass> gatepasses = new List<GatePass>();
@@ -83,7 +84,8 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
                 TransactionType = TransactionType.Company.ToInt(),
                 LedgerType = (int)LedgerType.Purchase,
                 TransactionId = transactionId,
-                Date = purchase.Date
+                Date = purchase.Date,
+                CompanyId = request.CompanyId.ToInt()
             };
             var partyLedger = new Domain.Entities.Ledger()
             {
@@ -93,7 +95,8 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
                 TransactionType = TransactionType.Party.ToInt(),
                 LedgerType = (int)LedgerType.Purchase,
                 TransactionId = transactionId,
-                Date = purchase.Date
+                Date = purchase.Date,
+                CompanyId = request.CompanyId.ToInt()
             };
             _context.Add(companyLedger);
             _context.Add(partyLedger);
@@ -127,7 +130,8 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
                 TotalPrice = purchase.TotalPrice,
                 Rate = purchase.Rate,
                 Date = new DateConverter().ConvertToDateTimeIso(purchase.Date),
-                CreatedDate = new DateConverter().ConvertToDateTimeIso(purchase.CreatedDate)
+                CreatedDate = new DateConverter().ConvertToDateTimeIso(purchase.CreatedDate),
+                CompanyId = (CompanyType)purchase.CompanyId
             }); ;
         }
     }

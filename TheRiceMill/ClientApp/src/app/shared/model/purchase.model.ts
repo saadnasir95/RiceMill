@@ -3,8 +3,9 @@ import { Vehicle } from './vehicle.model';
 import { Product } from './product.model';
 import { AdditionalCharges } from './additionalcharges.model';
 import { Gatepass } from './gatepass.model';
+import { Base } from './base.model';
 
-export class Purchase {
+export class Purchase extends Base {
   id: number;
   gatepassIds: Array<number>;
   gatepasses: Array<Gatepass>;
@@ -37,8 +38,4 @@ export class Purchase {
   percentCommission: number;
   commission: number;
   additionalCharges: AdditionalCharges[];
-
-  constructor(){
-    
-  }
 }

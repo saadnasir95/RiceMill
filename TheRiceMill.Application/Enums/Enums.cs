@@ -19,4 +19,9 @@
         Stockpile,
         Outside
     }
+    public enum CompanyType
+    {
+        ABRiceMill = 1,
+        GDTrading = 2
+    }
 }

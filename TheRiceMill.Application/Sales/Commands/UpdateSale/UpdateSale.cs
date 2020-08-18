@@ -83,8 +83,10 @@ namespace TheRiceMill.Application.Sales.Commands.UpdateSale
 
                 partyledger.Amount = request.TotalPrice - request.Commission;
                 partyledger.Date = sale.Date;
+                partyledger.CompanyId = request.CompanyId.ToInt();
                 companyLedger.Amount = -request.TotalPrice;
                 companyLedger.Date = sale.Date;
+                companyLedger.CompanyId = request.CompanyId.ToInt();
 
                 _context.Ledgers.Update(companyLedger);
                 _context.Ledgers.Update(partyledger);
@@ -93,6 +95,7 @@ namespace TheRiceMill.Application.Sales.Commands.UpdateSale
                 sale.BoriQuantity = request.BoriQuantity;
                 sale.BagQuantity = request.BagQuantity;
                 sale.TotalMaund = request.TotalMaund;
+                sale.CompanyId = request.CompanyId.ToInt();
                 await _context.SaveChangesAsync(cancellationToken);
                 return new ResponseViewModel().CreateOk(new SaleResponseViewModel()
                 {
@@ -108,7 +111,8 @@ namespace TheRiceMill.Application.Sales.Commands.UpdateSale
                     Rate = sale.Rate,
                     BagQuantity = sale.BagQuantity,
                     BoriQuantity = sale.BoriQuantity,
-                    CreatedDate = new DateConverter().ConvertToDateTimeIso(sale.CreatedDate)
+                    CreatedDate = new DateConverter().ConvertToDateTimeIso(sale.CreatedDate),
+                    CompanyId = (CompanyType)sale.CompanyId
                 });
             }
         }

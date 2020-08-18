@@ -22,7 +22,7 @@ namespace TheRiceMill.Application.Vehicles.Commands
 
         public Task<ResponseViewModel> Handle(DeleteVehicleRequestModel request, CancellationToken cancellationToken)
         {
-            var canDelete = _context.Vehicles.Any(p => p.Id == request.Id && !p.GatePasses.Any() && !p.Sales.Any());
+            var canDelete = _context.Vehicles.Any(p => p.Id == request.Id && !p.GatePasses.Any());
             if (!canDelete)
             {
                 throw new CannotDeleteException(nameof(Vehicle), request.Id);

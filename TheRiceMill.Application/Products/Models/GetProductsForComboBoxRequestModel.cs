@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using TheRiceMill.Application.Enums;
 using TheRiceMill.Common.Response;
 
 namespace TheRiceMill.Application.Products.Models
@@ -15,6 +16,7 @@ namespace TheRiceMill.Application.Products.Models
         }
         public string Search { get; set; }
         public int PageSize { get; set; }
+        public CompanyType CompanyId { get; set; }
     }
 
 

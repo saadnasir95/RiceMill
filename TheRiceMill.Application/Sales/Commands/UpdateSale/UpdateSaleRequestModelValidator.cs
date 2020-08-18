@@ -11,6 +11,7 @@ namespace TheRiceMill.Application.Sales.Commands.UpdateSale
             RuleFor(p => p.TotalMaund).Required();
             RuleFor(p => p.Rate).Required();
             RuleFor(p => p.TotalPrice).Required();
+            RuleFor(p => p.CompanyId).IsInEnum().WithMessage(Messages.IncorrectValue);
         }
     }
 }

@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { SidebarItems } from '../../../../shared/model/sidebar-item.model';
 import { AuthService } from '../../../../shared/services/auth.service';
 import { TokenService } from '../../../../shared/services/token.service';
+import { CompanyType } from '../../../../shared/model/enums';
+import { CompanyService } from '../../../../shared/services/company.service';
 declare const $: any;
 @Component({
   selector: 'app-sidebar',
@@ -10,9 +12,15 @@ declare const $: any;
 })
 export class SidebarComponent implements OnInit {
   menuItems: SidebarItems[];
-  constructor(private authService: AuthService, private tokenService: TokenService) { }
+  companyType = CompanyType;
+  companyId = 0;
+  constructor(
+    private authService: AuthService,
+    private tokenService: TokenService,
+    private companyService: CompanyService) { }
 
   ngOnInit() {
+    this.companyId = this.companyService.getCompanyId();
     const userRoles: string[] = this.tokenService.userInfo.roles.split(',');
     const administrator = [
       { path: '/admin/gatepass', title: 'Gate Pass', icon: 'fas fa-passport', class: '' },
@@ -48,6 +56,9 @@ export class SidebarComponent implements OnInit {
   }
   logout() {
     this.authService.logout();
+  }
+  onCompanyChange() {
+    this.companyService.setCompanyId(+this.companyId);
   }
 
 }

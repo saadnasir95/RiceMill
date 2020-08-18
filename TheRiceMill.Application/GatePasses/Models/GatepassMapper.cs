@@ -40,9 +40,12 @@ namespace TheRiceMill.Application.GatePasses.Models
                     },
                     VehicleId = _gatepass.Vehicle.Id,
                     ProductId = _gatepass.Product.Id,
+                    LotNumber = _gatepass.LotNumber,
+                    BiltyNumber = _gatepass.BiltyNumber,
+                    CompanyId = (CompanyType)_gatepass.CompanyId
                 });
             });
-            return gatePassResponseModels; 
+            return gatePassResponseModels;
         }
 
         public GatePassResponseModel Map(GatePass _gatepass)

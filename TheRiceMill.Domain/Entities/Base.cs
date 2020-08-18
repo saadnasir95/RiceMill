@@ -12,6 +12,7 @@ namespace TheRiceMill.Domain.Entities
         /// Id of the Entity
         /// </summary>
         public int Id { get; set; }
+        public int CompanyId { get; set; }
         /// <summary>
         /// The Date it was created
         /// </summary>

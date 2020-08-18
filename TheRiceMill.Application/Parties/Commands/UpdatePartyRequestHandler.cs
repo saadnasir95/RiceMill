@@ -3,8 +3,10 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using TheRiceMill.Application.Companies.Models;
+using TheRiceMill.Application.Enums;
 using TheRiceMill.Application.Exceptions;
 using TheRiceMill.Application.Products.Models;
+using TheRiceMill.Common.Extensions;
 using TheRiceMill.Common.Response;
 using TheRiceMill.Common.Util;
 using TheRiceMill.Domain.Entities;
@@ -23,13 +25,13 @@ namespace TheRiceMill.Application.Companies.Commands
 
         public async Task<ResponseViewModel> Handle(UpdatePartyRequestModel request, CancellationToken cancellationToken)
         {
-            var company = await _context.Parties.FindAsync(request.Id);
-            if (company == null)
+            var party = await _context.Parties.FindAsync(request.Id);
+            if (party == null)
             {
                 throw new NotFoundException(nameof(Product), request.Id);
             }
 
-            if (!company.NormalizedName.Equals(request.Name.ToUpper()))
+            if (!party.NormalizedName.Equals(request.Name.ToUpper()))
             {
                 if (_context.Parties.Any(p => p.NormalizedName.Equals(request.Name.ToUpper())))
                 {
@@ -37,19 +39,21 @@ namespace TheRiceMill.Application.Companies.Commands
                 }
             }
 
-            company.Name = request.Name;
-            company.NormalizedName = request.Name.ToUpper();
-            company.Address = request.Address;
-            company.PhoneNumber = request.PhoneNumber;
-            _context.Parties.Update(company);
+            party.Name = request.Name;
+            party.NormalizedName = request.Name.ToUpper();
+            party.Address = request.Address;
+            party.PhoneNumber = request.PhoneNumber;
+            party.CompanyId = request.CompanyId.ToInt();
+            _context.Parties.Update(party);
             await _context.SaveChangesAsync(cancellationToken);
             return new ResponseViewModel().CreateOk(new PartyInfoResponseModel()
             {
-                Name = company.Name,
-                Id = company.Id,
-                Address = company.Address,
-                PhoneNumber = company.PhoneNumber,
-                CreatedDate = new DateConverter().ConvertToDateTimeIso(company.CreatedDate),
+                Name = party.Name,
+                Id = party.Id,
+                Address = party.Address,
+                PhoneNumber = party.PhoneNumber,
+                CreatedDate = new DateConverter().ConvertToDateTimeIso(party.CreatedDate),
+                CompanyId = (CompanyType)party.CompanyId
             });
         }
     }

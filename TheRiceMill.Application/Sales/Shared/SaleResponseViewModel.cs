@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using TheRiceMill.Application.Enums;
 using TheRiceMill.Application.GatePasses.Models;
 using TheRiceMill.Application.Sales.Commands.CreateSale;
 
@@ -42,6 +43,6 @@ namespace TheRiceMill.Application.Sales.Shared
         public double Vibration { get; set; }
         public string CreatedDate { get; set; }
         public string Date { get; set; }
-
+        public CompanyType CompanyId { get; set; }
     }
 }

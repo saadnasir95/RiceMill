@@ -22,6 +22,7 @@ namespace TheRiceMill.Application.GatePasses.Models
             }
 
         }
+        public CompanyType CompanyId { get; set; }
         public string Search { get; set; }
         public bool IsDescending { get; set; }
         public int Page { get; set; }
@@ -36,6 +37,7 @@ namespace TheRiceMill.Application.GatePasses.Models
     {
         public GetGatePassRequestModelValidator()
         {
+            RuleFor(p => p.CompanyId).IsInEnum().WithMessage(Messages.IncorrectValue);
             RuleFor(p => p.Page).GreaterThan(0).WithMessage(Messages.LessThan(0));
             RuleFor(p => p.PageSize).GreaterThan(0).WithMessage(Messages.LessThan(0));
         }

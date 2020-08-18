@@ -21,5 +21,6 @@ namespace TheRiceMill.Application.Purchases.Commands.UpdatePurchase
         public double Commission { get; set; }
         public DateTime Date { get; set; }
         public ChargeRequestViewModel[] AdditionalCharges { get; set; }
+        public CompanyType CompanyId { get; set; }
     }
 }

@@ -7,6 +7,7 @@ import { PurchaseService } from '../../../../shared/services/purchase.service';
 import { PurchaseResponse } from '../../../../shared/model/purchase-response.model';
 import { PurchaseReceiptComponent } from '../purchase-receipt/purchase-receipt.component';
 import { NotificationService } from '../../../../shared/services/notification.service';
+import { CompanyService } from '../../../../shared/services/company.service';
 
 @Component({
   selector: 'app-purchase',
@@ -14,22 +15,25 @@ import { NotificationService } from '../../../../shared/services/notification.se
   styleUrls: ['./purchase.component.scss']
 })
 export class PurchaseComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['Id', 'createdDate','totalMaund','boriQuantity','bagQuantity', 'brokery','rate', 'totalPrice','totalGatepasses', 'Action'];
+  displayedColumns: string[] = ['Id', 'createdDate', 'totalMaund', 'boriQuantity', 'bagQuantity', 'brokery', 'rate', 'totalPrice', 'totalGatepasses', 'Action'];
   dataSource: MatTableDataSource<Purchase>;
   purchaseList: Purchase[];
   isLoadingData: Boolean = false;
   dialogRef: MatDialogRef<PurchaseModalComponent>;
   purchaseSubscription: Subscription;
+  companySubscription: Subscription;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(PurchaseReceiptComponent) purchaseReceiptComponent: PurchaseReceiptComponent;
   purchaseSearch = '';
   sortDirection = 'false';
   sortOrderBy = '';
+  companyId = 0;
   constructor(
     private purchaseService: PurchaseService,
     private matDialog: MatDialog,
-    private notificationService: NotificationService) { }
+    private notificationService: NotificationService,
+    private companyService: CompanyService) { }
 
   ngOnInit() {
     this.dataSource = new MatTableDataSource();
@@ -44,10 +48,24 @@ export class PurchaseComponent implements OnInit, OnDestroy {
         }
       }
     );
+    this.companySubscription = this.companyService.companySubject.subscribe(
+      (companyId: number) => {
+        if (this.companyId !== companyId) {
+          this.companyId = companyId;
+          this.paginator.pageIndex = 0;
+          this.getPurchaseList();
+        }
+      }
+    );
   }
 
   ngOnDestroy() {
-    this.purchaseSubscription.unsubscribe();
+    if (this.purchaseSubscription) {
+      this.purchaseSubscription.unsubscribe();
+    }
+    if (this.companySubscription) {
+      this.companySubscription.unsubscribe();
+    }
   }
 
   applyFilter(filterValue: string) {

@@ -1,5 +1,6 @@
 using FluentValidation;
 using TheRiceMill.Application.Extensions;
+using TheRiceMill.Common.Constants;
 
 namespace TheRiceMill.Application.Sales.Queries.GetSales
 {
@@ -9,6 +10,7 @@ namespace TheRiceMill.Application.Sales.Queries.GetSales
         {
             RuleFor(p => p.Page).Required();
             RuleFor(p => p.PageSize).Required();
+            RuleFor(p => p.CompanyId).IsInEnum().WithMessage(Messages.IncorrectValue);
         }
     }
 }

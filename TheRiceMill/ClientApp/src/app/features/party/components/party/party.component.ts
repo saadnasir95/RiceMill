@@ -5,6 +5,7 @@ import { PartyModalComponent } from '../party-modal/party-modal.component';
 import { Subscription } from 'rxjs';
 import { PartyService } from '../../../../shared/services/party.service';
 import { PartyResponse } from '../../../../shared/model/party-response.model';
+import { CompanyService } from '../../../../shared/services/company.service';
 
 @Component({
   selector: 'app-party',
@@ -18,28 +19,47 @@ export class PartyComponent implements OnInit, OnDestroy {
   parties: Party[];
   isLoadingData: Boolean = false;
   dialogRef: MatDialogRef<PartyModalComponent>;
-  PartySubscription: Subscription;
+  partySubscription: Subscription;
+  companySubscription: Subscription;
   partySearch = '';
   sortDirection = 'false';
   sortOrderBy = '';
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
-  constructor(private partyService: PartyService, private matDialog: MatDialog) { }
+  companyId = 0;
+  constructor(
+    private partyService: PartyService,
+    private matDialog: MatDialog,
+    private companyService: CompanyService) { }
 
   ngOnInit() {
     this.dataSource = new MatTableDataSource();
     this.paginator.pageSize = 10;
     this.getParties();
-    this.PartySubscription = this.partyService.partyEmitter.subscribe(
+    this.partySubscription = this.partyService.partyEmitter.subscribe(
       () => {
         this.paginator.pageIndex = 0;
         this.getParties();
       }
     );
+    this.companySubscription = this.companyService.companySubject.subscribe(
+      (companyId: number) => {
+        if (this.companyId !== companyId) {
+          this.companyId = companyId;
+          this.paginator.pageIndex = 0;
+          this.getParties();
+        }
+      }
+    );
   }
 
   ngOnDestroy() {
-    this.PartySubscription.unsubscribe();
+    if (this.partySubscription) {
+      this.partySubscription.unsubscribe();
+    }
+    if (this.companySubscription) {
+      this.companySubscription.unsubscribe();
+    }
   }
 
   applyFilter(filterValue: string) {

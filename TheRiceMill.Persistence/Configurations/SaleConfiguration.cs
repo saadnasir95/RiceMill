@@ -8,7 +8,7 @@ namespace TheRiceMill.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Sale> builder)
         {
-           
+            builder.Property(s => s.CompanyId).HasDefaultValue(1);
         }
     }
 }
