@@ -57,6 +57,7 @@ namespace TheRiceMill.Application.GatePasses.Models
     }
     public class PartyRequestModel
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string PhoneNumber { get; set; }
         public string Address { get; set; }

@@ -13,8 +13,9 @@ using TheRiceMill.Common.Util;
 using TheRiceMill.Domain.Entities;
 using TheRiceMill.Persistence;
 using TheRiceMill.Persistence.Extensions;
+using static TheRiceMill.Application.Ledgers.Queries.GetLedgerInfo.GetLedgerInfoRequestHandler;
 
-namespace TheRiceMill.Application.Ledger.Queries.GetLedgers
+namespace TheRiceMill.Application.Ledgers.Queries.GetLedgers
 {
     public class GetPartyLedgerRequestHandler : IRequestHandler<GetPartyLedgerRequestModel, ResponseViewModel>
     {
@@ -55,6 +56,11 @@ namespace TheRiceMill.Application.Ledger.Queries.GetLedgers
                         Date = dateConverter.ConvertToDateTimeIso(p.Date),
                         TransactionId = p.TransactionId,
                     }).ToListAsync(cancellationToken);
+
+            list.ForEach(l => {
+                this.GetLedgerDetail(l);
+            });
+
             var count = await _context.Ledgers.CountAsync(query, cancellationToken);
             var netBalance = await _context.Ledgers.SumAsync(query, p => p.Amount, cancellationToken);
             var firstLedger = list.FirstOrDefault();
@@ -74,6 +80,42 @@ namespace TheRiceMill.Application.Ledger.Queries.GetLedgers
             }, count);
         }
 
+        public void GetLedgerDetail(LedgerResponse ledger)
+        {
+            if ((int)LedgerType.Purchase == ledger.LedgerType)
+            {
+                var purchase = _context.Purchases.GetBy(p => p.Id == ledger.Id, p => p.Include(pr => pr.GatePasses).ThenInclude(g => g.Product).Include(c => c.Charges));
+                if (purchase != null)
+                {
+                    ledger.AdditionalCharges = purchase.Charges.Sum(c => c.Total);
+                    ledger.BagQuantity = purchase.BagQuantity;
+                    ledger.BoriQuantity = purchase.BoriQuantity;
+                    ledger.Commission = purchase.Commission;
+                    ledger.GatepassIds = String.Join(", ", purchase.GatePasses.Select(c => c.Id));
+                    ledger.Product = String.Join(", ", purchase.GatePasses.Select(c => c.Product.Name).Distinct());
+                    ledger.TotalMaund = purchase.TotalMaund;
+                    ledger.Rate = purchase.Rate;
+                    ledger.RateBasedOn = purchase.RateBasedOn;
+                }
+            }
+            else if ((int)LedgerType.Sale == ledger.LedgerType)
+            {
+                var sale = _context.Sales.GetBy(p => p.Id == ledger.Id, p => p.Include(pr => pr.GatePasses).ThenInclude(g => g.Product).Include(c => c.Charges));
+                if (sale != null)
+                {
+                    ledger.AdditionalCharges = sale.Charges.Sum(c => c.Total);
+                    ledger.BagQuantity = sale.BagQuantity;
+                    ledger.BoriQuantity = sale.BoriQuantity;
+                    ledger.Commission = sale.Commission;
+                    ledger.GatepassIds = String.Join(", ", sale.GatePasses.Select(c => c.Id));
+                    ledger.Product = String.Join(", ", sale.GatePasses.Select(c => c.Product.Name).Distinct());
+                    ledger.TotalMaund = sale.TotalMaund;
+                    ledger.Rate = sale.Rate;
+                    ledger.RateBasedOn = sale.RateBasedOn;
+                }
+            }
+        }
+
         class Response
         {
             public List<LedgerResponse> LedgerResponses { get; set; }
@@ -90,6 +132,16 @@ namespace TheRiceMill.Application.Ledger.Queries.GetLedgers
             public Party Party { get; set; }
             public string Date { get; set; }
             public string TransactionId { get; set; }
+            public string Product { get; set; }
+            public double BoriQuantity { get; set; }
+            public double BagQuantity { get; set; }
+            public double TotalMaund { get; set; }
+            public double AdditionalCharges { get; set; }
+            public double Commission { get; set; }
+            public string GatepassIds { get; set; }
+            public RateBasedOn RateBasedOn { get; set; }
+            public double Rate { get; set; }
+
         }
     }
 }

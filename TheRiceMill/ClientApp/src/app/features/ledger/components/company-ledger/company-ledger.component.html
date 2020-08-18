@@ -44,7 +44,15 @@
                 {{(ledgerData.netBalance) | localCurrency}}</h4>
             </div>
           </div>
-          <div class="mat-elevation-z8">
+          <ag-grid-angular
+            style="height: 500px;"
+            class="ag-theme-balham w-100"
+            [gridOptions]="gridOptions">
+          </ag-grid-angular>
+          <mat-paginator [pageSizeOptions]="[10,25, 50, 100,200]" [showFirstLastButtons]="true" (page)="changePage()">
+          </mat-paginator>
+
+          <!-- <div class="mat-elevation-z8">
             <table class="table-responsive-sm" mat-table [dataSource]="dataSource" multiTemplateDataRows>
               <ng-container matColumnDef="createdDate">
                 <th mat-header-cell *matHeaderCellDef> Date</th>
@@ -83,9 +91,80 @@
                 </td>
               </ng-container>
 
+              <ng-container matColumnDef="product">
+                <th mat-header-cell *matHeaderCellDef> Product </th>
+                <td mat-cell *matCellDef="let ledger">
+                  <span>
+                    {{ledger.product }}
+                  </span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="gatepassIds">
+                <th mat-header-cell *matHeaderCellDef> Gatepass Ids </th>
+                <td mat-cell *matCellDef="let ledger">
+                  <span>
+                    {{ledger.gatepassIds }}
+                  </span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="boriQuantity">
+                <th mat-header-cell *matHeaderCellDef> Bori Quantity </th>
+                <td mat-cell *matCellDef="let ledger">
+                  <span>
+                    {{ledger.boriQuantity }}
+                  </span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="bagQuantity">
+                <th mat-header-cell *matHeaderCellDef> Bag Quantity </th>
+                <td mat-cell *matCellDef="let ledger">
+                  <span>
+                    {{ledger.bagQuantity }}
+                  </span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="totalMaund">
+                <th mat-header-cell *matHeaderCellDef> Total Maund </th>
+                <td mat-cell *matCellDef="let ledger">
+                  <span>
+                    {{ledger.totalMaund}}
+                  </span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="rate">
+                <th mat-header-cell *matHeaderCellDef> Rate </th>
+                <td mat-cell *matCellDef="let ledger">
+                  <span>
+                    {{ledger.rate}}
+                  </span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="rateBasedOn">
+                <th mat-header-cell *matHeaderCellDef> Rate BasedOn </th>
+                <td mat-cell *matCellDef="let ledger">
+                  <span>
+                    {{ledger.rateBasedOn | rateBasedOn}}
+                  </span>
+                </td>
+              </ng-container>
+
+              <ng-container matColumnDef="commission">
+                <th mat-header-cell *matHeaderCellDef> Commission </th>
+                <td mat-cell *matCellDef="let ledger">
+                  <span>
+                    {{ledger.commission}}
+                  </span>
+                </td>
+              </ng-container>
+
               <ng-container matColumnDef="expandedDetail">
                 <td mat-cell *matCellDef="let ledger" [attr.colspan]="displayedColumns.length">
-                  <!-- <mat-divider></mat-divider> -->
                   <div class="example-element-detail"
                     [@detailExpand]="ledger.id == expandedId && ledger.ledgerType == expandedLedgerType ? 'expanded' : 'collapsed'">
                     <span *ngIf="isLoading"><i class="fas fa-spinner fa-spin"></i>&nbsp;</span>
@@ -117,7 +196,6 @@
                     </div>
 
                   </div>
-                  <!-- <mat-divider></mat-divider> -->
                 </td>
               </ng-container>
 
@@ -128,9 +206,7 @@
               </ng-container>
 
               <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="example-element-row"
-                [class.example-expanded-row]="expandedId === row.id && expandedLedgerType===row.ledgerType"
-                (click)="getLedgerInfo(row)">
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;" class="example-element-row">
               </tr>
               <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
               <div *ngIf="ledgerData && ledgerData.ledgerResponses.length==0">
@@ -138,8 +214,8 @@
               </div>
             </table>
             <mat-paginator [pageSizeOptions]="[25, 50, 100,200]" [showFirstLastButtons]="true" (page)="changePage()">
-            </mat-paginator>
-          </div>
+            </mat-paginator> 
+          </div>-->
         </div>
       </div>
     </div>

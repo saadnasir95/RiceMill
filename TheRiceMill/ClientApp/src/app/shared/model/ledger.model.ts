@@ -1,4 +1,5 @@
 import { Party } from "./party.model";
+import { RateBasedOn } from "./enums";
 
 export class Ledger {
   id: number;
@@ -10,4 +11,13 @@ export class Ledger {
   transactionId: string;
   partyId: number;
   party: Party;
+  Product:string;
+  BoriQuantity:number;
+  BagQuantity:number;
+  TotalMaund:number;
+  AdditionalCharges:number;
+  Commission:number;
+  GatepassIds:string;
+  RateBasedOn:RateBasedOn; 
+  Rate:number; 
 }

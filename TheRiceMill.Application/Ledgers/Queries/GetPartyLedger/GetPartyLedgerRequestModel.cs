@@ -2,7 +2,7 @@ using MediatR;
 using TheRiceMill.Application.Constants;
 using TheRiceMill.Common.Response;
 
-namespace TheRiceMill.Application.Ledger.Queries.GetLedgers
+namespace TheRiceMill.Application.Ledgers.Queries.GetLedgers
 {
     public class GetPartyLedgerRequestModel : IRequest<ResponseViewModel>
     {

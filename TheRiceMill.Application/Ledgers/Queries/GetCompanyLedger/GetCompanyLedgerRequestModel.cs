@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using TheRiceMill.Common.Response;
 
-namespace TheRiceMill.Application.Ledger.Queries.GetCompanyLedger
+namespace TheRiceMill.Application.Ledgers.Queries.GetCompanyLedger
 {
     public class GetCompanyLedgerRequestModel : IRequest<ResponseViewModel>
     {

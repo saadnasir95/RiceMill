@@ -10,7 +10,7 @@ using TheRiceMill.Domain.Entities;
 using TheRiceMill.Persistence;
 using TheRiceMill.Persistence.Extensions;
 
-namespace TheRiceMill.Application.Ledger.Queries.GetLedgerInfo
+namespace TheRiceMill.Application.Ledgers.Queries.GetLedgerInfo
 {
     public class GetLedgerInfoRequestHandler : IRequestHandler<GetLedgerInfoRequestModel, ResponseViewModel>
     {
@@ -80,7 +80,7 @@ namespace TheRiceMill.Application.Ledger.Queries.GetLedgerInfo
             return new ResponseViewModel().CreateOk(new { });
         }
 
-        class SaleInfo
+        public class SaleInfo
         {
             public string Product { get; set; }
             public double TotalActualBagWeight { get; set; }
@@ -88,7 +88,7 @@ namespace TheRiceMill.Application.Ledger.Queries.GetLedgerInfo
             public double TotalMaund { get; set; }
         }
 
-        class PurchaseInfo
+        public class PurchaseInfo
         {
             public string Product { get; set; }
             public double BoriQuantity { get; set; }
@@ -101,7 +101,7 @@ namespace TheRiceMill.Application.Ledger.Queries.GetLedgerInfo
             public double Rate { get; set; }
         }
 
-        class BankInfo
+        public class BankInfo
         {
             public int PaymentType { get; set; }
             public string AccountNumber { get; set; }

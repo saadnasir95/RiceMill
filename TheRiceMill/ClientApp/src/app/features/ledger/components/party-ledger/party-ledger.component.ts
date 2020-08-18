@@ -10,6 +10,7 @@ import { PartyResponse } from '../../../../shared/model/party-response.model';
 import { Ledger } from '../../../../shared/model/ledger.model';
 import { LedgerData, LedgerResponse } from '../../../../shared/model/ledger-response.model';
 import { LedgerService } from '../../../../shared/services/ledger.service';
+import { GridOptions } from 'ag-grid-community';
 
 @Component({
   selector: 'app-party-ledger',
@@ -37,8 +38,10 @@ export class PartyLedgerComponent implements OnInit {
   };
   partyList: Party[];
   selectedPartyId = 0;
-  displayedColumns: string[] = ['createdDate', 'ledgerType', 'credit', 'debit', 'balance'];
+  displayedColumns: string[] = ['createdDate', 'ledgerType', 'credit', 'debit', 'balance','product','gatepassIds','boriQuantity',
+  'bagQuantity','totalMaund','rate','rateBasedOn','commission'];
   dataSource: MatTableDataSource<Ledger>;
+  gridOptions: GridOptions;
   ledgerData: LedgerData;
   isLoadingData: Boolean = false;
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -48,6 +51,95 @@ export class PartyLedgerComponent implements OnInit {
   ) { }
 
   ngOnInit() {
+    this.gridOptions = {
+      rowData: [],
+      columnDefs: [
+      {
+        headerName: "Created Date",
+        field: 'date', 
+        sortable: true, 
+        filter: true
+      },
+      {
+        headerName: "Description",
+        field: 'ledgerType', 
+        sortable: true, 
+        filter: true
+      },
+      {
+        headerName: "Credit",
+        field: 'amount', 
+        sortable: true, 
+        filter: true 
+      },
+      {
+        headerName: "Debit",
+        field: 'amount', 
+        sortable: true, 
+        filter: true
+      },
+      {
+        headerName: "Balance",
+        field: 'balance', 
+        sortable: true, 
+        filter: true
+      },
+      {
+        headerName: "Product",
+        field: 'product', 
+        sortable: true, 
+        filter: true
+      },
+      {
+        headerName: "GatepassIds",
+        field: 'gatepassIds', 
+        sortable: true, 
+        filter: true
+      },
+      {
+        headerName: "Bori Quantity",
+        field: 'boriQuantity', 
+        sortable: true, 
+        filter: true
+      },
+      {
+        headerName: "Bag Quantity",   
+        field: 'bagQuantity', 
+        sortable: true, 
+        filter: true
+      },
+      {
+        headerName: "Total Maund",
+        field: 'totalMaund', 
+        sortable: true, 
+        filter: true 
+      },
+      {
+        headerName: "Rate",
+        field: 'rate', 
+        sortable: true, 
+        filter: true
+      },
+      {
+        headerName: "Rate BasedOn",   
+        field: 'rateBasedOn', 
+        sortable: true, 
+        filter: true
+      },
+      {
+        headerName: "Commission",
+        field: 'commission', 
+        sortable: true, 
+        filter: true
+      }],
+      onGridReady: () => {
+        this.getLedgerList();
+      },
+      rowSelection: 'multiple',
+      rowGroupPanelShow: 'always',
+      pivotPanelShow: 'always',
+      enableRangeSelection: true,    
+    }
     this.dataSource = new MatTableDataSource();
     this.paginator.pageSize = 25;
     this.partyService.getParties(100, 0).subscribe(
@@ -60,6 +152,7 @@ export class PartyLedgerComponent implements OnInit {
       }
     );
   }
+  
   onPartyChange() {
     this.getLedgerList();
   }
@@ -67,6 +160,7 @@ export class PartyLedgerComponent implements OnInit {
   changePage() {
     this.getLedgerList();
   }
+
   getLedgerList() {
     if (this.selectedPartyId !== 0) {
       this.ledgerService
@@ -86,6 +180,7 @@ export class PartyLedgerComponent implements OnInit {
               previousBalance += element.amount;
               element.balance = previousBalance;
             });
+            this.gridOptions.api.setRowData(this.ledgerData.ledgerResponses);
             this.dataSource.data = this.ledgerData.ledgerResponses;
             this.paginator.length = response.count;
           },

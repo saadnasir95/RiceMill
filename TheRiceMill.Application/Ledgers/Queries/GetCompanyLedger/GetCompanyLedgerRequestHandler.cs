@@ -8,12 +8,14 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using TheRiceMill.Application.Constants;
+using TheRiceMill.Application.Ledgers.Queries.GetCompanyLedger;
 using TheRiceMill.Common.Extensions;
 using TheRiceMill.Common.Response;
 using TheRiceMill.Common.Util;
 using TheRiceMill.Persistence;
 using TheRiceMill.Persistence.Extensions;
-using static TheRiceMill.Application.Ledger.Queries.GetLedgers.GetPartyLedgerRequestHandler;
+using static TheRiceMill.Application.Ledgers.Queries.GetLedgerInfo.GetLedgerInfoRequestHandler;
+using static TheRiceMill.Application.Ledgers.Queries.GetLedgers.GetPartyLedgerRequestHandler;
 
 namespace TheRiceMill.Application.Ledger.Queries.GetCompanyLedger
 {
@@ -39,22 +41,26 @@ namespace TheRiceMill.Application.Ledger.Queries.GetCompanyLedger
             request.SetDefaultValue();
             Expression<Func<Domain.Entities.Ledger, bool>> query ;
             query = CreateQuery(request);
-            
+
             var dateConverter = new DateConverter();
             var list = await _context.Ledgers
-                .GetManyReadOnly(query, "Date", request.Page, request.PageSize, false,
-                    p => p.Include(pr => pr.Party)).Select(p =>
-                    new LedgerResponse()
-                    {
-                        Id = p.Id,
-                        PartyId = p.PartyId,
-                        LedgerType = p.LedgerType,
-                        Amount = p.Amount,
-                        Party = p.Party,
-                        TransactionType = p.TransactionType,
-                        Date = dateConverter.ConvertToDateTimeIso(p.Date),
-                        TransactionId = p.TransactionId,
-                    }).ToListAsync(cancellationToken);
+                 .GetManyReadOnly(query, "Date", request.Page, request.PageSize, false,
+                     p => p.Include(pr => pr.Party)).Select(p =>
+                     new LedgerResponse()
+                     {
+                         Id = p.Id,
+                         PartyId = p.PartyId,
+                         LedgerType = p.LedgerType,
+                         Amount = p.Amount,
+                         Party = p.Party,
+                         TransactionType = p.TransactionType,
+                         Date = dateConverter.ConvertToDateTimeIso(p.Date),
+                         TransactionId = p.TransactionId,
+                     }).ToListAsync(cancellationToken);
+
+            list.ForEach(l => {
+                 this.GetLedgerDetail(l);
+            });
             var count = await _context.Ledgers.CountAsync(query, cancellationToken);
             var netBalance = await _context.Ledgers.SumAsync(query, p => p.Amount, cancellationToken);
             var firstLedger = list.FirstOrDefault();
@@ -74,6 +80,41 @@ namespace TheRiceMill.Application.Ledger.Queries.GetCompanyLedger
             }, count);
         }
 
+        public void GetLedgerDetail(LedgerResponse ledger)
+        {
+            if ((int)LedgerType.Purchase == ledger.LedgerType)
+            {
+                var purchase = _context.Purchases.GetBy(p => p.Id == ledger.Id, p => p.Include(pr => pr.GatePasses).ThenInclude(g => g.Product).Include(c => c.Charges));
+                if (purchase != null)
+                {
+                    ledger.AdditionalCharges = purchase.Charges.Sum(c => c.Total);
+                    ledger.BagQuantity = purchase.BagQuantity;
+                    ledger.BoriQuantity = purchase.BoriQuantity;
+                    ledger.Commission = purchase.Commission;
+                    ledger.GatepassIds = String.Join(", ", purchase.GatePasses.Select(c => c.Id));
+                    ledger.Product = String.Join(", ", purchase.GatePasses.Select(c => c.Product.Name).Distinct());
+                    ledger.TotalMaund = purchase.TotalMaund;
+                    ledger.Rate = purchase.Rate;
+                    ledger.RateBasedOn = purchase.RateBasedOn;
+                }
+            }
+            else if ((int)LedgerType.Sale == ledger.LedgerType)
+            {
+                var sale = _context.Sales.GetBy(p => p.Id == ledger.Id, p => p.Include(pr => pr.GatePasses).ThenInclude(g => g.Product).Include(c => c.Charges));
+                if (sale != null)
+                {
+                    ledger.AdditionalCharges = sale.Charges.Sum(c => c.Total);
+                    ledger.BagQuantity = sale.BagQuantity;
+                    ledger.BoriQuantity = sale.BoriQuantity;
+                    ledger.Commission = sale.Commission;
+                    ledger.GatepassIds = String.Join(", ", sale.GatePasses.Select(c => c.Id));
+                    ledger.Product = String.Join(", ", sale.GatePasses.Select(c => c.Product.Name).Distinct());
+                    ledger.TotalMaund = sale.TotalMaund;
+                    ledger.Rate = sale.Rate;
+                    ledger.RateBasedOn = sale.RateBasedOn;
+                }
+            }
+        }
         private Expression<Func<Domain.Entities.Ledger, bool>> CreateQuery(GetCompanyLedgerRequestModel request)
         {
             if (request.ToDate != null && request.FromDate != null && request.LedgerType != 0)

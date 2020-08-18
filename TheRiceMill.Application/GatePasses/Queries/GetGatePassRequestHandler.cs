@@ -96,6 +96,7 @@ namespace TheRiceMill.Application.GatePasses.Queries
                     Id = p.Id,
                     Party = new PartyRequestModel()
                     {
+                        Id = p.PartyId,
                         Address = p.Party.Address,
                         Name = p.Party.Name,
                         PhoneNumber = p.Party.PhoneNumber
