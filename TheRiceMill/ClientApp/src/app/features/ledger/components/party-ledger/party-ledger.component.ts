@@ -13,6 +13,8 @@ import { LedgerService } from '../../../../shared/services/ledger.service';
 import { GridOptions } from 'ag-grid-community';
 import { CompanyService } from '../../../../shared/services/company.service';
 import { Subscription } from 'rxjs';
+import { LocalDatetimePipe } from '../../../../shared/pipes/local-datetime.pipe';
+import { LocalCurrencyPipe } from '../../../../shared/pipes/local-currency.pipe';
 
 @Component({
   selector: 'app-party-ledger',
@@ -49,11 +51,12 @@ export class PartyLedgerComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   companyId = 0;
   companySubscription: Subscription;
+
   constructor(
     private ledgerService: LedgerService,
     private partyService: PartyService,
     private companyService: CompanyService
-  ) { }
+  ) {   }
 
   ngOnInit() {
     this.gridOptions = {
@@ -63,7 +66,8 @@ export class PartyLedgerComponent implements OnInit, OnDestroy {
           headerName: 'Created Date',
           field: 'date',
           sortable: true,
-          filter: true
+          filter: true,
+          valueFormatter: this.datePipe
         },
         {
           headerName: 'Description',
@@ -74,20 +78,26 @@ export class PartyLedgerComponent implements OnInit, OnDestroy {
         {
           headerName: 'Credit',
           field: 'amount',
+          width: 100,
           sortable: true,
-          filter: true
+          filter: true,
+          valueFormatter: this.currencyPipe
         },
         {
           headerName: 'Debit',
           field: 'amount',
+          width: 100,
           sortable: true,
-          filter: true
+          filter: true,
+          valueFormatter: this.currencyPipe
         },
         {
           headerName: 'Balance',
           field: 'balance',
+          width: 100,
           sortable: true,
-          filter: true
+          filter: true,
+          valueFormatter: this.currencyPipe
         },
         {
           headerName: 'Product',
@@ -98,24 +108,28 @@ export class PartyLedgerComponent implements OnInit, OnDestroy {
         {
           headerName: 'GatepassIds',
           field: 'gatepassIds',
+          width: 120,
           sortable: true,
           filter: true
         },
         {
           headerName: 'Bori Quantity',
           field: 'boriQuantity',
+          width: 120,
           sortable: true,
           filter: true
         },
         {
           headerName: 'Bag Quantity',
           field: 'bagQuantity',
+          width: 120,
           sortable: true,
           filter: true
         },
         {
           headerName: 'Total Maund',
           field: 'totalMaund',
+          width: 120,
           sortable: true,
           filter: true
         },
@@ -123,19 +137,24 @@ export class PartyLedgerComponent implements OnInit, OnDestroy {
           headerName: 'Rate',
           field: 'rate',
           sortable: true,
-          filter: true
+          width: 100,
+          filter: true,
+          valueFormatter: this.currencyPipe
         },
         {
           headerName: 'Rate BasedOn',
           field: 'rateBasedOn',
+          width: 120,
           sortable: true,
           filter: true
         },
         {
           headerName: 'Commission',
           field: 'commission',
+          width: 120,
           sortable: true,
-          filter: true
+          filter: true,
+          valueFormatter: this.currencyPipe
         }],
       onGridReady: () => {
         this.getParties();
@@ -157,6 +176,19 @@ export class PartyLedgerComponent implements OnInit, OnDestroy {
       }
     );
   }
+
+  datePipe(date: any){
+    if(date){
+      return new LocalDatetimePipe().transform(date.value);
+    }
+  }
+
+  currencyPipe(number: any){
+    if(number){
+      return new LocalCurrencyPipe().transform(number.value)
+    }
+  }
+  
   ngOnDestroy() {
     if (this.companySubscription) {
       this.companySubscription.unsubscribe();
