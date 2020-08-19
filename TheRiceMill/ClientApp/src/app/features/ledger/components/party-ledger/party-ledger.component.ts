@@ -15,6 +15,7 @@ import { CompanyService } from '../../../../shared/services/company.service';
 import { Subscription } from 'rxjs';
 import { LocalDatetimePipe } from '../../../../shared/pipes/local-datetime.pipe';
 import { LocalCurrencyPipe } from '../../../../shared/pipes/local-currency.pipe';
+import { RateBasedOnPipe } from '../../../../shared/pipes/rate-based-on.pipe';
 
 @Component({
   selector: 'app-party-ledger',
@@ -101,8 +102,14 @@ export class PartyLedgerComponent implements OnInit, OnDestroy {
           filter: true
         },
         {
+          headerName: 'Lot No.',
+          field: 'lotNumber',
+          sortable: true,
+          filter: true
+        },
+        {
           headerName: 'Inv No.',
-          field: 'ledgerType',
+          field: 'invoiceId',
           sortable: true,
           filter: true
         },
@@ -152,7 +159,8 @@ export class PartyLedgerComponent implements OnInit, OnDestroy {
           field: 'rateBasedOn',
           width: 120,
           sortable: true,
-          filter: true
+          filter: true,
+          valueFormatter: this.rateBasedOnPipe
         },
         {
           headerName: 'Commission',
@@ -206,6 +214,12 @@ export class PartyLedgerComponent implements OnInit, OnDestroy {
         }
       }
     );
+  }
+
+  rateBasedOnPipe(data: any){
+    if(data){
+      return new RateBasedOnPipe().transform(data.value);
+    }
   }
 
   datePipe(date: any){

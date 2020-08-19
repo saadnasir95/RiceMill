@@ -4,7 +4,7 @@ import moment = require('moment');
 import { MatPaginator, MatTableDataSource } from '@angular/material';
 import { FormGroup, FormControl } from '@angular/forms';
 import { trigger, state, transition, animate, style } from '@angular/animations';
-import { LedgerType } from '../../../../shared/model/enums';
+import { LedgerType, RateBasedOn } from '../../../../shared/model/enums';
 import { Ledger } from '../../../../shared/model/ledger.model';
 import { LedgerData, LedgerResponse } from '../../../../shared/model/ledger-response.model';
 import { BankTransactionInfo } from '../../../../shared/model/bank-transaction-info.model';
@@ -15,6 +15,7 @@ import { Subscription } from 'rxjs';
 import { CompanyService } from '../../../../shared/services/company.service';
 import { LocalCurrencyPipe } from '../../../../shared/pipes/local-currency.pipe';
 import { LocalDatetimePipe } from '../../../../shared/pipes/local-datetime.pipe';
+import { RateBasedOnPipe } from '../../../../shared/pipes/rate-based-on.pipe';
 
 
 @Component({
@@ -124,8 +125,14 @@ export class CompanyLedgerComponent implements OnInit, OnDestroy {
           filter: true
         },
         {
+          headerName: 'Lot No.',
+          field: 'lotNumber',
+          sortable: true,
+          filter: true
+        },
+        {
           headerName: 'Inv No.',
-          field: 'ledgerType',
+          field: 'invoiceId',
           sortable: true,
           filter: true
         },
@@ -175,7 +182,8 @@ export class CompanyLedgerComponent implements OnInit, OnDestroy {
           field: 'rateBasedOn',
           width: 120,
           sortable: true,
-          filter: true
+          filter: true,
+          valueFormatter: this.rateBasedOnPipe
         },
         {
           headerName: 'Commission',
@@ -230,6 +238,12 @@ export class CompanyLedgerComponent implements OnInit, OnDestroy {
         }
       }
     );
+  }
+
+  rateBasedOnPipe(data: any){
+    if(data){
+      return new RateBasedOnPipe().transform(data.value);
+    }
   }
 
   datePipe(date: any){

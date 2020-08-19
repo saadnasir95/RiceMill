@@ -93,8 +93,10 @@ namespace TheRiceMill.Application.Ledgers.Queries.GetLedgers
                     ledger.Commission = purchase.Commission;
                     ledger.GatepassIds = String.Join(", ", purchase.GatePasses.Select(c => c.Id));
                     ledger.Product = String.Join(", ", purchase.GatePasses.Select(c => c.Product.Name).Distinct());
+                    ledger.LotNumber = String.Join(", ", purchase.GatePasses.Select(c => c.LotNumber).Distinct());
                     ledger.VehicleNo = String.Join(", ", purchase.GatePasses.Select(c => c.Vehicle.PlateNo).Distinct());
                     ledger.Broker = String.Join(", ", purchase.GatePasses.Select(c => c.Broker).Distinct());
+                    ledger.InvoiceId = String.Join(", ", purchase.GatePasses.Select(c => c.PurchaseId).Distinct());
                     ledger.BiltyNumber = String.Join(", ", purchase.GatePasses.Select(c => c.BiltyNumber).Distinct());
                     ledger.TotalMaund = purchase.TotalMaund;
                     ledger.Rate = purchase.Rate;
@@ -113,6 +115,8 @@ namespace TheRiceMill.Application.Ledgers.Queries.GetLedgers
                     ledger.GatepassIds = String.Join(", ", sale.GatePasses.Select(c => c.Id));
                     ledger.Product = String.Join(", ", sale.GatePasses.Select(c => c.Product.Name).Distinct());
                     ledger.VehicleNo = String.Join(", ", sale.GatePasses.Select(c => c.Vehicle.PlateNo).Distinct());
+                    ledger.LotNumber = String.Join(", ", sale.GatePasses.Select(c => c.LotNumber).Distinct());
+                    ledger.InvoiceId = String.Join(", ", sale.GatePasses.Select(c => c.PurchaseId).Distinct());
                     ledger.Broker = String.Join(", ", sale.GatePasses.Select(c => c.Broker).Distinct());
                     ledger.BiltyNumber = String.Join(", ", sale.GatePasses.Select(c => c.BiltyNumber).Distinct());
                     ledger.TotalMaund = sale.TotalMaund;
@@ -137,6 +141,8 @@ namespace TheRiceMill.Application.Ledgers.Queries.GetLedgers
             public int PartyId { get; set; }
             public Party Party { get; set; }
             public string VehicleNo { get; set; }
+            public string InvoiceId { get; set; }
+            public string LotNumber { get; set; }
             public string Broker { get; set; }
             public string BiltyNumber { get; set; }
             public string Date { get; set; }
