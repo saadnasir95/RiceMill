@@ -76,30 +76,6 @@ export class PartyLedgerComponent implements OnInit, OnDestroy {
           filter: true
         },
         {
-          headerName: 'Credit',
-          field: 'amount',
-          width: 100,
-          sortable: true,
-          filter: true,
-          valueFormatter: this.currencyPipe
-        },
-        {
-          headerName: 'Debit',
-          field: 'amount',
-          width: 100,
-          sortable: true,
-          filter: true,
-          valueFormatter: this.currencyPipe
-        },
-        {
-          headerName: 'Balance',
-          field: 'balance',
-          width: 100,
-          sortable: true,
-          filter: true,
-          valueFormatter: this.currencyPipe
-        },
-        {
           headerName: 'Product',
           field: 'product',
           sortable: true,
@@ -109,6 +85,36 @@ export class PartyLedgerComponent implements OnInit, OnDestroy {
           headerName: 'GatepassIds',
           field: 'gatepassIds',
           width: 120,
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: 'Party Name',
+          field: 'party.name',
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: 'Broker',
+          field: 'broker',
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: 'Inv No.',
+          field: 'ledgerType',
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: 'Vehicle No.',
+          field: 'vehicleNo',
+          sortable: true,
+          filter: true
+        },
+        {
+          headerName: 'Bilty Number',
+          field: 'biltyNumber',
           sortable: true,
           filter: true
         },
@@ -155,7 +161,32 @@ export class PartyLedgerComponent implements OnInit, OnDestroy {
           sortable: true,
           filter: true,
           valueFormatter: this.currencyPipe
-        }],
+        },
+        {
+          headerName: 'Credit',
+          field: 'amount',
+          width: 100,
+          sortable: true,
+          filter: true,
+          valueFormatter: this.currencyPipe
+        },
+        {
+          headerName: 'Debit',
+          field: 'amount',
+          width: 100,
+          sortable: true,
+          filter: true,
+          valueFormatter: this.currencyPipe
+        },
+        {
+          headerName: 'Balance',
+          field: 'balance',
+          width: 100,
+          sortable: true,
+          filter: true,
+          valueFormatter: this.currencyPipe
+        },
+      ],
       onGridReady: () => {
         this.getParties();
       },

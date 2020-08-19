@@ -93,6 +93,9 @@ namespace TheRiceMill.Application.Ledgers.Queries.GetLedgers
                     ledger.Commission = purchase.Commission;
                     ledger.GatepassIds = String.Join(", ", purchase.GatePasses.Select(c => c.Id));
                     ledger.Product = String.Join(", ", purchase.GatePasses.Select(c => c.Product.Name).Distinct());
+                    ledger.VehicleNo = String.Join(", ", purchase.GatePasses.Select(c => c.Vehicle.PlateNo).Distinct());
+                    ledger.Broker = String.Join(", ", purchase.GatePasses.Select(c => c.Broker).Distinct());
+                    ledger.BiltyNumber = String.Join(", ", purchase.GatePasses.Select(c => c.BiltyNumber).Distinct());
                     ledger.TotalMaund = purchase.TotalMaund;
                     ledger.Rate = purchase.Rate;
                     ledger.RateBasedOn = purchase.RateBasedOn;
@@ -109,6 +112,9 @@ namespace TheRiceMill.Application.Ledgers.Queries.GetLedgers
                     ledger.Commission = sale.Commission;
                     ledger.GatepassIds = String.Join(", ", sale.GatePasses.Select(c => c.Id));
                     ledger.Product = String.Join(", ", sale.GatePasses.Select(c => c.Product.Name).Distinct());
+                    ledger.VehicleNo = String.Join(", ", sale.GatePasses.Select(c => c.Vehicle.PlateNo).Distinct());
+                    ledger.Broker = String.Join(", ", sale.GatePasses.Select(c => c.Broker).Distinct());
+                    ledger.BiltyNumber = String.Join(", ", sale.GatePasses.Select(c => c.BiltyNumber).Distinct());
                     ledger.TotalMaund = sale.TotalMaund;
                     ledger.Rate = sale.Rate;
                     ledger.RateBasedOn = sale.RateBasedOn;
@@ -130,6 +136,9 @@ namespace TheRiceMill.Application.Ledgers.Queries.GetLedgers
             public double Amount { get; set; }
             public int PartyId { get; set; }
             public Party Party { get; set; }
+            public string VehicleNo { get; set; }
+            public string Broker { get; set; }
+            public string BiltyNumber { get; set; }
             public string Date { get; set; }
             public string TransactionId { get; set; }
             public string Product { get; set; }
