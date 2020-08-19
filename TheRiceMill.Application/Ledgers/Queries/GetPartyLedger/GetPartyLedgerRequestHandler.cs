@@ -84,7 +84,7 @@ namespace TheRiceMill.Application.Ledgers.Queries.GetLedgers
         {
             if ((int)LedgerType.Purchase == ledger.LedgerType)
             {
-                var purchase = _context.Purchases.GetBy(p => p.Id == ledger.Id, p => p.Include(pr => pr.GatePasses).ThenInclude(g => g.Product).Include(c => c.Charges));
+                var purchase = _context.Purchases.GetBy(p => p.Id == ledger.Id, p => p.Include(pr => pr.GatePasses).ThenInclude(g => g.Product).Include(pr => pr.GatePasses).ThenInclude(g => g.Vehicle).Include(c => c.Charges));
                 if (purchase != null)
                 {
                     ledger.AdditionalCharges = purchase.Charges.Sum(c => c.Total);
@@ -103,7 +103,7 @@ namespace TheRiceMill.Application.Ledgers.Queries.GetLedgers
             }
             else if ((int)LedgerType.Sale == ledger.LedgerType)
             {
-                var sale = _context.Sales.GetBy(p => p.Id == ledger.Id, p => p.Include(pr => pr.GatePasses).ThenInclude(g => g.Product).Include(c => c.Charges));
+                var sale = _context.Sales.GetBy(p => p.Id == ledger.Id, p => p.Include(pr => pr.GatePasses).ThenInclude(g => g.Product).Include(pr => pr.GatePasses).ThenInclude(g => g.Vehicle).Include(c => c.Charges));
                 if (sale != null)
                 {
                     ledger.AdditionalCharges = sale.Charges.Sum(c => c.Total);
