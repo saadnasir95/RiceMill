@@ -16,6 +16,7 @@ import { Subscription } from 'rxjs';
 import { LocalDatetimePipe } from '../../../../shared/pipes/local-datetime.pipe';
 import { LocalCurrencyPipe } from '../../../../shared/pipes/local-currency.pipe';
 import { RateBasedOnPipe } from '../../../../shared/pipes/rate-based-on.pipe';
+import { LedgerTypePipe } from '../../../../shared/pipes/ledger-type.pipe';
 
 @Component({
   selector: 'app-party-ledger',
@@ -140,6 +141,12 @@ export class PartyLedgerComponent implements OnInit, OnDestroy {
           filter: true
         },
         {
+          headerName: 'Net Weight',
+          field: 'netWeight',
+          sortable: true,
+          filter: true
+        },
+        {
           headerName: 'Total Maund',
           field: 'totalMaund',
           width: 120,
@@ -216,21 +223,27 @@ export class PartyLedgerComponent implements OnInit, OnDestroy {
     );
   }
 
+  ledgerTypePipe(data: any){
+    if(data.value){
+      return new LedgerTypePipe().transform(data.value);
+    }
+  }
+
   rateBasedOnPipe(data: any){
-    if(data){
+    if(data.value){
       return new RateBasedOnPipe().transform(data.value);
     }
   }
 
   datePipe(date: any){
-    if(date){
+    if(date.value){
       return new LocalDatetimePipe().transform(date.value);
     }
   }
 
-  currencyPipe(number: any){
-    if(number){
-      return new LocalCurrencyPipe().transform(number.value)
+  currencyPipe(data: any){
+    if(data.value){
+      return new LocalCurrencyPipe().transform(data.value)
     }
   }
   
@@ -279,6 +292,48 @@ export class PartyLedgerComponent implements OnInit, OnDestroy {
               element.balance = previousBalance;
             });
             this.gridOptions.api.setRowData(this.ledgerData.ledgerResponses);
+            let _credit = 0;
+            let _debit = 0;
+            let _balance = 0;
+            let _bagQuantity = 0;
+            let _boriQuantity = 0;
+            let _netWeight = 0;
+            let _totalMaund = 0;
+            
+            this.ledgerData.ledgerResponses.forEach(ledger => {
+              debugger
+              _credit += ledger.amount;
+              _debit += ledger.amount;
+              _balance += ledger.balance;
+              _bagQuantity += ledger.bagQuantity;
+              _boriQuantity += ledger.boriQuantity;
+              _netWeight += ledger.netWeight;
+              _totalMaund += ledger.totalMaund;
+
+            })
+            const result = [{
+              date: "",
+              ledgerType:"",
+              product:"",
+              gatepassIds:"",
+              name:"",
+              broker:"",
+              lotNumber:"",
+              invoiceId:"",
+              vehicleNo: "",
+              biltyNumber:"",
+              boriQuantity:_bagQuantity,
+              bagQuantity:_boriQuantity,
+              totalMaund:_totalMaund,
+              netWeight: _netWeight,
+              rate:"",
+              rateBasedOn: "",
+              commission:"",
+              amount: _credit,
+              // : _debit,
+              balance: _balance,
+            }];
+            this.gridOptions.api.setPinnedBottomRowData(result);
             this.dataSource.data = this.ledgerData.ledgerResponses;
             this.paginator.length = response.count;
           },
