@@ -67,138 +67,114 @@ export class PartyLedgerComponent implements OnInit, OnDestroy {
         {
           headerName: 'Created Date',
           field: 'date',
-          sortable: true,
-          filter: true,
           valueFormatter: this.datePipe
         },
         {
           headerName: 'Description',
           field: 'ledgerType',
-          sortable: true,
-          filter: true
         },
         {
           headerName: 'Product',
           field: 'product',
-          sortable: true,
-          filter: true
         },
         {
           headerName: 'GatepassIds',
           field: 'gatepassIds',
           width: 120,
-          sortable: true,
-          filter: true
         },
         {
           headerName: 'Party Name',
           field: 'party.name',
-          sortable: true,
-          filter: true
         },
         {
           headerName: 'Broker',
           field: 'broker',
-          sortable: true,
-          filter: true
         },
         {
           headerName: 'Lot No.',
           field: 'lotNumber',
-          sortable: true,
-          filter: true
         },
         {
           headerName: 'Inv No.',
           field: 'invoiceId',
-          sortable: true,
-          filter: true
         },
         {
           headerName: 'Vehicle No.',
           field: 'vehicleNo',
-          sortable: true,
-          filter: true
         },
         {
           headerName: 'Bilty Number',
           field: 'biltyNumber',
-          sortable: true,
-          filter: true
         },
         {
           headerName: 'Bori Quantity',
           field: 'boriQuantity',
           width: 120,
-          sortable: true,
-          filter: true
         },
         {
           headerName: 'Bag Quantity',
           field: 'bagQuantity',
           width: 120,
-          sortable: true,
-          filter: true
+        },
+        {
+          headerName: 'Kg. p/b',
+          field: '',
+          width: 120,
         },
         {
           headerName: 'Net Weight',
           field: 'netWeight',
-          sortable: true,
-          filter: true
         },
         {
           headerName: 'Total Maund',
           field: 'totalMaund',
           width: 120,
-          sortable: true,
-          filter: true
         },
         {
           headerName: 'Rate',
           field: 'rate',
-          sortable: true,
           width: 100,
-          filter: true,
           valueFormatter: this.currencyPipe
+        },
+        {
+          headerName: 'Freight',
+          field: '',
+          width: 100,
+          valueFormatter: this.currencyPipe
+        },
+        {
+          headerName: 'Cash/Chq',
+          field: '',
+          width: 100,
         },
         {
           headerName: 'Rate BasedOn',
           field: 'rateBasedOn',
           width: 120,
-          sortable: true,
-          filter: true,
           valueFormatter: this.rateBasedOnPipe
         },
         {
-          headerName: 'Commission',
+          headerName: 'Brokery',
           field: 'commission',
           width: 120,
-          sortable: true,
-          filter: true,
           valueFormatter: this.currencyPipe
         },
         {
           headerName: 'Credit',
           field: 'amount',
           width: 100,
-          sortable: true,
-          filter: true,
           valueFormatter: this.currencyPipe
         },
         {
           headerName: 'Debit',
           field: 'amount',
           width: 100,
-          sortable: true,
-          filter: true,
           valueFormatter: this.currencyPipe
         },
         {
           headerName: 'Balance',
           field: 'balance',
           width: 100,
-          sortable: true,
-          filter: true,
           valueFormatter: this.currencyPipe
         },
       ],
@@ -209,6 +185,10 @@ export class PartyLedgerComponent implements OnInit, OnDestroy {
       rowGroupPanelShow: 'always',
       pivotPanelShow: 'always',
       enableRangeSelection: true,
+      defaultColDef: {
+        resizable: true,
+        filter: true
+      }
     };
     this.dataSource = new MatTableDataSource();
     this.paginator.pageSize = 25;
@@ -297,17 +277,18 @@ export class PartyLedgerComponent implements OnInit, OnDestroy {
             let _balance = 0;
             let _bagQuantity = 0;
             let _boriQuantity = 0;
+            let _brokery = 0;
             let _netWeight = 0;
             let _totalMaund = 0;
             
             this.ledgerData.ledgerResponses.forEach(ledger => {
-              debugger
               _credit += ledger.amount;
               _debit += ledger.amount;
               _balance += ledger.balance;
               _bagQuantity += ledger.bagQuantity;
               _boriQuantity += ledger.boriQuantity;
               _netWeight += ledger.netWeight;
+              _brokery += ledger.commission;
               _totalMaund += ledger.totalMaund;
 
             })
@@ -322,13 +303,13 @@ export class PartyLedgerComponent implements OnInit, OnDestroy {
               invoiceId:"",
               vehicleNo: "",
               biltyNumber:"",
-              boriQuantity:_bagQuantity,
-              bagQuantity:_boriQuantity,
-              totalMaund:_totalMaund,
-              netWeight: _netWeight,
+              boriQuantity:_bagQuantity.toFixed(2),
+              bagQuantity:_boriQuantity.toFixed(2),
+              totalMaund:_totalMaund.toFixed(2),
+              netWeight: _netWeight.toFixed(2),
               rate:"",
               rateBasedOn: "",
-              commission:"",
+              brokery: _brokery.toFixed(2),
               amount: _credit,
               // : _debit,
               balance: _balance,
