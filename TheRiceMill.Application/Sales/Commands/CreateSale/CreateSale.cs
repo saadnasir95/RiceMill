@@ -57,6 +57,8 @@ namespace TheRiceMill.Application.Sales.Commands.CreateSale
             sale.Commission = request.Commission;
             sale.Rate = request.Rate;
             sale.TotalPrice = request.TotalPrice;
+            sale.Freight = request.Freight;
+            sale.BasePrice = request.BasePrice;
             sale.TotalMaund = request.TotalMaund;
             sale.BoriQuantity = request.BoriQuantity;
             sale.BagQuantity = request.BagQuantity;
@@ -102,28 +104,14 @@ namespace TheRiceMill.Application.Sales.Commands.CreateSale
             await _context.SaveChangesAsync(cancellationToken);
             return new ResponseViewModel().CreateOk(new SaleResponseViewModel()
             {
-                /*BagQuantity = request.BagQuantity,
-                BagWeight = request.BagWeight,
-                KandaWeight = request.KandaWeight,*/
-                //CheckIn = new DateConverter().ConvertToDateTimeIso(request.CheckIn),
-                /*BasePrice = purchase.BasePrice,
-                 PercentCommission = purchase.PercentCommission,*/
-                /*ActualBagWeight = purchase.ActualBagWeight,
-                ExpectedBagWeight = purchase.ExpectedBagWeight,
-                RatePerKg = purchase.RatePerKg,
-                ExpectedEmptyBagWeight = purchase.ExpectedEmptyBagWeight,
-                TotalActualBagWeight = purchase.TotalActualBagWeight,
-                TotalExpectedBagWeight = purchase.TotalExpectedBagWeight,
-                TotalExpectedEmptyBagWeight = purchase.TotalExpectedEmptyBagWeight,
-                Direction = purchase.Direction,
-                Vibration = purchase.Vibration,
-                ActualBags = purchase.ActualBags*/
                 TotalMaund = request.TotalMaund,
                 BagQuantity = request.BagQuantity,
                 BoriQuantity = request.BoriQuantity,
                 Gatepasses = gatepassMapper.MapFull(gatepasses),
                 Id = sale.Id,
                 RateBasedOn = (int)sale.RateBasedOn,
+                BasePrice = sale.BasePrice,
+                Freight = sale.Freight,
                 Commission = sale.Commission,
                 AdditionalCharges = request.AdditionalCharges,
                 TotalPrice = sale.TotalPrice,

@@ -55,6 +55,7 @@ export class PurchaseModalComponent implements OnInit {
       bagQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
       boriQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
       totalMaund: new FormControl(0, [Validators.required, Validators.min(0)]),
+      freight: new FormControl(0, [Validators.required, Validators.min(0)]),
       rate: new FormControl(0, [Validators.required, Validators.min(0)]),
       commission: new FormControl(0, [Validators.required, Validators.min(0)]),
       totalPrice: new FormControl(0, [Validators.required, Validators.min(0)]),
@@ -278,6 +279,9 @@ export class PurchaseModalComponent implements OnInit {
       this.purchase.rate = this.purchaseForm.get('weightPriceGroup').value.rate;
       this.purchase.totalPrice = this.getRateBasedOnTotal() + this.purchaseForm.get('weightPriceGroup.commission').value + this.additionalCharges;
       this.purchase.commission = this.purchaseForm.get('weightPriceGroup').value.commission;
+      this.purchase.freight = this.purchaseForm.get('weightPriceGroup').value.freight;
+      this.purchase.basePrice = this.getRateBasedOnTotal();  
+
 
       if (this.purchase.additionalCharges.length >= 0 && (this.purchaseForm.get('additionalCharges') as FormArray).length >= 0) {
         for (let i = 0; i < (this.purchaseForm.get('additionalCharges') as FormArray).length; i++) {

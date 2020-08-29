@@ -32,6 +32,7 @@ export class Purchase extends Base {
   ratePerKg: number;
   rate: number;
   basePrice: number;
+  freight: number;
   totalPrice: number;
   actualBags: number;
   bagWeight: number;

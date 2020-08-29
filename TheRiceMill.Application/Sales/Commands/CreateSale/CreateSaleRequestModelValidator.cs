@@ -14,6 +14,8 @@ namespace TheRiceMill.Application.Sales.Commands.CreateSale
             RuleFor(p => p.BagQuantity).Required();
             RuleFor(p => p.BagQuantity).Required();
             RuleFor(p => p.Rate).Required();
+            RuleFor(p => p.BasePrice).Required();
+            RuleFor(p => p.Freight).Required();
             RuleFor(p => p.GatepassIds).NotEmpty();
             RuleFor(p => p.TotalPrice).Required();
             RuleFor(p => p.CompanyId).IsInEnum().WithMessage(Messages.IncorrectValue);

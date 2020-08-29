@@ -14,9 +14,16 @@ namespace TheRiceMill.Domain.Entities
         public RateBasedOn RateBasedOn { get; set; }
 
         /// <summary>
+        /// Maund/Bag * Rate        
+        /// </summary>
+        public double BasePrice { get; set; }
+
+        /// <summary>
         /// Total Price of Invoice
         /// </summary>
         public double TotalPrice { get; set; }
+        public double Freight { get; set; }
+
         public double Commission { get; set; }
         public List<Charge> Charges { get; set; }
         public List<GatePass> GatePasses { get; set; }

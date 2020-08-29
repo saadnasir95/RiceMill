@@ -95,18 +95,19 @@ namespace TheRiceMill.Application.Sales.Commands.UpdateSale
                 sale.BoriQuantity = request.BoriQuantity;
                 sale.BagQuantity = request.BagQuantity;
                 sale.TotalMaund = request.TotalMaund;
+                sale.Freight = request.Freight;
+                sale.BasePrice = request.BasePrice;
                 sale.CompanyId = request.CompanyId.ToInt();
                 await _context.SaveChangesAsync(cancellationToken);
                 return new ResponseViewModel().CreateOk(new SaleResponseViewModel()
                 {
-
-                    /*                    BagWeight = request.BagWeight,
-                                        KandaWeight = request.KandaWeight,*/
                     TotalMaund = request.TotalMaund,
                     Id = sale.Id,
                     Date = new DateConverter().ConvertToDateTimeIso(sale.Date),
                     Commission = sale.Commission,
                     AdditionalCharges = request.AdditionalCharges,
+                    BasePrice = sale.BasePrice,
+                    Freight = sale.Freight,
                     TotalPrice = sale.TotalPrice,
                     Rate = sale.Rate,
                     BagQuantity = sale.BagQuantity,

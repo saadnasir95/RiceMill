@@ -57,6 +57,8 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
             purchase.RateBasedOn = request.RateBasedOn == 1 ? RateBasedOn.Maund : RateBasedOn.Bag;
             purchase.Commission = request.Commission;
             purchase.Rate = request.Rate;
+            purchase.Freight = request.Freight;
+            purchase.BasePrice = request.BasePrice;
             purchase.TotalPrice = request.TotalPrice;
             purchase.TotalMaund = request.TotalMaund;
             purchase.BoriQuantity = request.BoriQuantity;
@@ -103,27 +105,13 @@ namespace TheRiceMill.Application.Purchases.Commands.CreatePurchase
             await _context.SaveChangesAsync(cancellationToken);
             return new ResponseViewModel().CreateOk(new PurchaseResponseViewModel()
             {
-                /*BagQuantity = request.BagQuantity,
-                BagWeight = request.BagWeight,
-                KandaWeight = request.KandaWeight,*/
-                //CheckIn = new DateConverter().ConvertToDateTimeIso(request.CheckIn),
-                /*BasePrice = purchase.BasePrice,
-                 PercentCommission = purchase.PercentCommission,*/
-                /*ActualBagWeight = purchase.ActualBagWeight,
-                ExpectedBagWeight = purchase.ExpectedBagWeight,
-                RatePerKg = purchase.RatePerKg,
-                ExpectedEmptyBagWeight = purchase.ExpectedEmptyBagWeight,
-                TotalActualBagWeight = purchase.TotalActualBagWeight,
-                TotalExpectedBagWeight = purchase.TotalExpectedBagWeight,
-                TotalExpectedEmptyBagWeight = purchase.TotalExpectedEmptyBagWeight,
-                Direction = purchase.Direction,
-                Vibration = purchase.Vibration,
-                ActualBags = purchase.ActualBags*/
                 TotalMaund = request.TotalMaund,
                 BagQuantity = request.BagQuantity,
                 BoriQuantity = request.BoriQuantity,
                 Gatepasses = gatepassMapper.MapFull(gatepasses),
                 Id = purchase.Id,
+                BasePrice = purchase.BasePrice,
+                Freight = purchase.Freight,
                 RateBasedOn = (int)purchase.RateBasedOn,
                 Commission = purchase.Commission,
                 AdditionalCharges = request.AdditionalCharges,

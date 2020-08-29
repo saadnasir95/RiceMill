@@ -15,7 +15,7 @@ import { CompanyService } from '../../../../shared/services/company.service';
   styleUrls: ['./purchase.component.scss']
 })
 export class PurchaseComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['Id', 'createdDate', 'totalMaund', 'boriQuantity', 'bagQuantity', 'brokery', 'rate', 'totalPrice', 'totalGatepasses', 'Action'];
+  displayedColumns: string[] = ['Id', 'createdDate', 'totalMaund', 'boriQuantity', 'bagQuantity', 'brokery','freight', 'rate', 'totalPrice', 'totalGatepasses', 'Action'];
   dataSource: MatTableDataSource<Purchase>;
   purchaseList: Purchase[];
   isLoadingData: Boolean = false;

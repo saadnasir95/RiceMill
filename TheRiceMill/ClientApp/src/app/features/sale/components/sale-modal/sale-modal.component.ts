@@ -50,22 +50,11 @@ export class SaleModalComponent implements OnInit {
       isMaundBasedRate: new FormControl("1"),
       bagQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
       boriQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
-      // bagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
-      // kandaWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
-      // expectedBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
-      // totalExpectedBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
-      // emptyBagWeight: new FormControl(0, [Validators.required, Validators.min(0), Validators.max(2)]),
-      // totalEmptyBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
-      // actualBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
-      // totalActualBagWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
       totalMaund: new FormControl(0, [Validators.required, Validators.min(0)]),
-      // vibration: new FormControl(0, [Validators.required, Validators.min(0)]),
-      // ratePerKg: new FormControl(0, [Validators.required, Validators.min(0)]),
+      freight: new FormControl(0, [Validators.required, Validators.min(0)]),
       rate: new FormControl(0, [Validators.required, Validators.min(0)]),
       commission: new FormControl(0, [Validators.required, Validators.min(0)]),
-      // percentCommission: new FormControl(0, [Validators.required, Validators.min(0)]),
       totalPrice: new FormControl(0, [Validators.required, Validators.min(0)]),
-      // actualBags: new FormControl(0, [Validators.required, Validators.min(0)]),
     })
   });
 
@@ -299,6 +288,8 @@ export class SaleModalComponent implements OnInit {
       this.sale.rate = this.saleForm.get('weightPriceGroup').value.rate;
       this.sale.totalPrice = this.getRateBasedOnTotal() + this.saleForm.get('weightPriceGroup.commission').value + this.additionalCharges;
       this.sale.commission = this.saleForm.get('weightPriceGroup').value.commission;
+      this.sale.freight = this.saleForm.get('weightPriceGroup').value.freight;
+      this.sale.basePrice = this.getRateBasedOnTotal();  
 
       if (this.sale.additionalCharges.length >= 0 && (this.saleForm.get('additionalCharges') as FormArray).length >= 0) {
         for (let i = 0; i < (this.saleForm.get('additionalCharges') as FormArray).length; i++) {

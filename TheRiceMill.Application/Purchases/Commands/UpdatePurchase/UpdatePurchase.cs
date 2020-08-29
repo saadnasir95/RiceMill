@@ -99,19 +99,20 @@ namespace TheRiceMill.Application.Purchases.Commands.UpdatePurchase
                 purchase.BoriQuantity = request.BoriQuantity;
                 purchase.BagQuantity = request.BagQuantity;
                 purchase.TotalMaund = request.TotalMaund;
+                purchase.BasePrice = request.BasePrice;
+                purchase.Freight = request.Freight;
                 purchase.CompanyId = purchase.CompanyId.ToInt();
                 await _context.SaveChangesAsync(cancellationToken);
                 return new ResponseViewModel().CreateOk(new PurchaseResponseViewModel()
                 {
-
-                    /*                    BagWeight = request.BagWeight,
-                                        KandaWeight = request.KandaWeight,*/
                     TotalMaund = request.TotalMaund,
                     Id = purchase.Id,
                     Date = new DateConverter().ConvertToDateTimeIso(purchase.Date),
                     Commission = purchase.Commission,
                     AdditionalCharges = request.AdditionalCharges,
                     TotalPrice = purchase.TotalPrice,
+                    Freight = purchase.Freight,
+                    BasePrice = purchase.BasePrice,
                     Rate = purchase.Rate,
                     BagQuantity = purchase.BagQuantity,
                     BoriQuantity = purchase.BoriQuantity,

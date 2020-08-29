@@ -376,7 +376,7 @@
               Commission rate must be greater than 0</mat-error>
           </mat-form-field>
         </div> -->
-        <div class="col-md-8">
+        <div class="col-md-4">
           <mat-form-field>
             <input type="number" matInput placeholder="Brokery" formControlName="commission">
             <mat-error *ngIf="purchaseForm.get('weightPriceGroup.commission').hasError('required')">
@@ -386,9 +386,22 @@
               Brokery must be greater than 0</mat-error>
           </mat-form-field>
         </div>
+
         <div class="col-md-4">
-          <span class="grand-total"><p class="d-flex justify-content-end"><b> Brokery Charges:&nbsp;
-          </b> {{ purchaseForm.get('weightPriceGroup.commission').value  |currency:"PKR":"symbol": '1.2-2' }} </p>
+          <mat-form-field>
+            <input type="number" matInput placeholder="Freight" formControlName="freight">
+            <mat-error *ngIf="purchaseForm.get('weightPriceGroup.freight').hasError('required')">
+              Freight is required
+            </mat-error>
+            <mat-error *ngIf="purchaseForm.get('weightPriceGroup.freight').hasError('min')">
+              Freight must be greater than 0</mat-error>
+          </mat-form-field>
+        </div>
+
+        <div class="col-md-4">
+          <span class="grand-total"><p class="d-flex justify-content-end"><b> Total Charges:&nbsp;
+          </b> {{ (purchaseForm.get('weightPriceGroup.commission').value   + 
+           purchaseForm.get('weightPriceGroup.freight').value) | currency:"PKR":"symbol": '1.2-2' }} </p>
           </span>
         </div>
         <div class="col-md-12">
@@ -461,7 +474,7 @@
       <div class="row">
         <div class="offset-6 col-md-6">
           <span class="grand-total"><p class="d-flex justify-content-end"><b> Grand Total:&nbsp;
-          </b> {{ getRateBasedOnTotal() + purchaseForm.get('weightPriceGroup.commission').value + additionalCharges |currency:"PKR":"symbol":'1.2-2' }} </p>
+          </b> {{ getRateBasedOnTotal() + saleForm.get('weightPriceGroup.freight').value + purchaseForm.get('weightPriceGroup.commission').value + additionalCharges |currency:"PKR":"symbol":'1.2-2' }} </p>
           </span>
           <!-- <mat-form-field>
             <input type="number" matInput placeholder="Total Price" formControlName="totalPrice" readonly>

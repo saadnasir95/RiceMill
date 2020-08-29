@@ -53,6 +53,8 @@ namespace TheRiceMill.Application.Sales.Queries.GetSales
                     BagQuantity = p.BagQuantity,
                     TotalMaund = p.TotalMaund,
                     BoriQuantity = p.BoriQuantity,
+                    BasePrice = p.BasePrice,
+                    Freight = p.Freight,
                     RateBasedOn = (int)p.RateBasedOn,
                     Gatepasses = p.GatePasses.Select(gp => new GatePassResponseModel()
                     {

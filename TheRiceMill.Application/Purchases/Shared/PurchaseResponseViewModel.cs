@@ -36,6 +36,7 @@ namespace TheRiceMill.Application.Purchases.Shared
         public double BasePrice { get; set; }
         public double TotalPrice { get; set; }
         public double Commission { get; set; }
+        public double Freight { get; set; }
         public double PercentCommission { get; set; }
         public ChargeRequestViewModel[] AdditionalCharges { get; set; }
         public int Direction { get; set; }

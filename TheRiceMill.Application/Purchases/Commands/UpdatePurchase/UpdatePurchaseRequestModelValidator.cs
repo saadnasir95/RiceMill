@@ -12,6 +12,8 @@ namespace TheRiceMill.Application.Purchases.Commands.UpdatePurchase
             RuleFor(p => p.TotalMaund).Required();
             RuleFor(p => p.Rate).Required();
             RuleFor(p => p.TotalPrice).Required();
+            RuleFor(p => p.BasePrice).Required();
+            RuleFor(p => p.Freight).Required();
         }
     }
 }

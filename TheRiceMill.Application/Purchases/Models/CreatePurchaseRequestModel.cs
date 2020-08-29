@@ -16,8 +16,11 @@ namespace TheRiceMill.Application.Purchases.Models
         public double BagQuantity { get; set; }
         public int RateBasedOn { get; set; }
         public double Rate { get; set; }
+        public double BasePrice { get; set; }
         public double TotalPrice { get; set; }
         public double Commission { get; set; }
+        public double Freight { get; set; }
+
         public DateTime Date { get; set; }
         public ChargeRequestViewModel[] AdditionalCharges { get; set; }
         public CompanyType CompanyId { get; set; }
