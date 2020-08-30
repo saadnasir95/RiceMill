@@ -105,7 +105,7 @@
           <mat-divider class="mb-2"></mat-divider>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-md-8">
           <mat-form-field>
             <input type="number" matInput placeholder="Brokery" formControlName="commission">
             <mat-error *ngIf="saleForm.get('weightPriceGroup.commission').hasError('required')">
@@ -116,7 +116,7 @@
           </mat-form-field>
         </div>
 
-        <div class="col-md-4">
+        <!-- <div class="col-md-4">
           <mat-form-field>
             <input type="number" matInput placeholder="Freight" formControlName="freight">
             <mat-error *ngIf="saleForm.get('weightPriceGroup.freight').hasError('required')">
@@ -125,11 +125,11 @@
             <mat-error *ngIf="saleForm.get('weightPriceGroup.freight').hasError('min')">
               Freight must be greater than 0</mat-error>
           </mat-form-field>
-        </div>
+        </div> -->
 
         <div class="col-md-4">
-          <span class="grand-total"><p class="d-flex justify-content-end"><b> Total Charges:&nbsp;
-          </b> {{ (saleForm.get('weightPriceGroup.commission').value + saleForm.get('weightPriceGroup.freight').value )  |currency:"PKR":"symbol": '1.2-2' }} </p>
+          <span class="grand-total"><p class="d-flex justify-content-end"><b> Brokery Charges:&nbsp;
+          </b> {{ (saleForm.get('weightPriceGroup.commission').value)  |currency:"PKR":"symbol": '1.2-2' }} </p>
           </span>
         </div>
         <div class="col-md-12">
@@ -181,7 +181,7 @@
       <div class="row">
         <div class="offset-6 col-md-6">
           <span class="grand-total"><p class="d-flex justify-content-end"><b> Grand Total:&nbsp;
-          </b> {{ getRateBasedOnTotal() + saleForm.get('weightPriceGroup.commission').value + saleForm.get('weightPriceGroup.freight').value + additionalCharges |currency:"PKR":"symbol":'1.2-2' }} </p>
+          </b> {{ getRateBasedOnTotal() + saleForm.get('weightPriceGroup.commission').value + additionalCharges |currency:"PKR":"symbol":'1.2-2' }} </p>
           </span>
         </div>
       </div>

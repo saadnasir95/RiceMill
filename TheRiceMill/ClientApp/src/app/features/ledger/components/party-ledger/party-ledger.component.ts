@@ -138,7 +138,7 @@ export class PartyLedgerComponent implements OnInit, OnDestroy {
         },
         {
           headerName: 'Freight',
-          field: '',
+          field: 'freight',
           width: 100,
           valueFormatter: this.currencyPipe
         },
@@ -161,13 +161,13 @@ export class PartyLedgerComponent implements OnInit, OnDestroy {
         },
         {
           headerName: 'Credit',
-          field: 'amount',
+          field: 'credit',
           width: 100,
           valueFormatter: this.currencyPipe
         },
         {
           headerName: 'Debit',
-          field: 'amount',
+          field: 'debit',
           width: 100,
           valueFormatter: this.currencyPipe
         },
@@ -260,18 +260,6 @@ export class PartyLedgerComponent implements OnInit, OnDestroy {
           (response: LedgerResponse) => {
             this.ledgerData = response.data;
             let previousBalance: number = this.ledgerData.previousBalance != null ? this.ledgerData.previousBalance : 0;
-            this.ledgerData.ledgerResponses.forEach(element => {
-              // if (element.credit !== 0) {
-              //   previousBalance += element.credit;
-              //   element.balance = previousBalance;
-              // } else {
-              //   previousBalance -= element.debit;
-              //   element.balance = previousBalance;
-              // }
-              previousBalance += element.amount;
-              element.balance = previousBalance;
-            });
-            this.gridOptions.api.setRowData(this.ledgerData.ledgerResponses);
             let _credit = 0;
             let _debit = 0;
             let _balance = 0;
@@ -281,17 +269,30 @@ export class PartyLedgerComponent implements OnInit, OnDestroy {
             let _netWeight = 0;
             let _totalMaund = 0;
             
-            this.ledgerData.ledgerResponses.forEach(ledger => {
-              _credit += ledger.amount;
-              _debit += ledger.amount;
-              _balance += ledger.balance;
+            const modifiedLedgerResponses = this.ledgerData.ledgerResponses.map(ledger => {
+              previousBalance += ledger.amount;
+              ledger.balance = previousBalance;
+
               _bagQuantity += ledger.bagQuantity;
               _boriQuantity += ledger.boriQuantity;
               _netWeight += ledger.netWeight;
               _brokery += ledger.commission;
               _totalMaund += ledger.totalMaund;
-
+              if(ledger.amount > 0){
+                ledger['credit'] = ledger.amount;
+                ledger['debit'] = '' ;
+                _credit += ledger.amount;
+                _balance = +ledger.balance;
+              } else {
+                ledger['debit'] = ledger.amount; 
+                ledger['credit'] = '' ;
+                _debit += ledger.amount;
+                _balance = +ledger.balance;
+              }
+              return ledger;
             })
+
+            this.gridOptions.api.setRowData(modifiedLedgerResponses);
             const result = [{
               date: "",
               ledgerType:"",
@@ -310,8 +311,8 @@ export class PartyLedgerComponent implements OnInit, OnDestroy {
               rate:"",
               rateBasedOn: "",
               brokery: _brokery.toFixed(2),
-              amount: _credit,
-              // : _debit,
+              debit: _debit == 0 ? '' : _debit,
+              credit: _credit == 0 ? '' : _credit,
               balance: _balance,
             }];
             this.gridOptions.api.setPinnedBottomRowData(result);

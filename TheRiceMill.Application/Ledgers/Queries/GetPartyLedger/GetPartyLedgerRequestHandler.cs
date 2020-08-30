@@ -91,6 +91,7 @@ namespace TheRiceMill.Application.Ledgers.Queries.GetLedgers
                     ledger.BagQuantity = purchase.BagQuantity;
                     ledger.BoriQuantity = purchase.BoriQuantity;
                     ledger.Commission = purchase.Commission;
+                    ledger.Freight = purchase.Freight;
                     ledger.GatepassIds = String.Join(", ", purchase.GatePasses.Select(c => c.Id));
                     ledger.Product = String.Join(", ", purchase.GatePasses.Select(c => c.Product.Name).Distinct());
                     ledger.LotNumber = String.Join(", ", purchase.GatePasses.Select(c => c.LotNumber).Distinct());
@@ -113,6 +114,7 @@ namespace TheRiceMill.Application.Ledgers.Queries.GetLedgers
                     ledger.BagQuantity = sale.BagQuantity;
                     ledger.BoriQuantity = sale.BoriQuantity;
                     ledger.Commission = sale.Commission;
+                    ledger.Freight = sale.Freight;
                     ledger.GatepassIds = String.Join(", ", sale.GatePasses.Select(c => c.Id));
                     ledger.Product = String.Join(", ", sale.GatePasses.Select(c => c.Product.Name).Distinct());
                     ledger.VehicleNo = String.Join(", ", sale.GatePasses.Select(c => c.Vehicle.PlateNo).Distinct());
@@ -140,6 +142,8 @@ namespace TheRiceMill.Application.Ledgers.Queries.GetLedgers
             public int LedgerType { get; set; }
             public int TransactionType { get; set; }
             public double Amount { get; set; }
+            public double Freight { get; set; }
+
             public int PartyId { get; set; }
             public Party Party { get; set; }
             public string VehicleNo { get; set; }

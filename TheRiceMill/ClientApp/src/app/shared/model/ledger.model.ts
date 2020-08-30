@@ -18,6 +18,7 @@ export class Ledger {
   totalMaund:number;
   additionalCharges:number;
   commission:number;
+  freight:number;
   gatepassIds:string;
   rateBasedOn:RateBasedOn; 
   rate:number; 
