@@ -11,10 +11,18 @@
 <ng-template #body>
   <form [formGroup]="productForm" (ngSubmit)="submit()">
     <mat-dialog-content>
-      <mat-form-field class="d-block w-100 ">
-        <input type="text" matInput placeholder="Name" formControlName="name">
-        <mat-error *ngIf="productForm.get('name').hasError('required')">Name is required</mat-error>
-      </mat-form-field>
+      <div class="row">
+        <mat-form-field class="d-block w-100 ">
+          <input type="text" matInput placeholder="Name" formControlName="name">
+          <mat-error *ngIf="productForm.get('name').hasError('required')">Name is required</mat-error>
+        </mat-form-field>
+      </div>
+
+      <div class="row mt-3">
+        <mat-checkbox aria-labelledby="ProcessedMaterial" formControlName="isProcessedMaterial" color="primary">Processed Material
+        </mat-checkbox>
+      </div>
+
     </mat-dialog-content>
     <mat-dialog-actions>
       <div class="row ml-1">

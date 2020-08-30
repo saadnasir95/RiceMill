@@ -6,6 +6,7 @@ import { ProductResponse } from '../model/product-response.model';
 import { Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { CompanyService } from './company.service';
+import { ProductType } from '../model/enums';
 
 @Injectable({
   providedIn: 'root'
@@ -18,13 +19,15 @@ export class ProductService {
     private http: HttpClient,
     private companyService: CompanyService) { }
 
-  getProducts(pageSize: number, pageIndex: number, search = '', sortDirection = 'false', orderBy = ''):
+  
+    getProducts(pageSize: number, pageIndex: number, search = '', Type = ProductType.All , sortDirection = 'false', orderBy = ''):
     Observable<ProductResponse> {
     const params = new HttpParams()
       .set('CompanyId', this.companyService.getCompanyId().toString())
       .set('Page', (pageIndex + 1).toString())
       .set('PageSize', pageSize.toString())
       .set('search', search + '')
+      .set('ProductType', Type + '')
       .set('isDescending', sortDirection)
       .set('orderBy', orderBy + '');
     return this.http.get<ProductResponse>(this.apiUrl, { headers: this.tokenService.getHeaders(), params: params });

@@ -15,6 +15,7 @@ namespace TheRiceMill.Application.Products.Models
             
         }
         public string Search { get; set; }
+        public bool IsProcessedMaterial { get; set; }
         public int PageSize { get; set; }
         public CompanyType CompanyId { get; set; }
     }

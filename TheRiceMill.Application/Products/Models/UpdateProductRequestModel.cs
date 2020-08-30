@@ -11,6 +11,7 @@ namespace TheRiceMill.Application.Products.Models
     {
         public int Id { get; set; }
         public string Name { get; set; }
+        public bool IsProcessedMaterial { get; set; }
         public CompanyType CompanyId { get; set; }
     }
 

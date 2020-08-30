@@ -21,11 +21,19 @@ namespace TheRiceMill.Application.Products.Models
             }
         }
         public string Search { get; set; }
+        public int ProductType { get; set; }
         public bool IsDescending { get; set; }
         public int Page { get; set; }
         public int PageSize { get; set; }
         public string OrderBy { get; set; }
         public CompanyType CompanyId { get; set; }
+    }
+
+    public enum ProductType
+    {
+        All = 0,
+        ProcessedMaterial,
+        NonProcessedMaterial
     }
 
     public class GetProductsRequestModelValidator : AbstractValidator<GetProductsRequestModel>

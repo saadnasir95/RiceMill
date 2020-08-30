@@ -6,6 +6,8 @@ import { Subscription } from 'rxjs';
 import { ProductService } from '../../../../shared/services/product.service';
 import { ProductResponse } from '../../../../shared/model/product-response.model';
 import { CompanyService } from '../../../../shared/services/company.service';
+import { FormGroup, FormControl } from '@angular/forms';
+import { ProductType } from '../../../../shared/model/enums';
 
 @Component({
   selector: 'app-product',
@@ -13,7 +15,8 @@ import { CompanyService } from '../../../../shared/services/company.service';
   styleUrls: ['./product.component.scss']
 })
 export class ProductComponent implements OnInit, OnDestroy {
-  displayedColumns: string[] = ['Id', 'Name', 'CreatedDate', 'Action'];
+  displayedColumns: string[] = ['Id', 'Name', 'Type', 'CreatedDate', 'Action'];
+  productType = [{ id: ProductType.All, value: 'All' }, { id: ProductType.ProcessedMaterial, value: 'Processed Materials' }, { id: ProductType.NonProcessedMaterial, value: 'Non-Processed Materials' }];
   dataSource: MatTableDataSource<Product>;
   products: Product[];
   isLoadingData: Boolean = false;
@@ -24,6 +27,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   sortDirection = 'false';
   sortOrderBy = '';
   companyId = 0;
+  productForm: FormGroup;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   constructor(
@@ -34,6 +38,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.dataSource = new MatTableDataSource();
     this.paginator.pageSize = 10;
+    this.buildForm()
     this.getProducts();
     this.productSubscription = this.productService.productEmitter.subscribe(
       () => {
@@ -52,6 +57,7 @@ export class ProductComponent implements OnInit, OnDestroy {
     );
   }
 
+
   ngOnDestroy() {
     if (this.productSubscription) {
       this.productSubscription.unsubscribe();
@@ -59,6 +65,23 @@ export class ProductComponent implements OnInit, OnDestroy {
     if (this.companySubscription) {
       this.companySubscription.unsubscribe();
     }
+  }
+
+  buildForm(){
+    this.productForm = new FormGroup({
+      name: new FormControl('0'),
+      productType: new FormControl()
+    });
+
+    this.productForm.get('name').valueChanges.subscribe(response => {
+      if (response) {
+        this.getProducts();
+      }
+    });
+
+    this.productForm.get('productType').valueChanges.subscribe(response => {
+      this.getProducts();
+    });
   }
 
   applyFilter(filterValue: string) {
@@ -103,7 +126,7 @@ export class ProductComponent implements OnInit, OnDestroy {
   }
   getProducts() {
     this.productService
-      .getProducts(this.paginator.pageSize, this.paginator.pageIndex, this.productSearch, this.sortDirection, this.sortOrderBy)
+      .getProducts(this.paginator.pageSize, this.paginator.pageIndex, this.productSearch, this.productForm.get('productType').value, this.sortDirection, this.sortOrderBy)
       .subscribe(
         (response: ProductResponse) => {
           this.products = response.data;

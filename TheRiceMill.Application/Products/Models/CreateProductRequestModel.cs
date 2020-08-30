@@ -9,6 +9,7 @@ namespace TheRiceMill.Application.Products.Models
     public class CreateProductRequestModel : IRequest<ResponseViewModel>
     {
         public string Name { get; set; }
+        public bool IsProcessedMaterial { get; set; }
         public CompanyType CompanyId { get; set; }
     }
 

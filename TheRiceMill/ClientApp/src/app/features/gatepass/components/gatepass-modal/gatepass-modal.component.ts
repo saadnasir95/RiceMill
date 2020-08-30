@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
-import { GatePassType } from '../../../../shared/model/enums';
+import { GatePassType, ProductType } from '../../../../shared/model/enums';
 import { MatDialogRef, MatAutocompleteSelectedEvent } from '@angular/material';
 import { Vehicle } from '../../../../shared/model/vehicle.model';
 import { Product } from '../../../../shared/model/product.model';
@@ -44,6 +44,7 @@ export class GatepassModalComponent implements OnInit {
     }),
     productGroup: new FormGroup({
       name: new FormControl(null, Validators.required),
+      isProcessedMaterial: new FormControl(false, Validators.required)
     }),
     weightPriceGroup: new FormGroup({
       bagQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
@@ -172,7 +173,7 @@ export class GatepassModalComponent implements OnInit {
         }
         this.gatepass.productId = 0;
         if (value) {
-          this.productService.getProducts(5, 0, value).subscribe(
+          this.productService.getProducts(5, 0, value,this.gatepassForm.get('productGroup.isProcessedMaterial').value ? ProductType.ProcessedMaterial : ProductType.NonProcessedMaterial).subscribe(
             (response: ProductResponse) => {
               this.productSuggestions = response.data;
             },
@@ -219,6 +220,7 @@ export class GatepassModalComponent implements OnInit {
       },
       productGroup: {
         name: gatepass.product.name,
+        isProcessedMaterial: gatepass.product.isProcessedMaterial
       },
       partyGroup: {
         name: gatepass.party.name,
@@ -357,6 +359,7 @@ export class GatepassModalComponent implements OnInit {
   selectedProduct(event: MatAutocompleteSelectedEvent) {
     this.gatepassForm.get('productGroup').setValue({
       name: event.option.value.name,
+      isProcessedMaterial: event.option.value.isProcessedMaterial
     }, { emitEvent: false });
     if (this.gatepass === undefined || this.gatepass === null) {
       this.gatepass = new Gatepass();

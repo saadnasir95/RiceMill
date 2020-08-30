@@ -15,7 +15,7 @@ namespace TheRiceMill.Domain.Entities
         /// NormalizedName of the Product e.g "APPLE"
         /// </summary>
         public string NormalizedName { get; set; }
-
+        public bool IsProcessedMaterial { get; set; }
         public IEnumerable<GatePass> GatePasses { get; set; }
     }
 }

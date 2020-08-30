@@ -52,3 +52,9 @@ export enum CompanyType {
   ABRiceMill = 1,
   GDTrading
 }
+
+export enum ProductType {
+  All = 0,
+  ProcessedMaterial,
+  NonProcessedMaterial
+}

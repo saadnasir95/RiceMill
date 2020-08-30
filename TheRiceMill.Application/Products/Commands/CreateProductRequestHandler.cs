@@ -32,6 +32,7 @@ namespace TheRiceMill.Application.Products.Commands
             var product = new Product()
             {
                 Name = request.Name,
+                IsProcessedMaterial = request.IsProcessedMaterial,
                 NormalizedName = request.Name.ToUpper(),
                 CompanyId = request.CompanyId.ToInt()
             };
@@ -41,6 +42,7 @@ namespace TheRiceMill.Application.Products.Commands
             {
                 Name = product.Name,
                 Id = product.Id,
+                IsProcessedMaterial = product.IsProcessedMaterial,
                 CompanyId = (CompanyType)product.CompanyId,
                 CreatedDate = new DateConverter().ConvertToDateTimeIso(product.CreatedDate),
             });

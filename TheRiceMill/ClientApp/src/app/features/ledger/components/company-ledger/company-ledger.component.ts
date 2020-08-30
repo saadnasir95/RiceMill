@@ -260,8 +260,6 @@ export class CompanyLedgerComponent implements OnInit, OnDestroy {
       this.endDate = response.end ? moment(response.end).utc().format() : null;
       this.getLedgerList();
     });
-
-
   }
 
   changePage() {

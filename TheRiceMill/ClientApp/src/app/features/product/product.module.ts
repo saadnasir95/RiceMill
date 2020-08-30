@@ -5,7 +5,7 @@ import { ProductRoutingModule } from './product-routing.module';
 import { ProductComponent } from './components/product/product.component';
 import { ProductModalComponent } from './components/product-modal/product-modal.component';
 import { SharedModule } from '../../shared/shared.module';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [ProductComponent, ProductModalComponent],
@@ -14,6 +14,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     ProductRoutingModule,
     SharedModule,
+    FormsModule,
     ReactiveFormsModule
   ]
 })
