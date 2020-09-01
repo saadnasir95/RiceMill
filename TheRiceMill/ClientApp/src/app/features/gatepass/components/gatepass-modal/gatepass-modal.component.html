@@ -75,7 +75,7 @@
           </mat-form-field>
         </div>
 
-        <div class="col-md-4" formGroupName="productGroup">
+        <div class="col-md-6" formGroupName="productGroup">
           <mat-form-field class="w-100">
             <input type="text" matInput placeholder="Enter Product Name" formControlName="name" autocomplete="off"
               [matAutocomplete]="productAutoComplete">
@@ -88,10 +88,11 @@
             </mat-error>
           </mat-form-field>
         </div>
-        <div class="col-2 d-flex justify-content-center align-items-center" formGroupName="productGroup">
+        <!-- Checkbox for Processed Material/Non-Processed Materials -->
+        <!-- <div class="col-2 d-flex justify-content-center align-items-center" formGroupName="productGroup">
           <mat-checkbox aria-labelledby="ProcessedMaterial" formControlName="isProcessedMaterial" color="primary">Processed Material
           </mat-checkbox>
-        </div>
+        </div> -->
 
       </div>
       <div class="row">

@@ -173,7 +173,7 @@ export class GatepassModalComponent implements OnInit {
         }
         this.gatepass.productId = 0;
         if (value) {
-          this.productService.getProducts(5, 0, value,this.gatepassForm.get('productGroup.isProcessedMaterial').value ? ProductType.ProcessedMaterial : ProductType.NonProcessedMaterial).subscribe(
+          this.productService.getProducts(5, 0, value,ProductType.All).subscribe(
             (response: ProductResponse) => {
               this.productSuggestions = response.data;
             },
