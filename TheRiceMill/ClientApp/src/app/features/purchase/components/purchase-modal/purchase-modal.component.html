@@ -474,7 +474,7 @@
       <div class="row">
         <div class="offset-6 col-md-6">
           <span class="grand-total"><p class="d-flex justify-content-end"><b> Grand Total:&nbsp;
-          </b> {{ getRateBasedOnTotal() + saleForm.get('weightPriceGroup.freight').value + purchaseForm.get('weightPriceGroup.commission').value + additionalCharges |currency:"PKR":"symbol":'1.2-2' }} </p>
+          </b> {{ getRateBasedOnTotal() + purchaseForm.get('weightPriceGroup.freight').value + purchaseForm.get('weightPriceGroup.commission').value + additionalCharges |currency:"PKR":"symbol":'1.2-2' }} </p>
           </span>
           <!-- <mat-form-field>
             <input type="number" matInput placeholder="Total Price" formControlName="totalPrice" readonly>
