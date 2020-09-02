@@ -40,7 +40,7 @@ namespace TheRiceMill.Application.GatePasses.Models
                     },
                     VehicleId = _gatepass.Vehicle.Id,
                     ProductId = _gatepass.Product.Id,
-                    LotNumber = _gatepass.LotNumber,
+                    //LotNumber = _gatepass.LotNumber,
                     BiltyNumber = _gatepass.BiltyNumber,
                     CompanyId = (CompanyType)_gatepass.CompanyId
                 });
@@ -55,7 +55,7 @@ namespace TheRiceMill.Application.GatePasses.Models
                 BagQuantity = _gatepass.BagQuantity,
                 BoriQuantity = _gatepass.BoriQuantity,
                 Broker = _gatepass.Broker,
-                LotNumber = _gatepass.LotNumber,
+                //LotNumber = _gatepass.LotNumber,
                 KandaWeight = _gatepass.KandaWeight,
                 EmptyWeight = _gatepass.EmptyWeight,
                 Maund = _gatepass.Maund,

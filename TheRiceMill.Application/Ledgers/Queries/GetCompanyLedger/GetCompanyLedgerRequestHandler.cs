@@ -99,7 +99,7 @@ namespace TheRiceMill.Application.Ledger.Queries.GetCompanyLedger
                     ledger.Broker = String.Join(", ", purchase.GatePasses.Select(c => c.Broker).Distinct());
                     ledger.NetWeight = purchase.GatePasses.Select(c => c.NetWeight).Sum();
                     ledger.InvoiceId = String.Join(", ", purchase.GatePasses.Select(c => c.PurchaseId).Distinct());
-                    ledger.LotNumber = String.Join(", ", purchase.GatePasses.Select(c => c.LotNumber).Distinct());
+                    //ledger.LotNumber = String.Join(", ", purchase.GatePasses.Select(c => c.LotNumber).Distinct());
                     ledger.BiltyNumber = String.Join(", ", purchase.GatePasses.Select(c => c.BiltyNumber).Distinct());
                     ledger.TotalMaund = purchase.TotalMaund;
                     ledger.Rate = purchase.Rate;
@@ -122,7 +122,7 @@ namespace TheRiceMill.Application.Ledger.Queries.GetCompanyLedger
                     ledger.InvoiceId = String.Join(", ", sale.GatePasses.Select(c => c.PurchaseId).Distinct());
                     ledger.NetWeight = sale.GatePasses.Select(c => c.NetWeight).Sum();
                     ledger.Broker = String.Join(", ", sale.GatePasses.Select(c => c.Broker).Distinct());
-                    ledger.LotNumber = String.Join(", ", sale.GatePasses.Select(c => c.LotNumber).Distinct());
+                    //ledger.LotNumber = String.Join(", ", sale.GatePasses.Select(c => c.LotNumber).Distinct());
                     ledger.BiltyNumber = String.Join(", ", sale.GatePasses.Select(c => c.BiltyNumber).Distinct());
                     ledger.TotalMaund = sale.TotalMaund;
                     ledger.Rate = sale.Rate;

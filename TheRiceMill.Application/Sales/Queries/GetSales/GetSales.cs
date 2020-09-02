@@ -66,7 +66,7 @@ namespace TheRiceMill.Application.Sales.Queries.GetSales
                         Maund = gp.Maund,
                         KandaWeight = gp.KandaWeight,
                         EmptyWeight = gp.EmptyWeight,
-                        LotNumber = gp.LotNumber,
+                        //LotNumber = gp.LotNumber,
                         DateTime = gp.DateTime,
                         Broker = gp.Broker,
                         Id = gp.Id,

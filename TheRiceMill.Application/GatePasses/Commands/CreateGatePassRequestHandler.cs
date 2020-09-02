@@ -42,7 +42,7 @@ namespace TheRiceMill.Application.GatePasses.Commands
                 NetWeight = request.NetWeight,
                 Maund = request.Maund,
                 Broker = request.Broker,
-                LotNumber = request.LotNumber,
+                //LotNumber = request.LotNumber,
                 BiltyNumber = request.BiltyNumber
             };
             Party party;

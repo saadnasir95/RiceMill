@@ -67,7 +67,7 @@ namespace TheRiceMill.Application.Purchases.Queries
                         DateTime = gp.DateTime,
                         Broker = gp.Broker,
                         KandaWeight = gp.KandaWeight,
-                        LotNumber = gp.LotNumber,
+                        //LotNumber = gp.LotNumber,
                         Id = gp.Id,
                         Party = new PartyRequestModel()
                         {

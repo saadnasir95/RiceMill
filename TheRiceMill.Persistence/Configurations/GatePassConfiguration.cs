@@ -24,6 +24,9 @@ namespace TheRiceMill.Persistence.Configurations
                 .WithMany(g => g.GatePasses)
                 .HasForeignKey(s => s.PurchaseId);
             builder.Property(g => g.CompanyId).HasDefaultValue(1);
+            builder.HasOne(c => c.Lot)
+                .WithMany(c => c.GatePasses)
+                .HasForeignKey(c => new { c.LotId, c.LotYear });
         }
     }
 }
