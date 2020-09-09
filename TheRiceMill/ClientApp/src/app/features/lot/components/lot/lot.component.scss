@@ -1,0 +1,28 @@
+table {
+  width: 100%;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+// td,
+// th {
+//   width: 10%;
+// }
+.no-records {
+  font-weight: bold;
+  text-align: center;
+  color: red;
+}
+
+
+@media print {
+  :not(app-gatepass-receipt) {
+    display: none;
+  }
+  app-gatepass-receipt {
+    display: block !important;
+  }
+}

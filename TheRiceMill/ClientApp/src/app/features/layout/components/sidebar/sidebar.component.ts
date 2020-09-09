@@ -31,6 +31,7 @@ export class SidebarComponent implements OnInit {
       { path: '/admin/product', title: 'Product', icon: 'fa fa-shopping-bag', class: '' },
       { path: '/admin/ledger/party', title: 'Party Ledger', icon: 'fa fa-book', class: '' },
       { path: '/admin/ledger/company', title: 'Company Ledger', icon: 'fa fa-book', class: '' },
+      { path: '/admin/lot', title: 'Lot', icon: 'fa fa-book', class: '' }
       // { path: '/admin/bank-transaction', title: 'Bank Transaction', icon: 'fa fa-exchange-alt', class: '' },
       // { path: '/admin/bank-account', title: 'Bank Account', icon: 'fa fa-university', class: '' }
     ];
