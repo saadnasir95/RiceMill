@@ -143,7 +143,8 @@ namespace TheRiceMill.Application.GatePasses.Commands
                 ProductId = product.Id,
                 VehicleId = vehicle.Id,
                 BiltyNumber = request.BiltyNumber,
-                LotNumber = request.LotNumber
+                LotId = request.LotId,
+                LotYear = request.LotYear
             });
         }
     }

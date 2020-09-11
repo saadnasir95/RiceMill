@@ -115,7 +115,8 @@ namespace TheRiceMill.Application.GatePasses.Queries
                     PurchaseId = p.PurchaseId,
                     SaleId = p.SaleId,
                     BiltyNumber = p.BiltyNumber,
-                    //LotNumber = p.LotNumber
+                    LotId = p.LotId,
+                    LotYear = p.LotYear
                 }).ToList();
             var count = await _context.GatePasses.CountAsync(query, cancellationToken);
             return new ResponseViewModel().CreateOk(gatePasses, count);

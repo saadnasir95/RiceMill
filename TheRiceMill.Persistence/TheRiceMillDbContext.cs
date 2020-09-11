@@ -12,7 +12,7 @@ using TheRiceMill.Domain.Interfaces;
 
 namespace TheRiceMill.Persistence
 {
-    public class TheRiceMillDbContext : IdentityDbContext<User, Role, string,UserClaim,UserRole,IdentityUserLogin<string>,RoleClaim,IdentityUserToken<string>>
+    public class TheRiceMillDbContext : IdentityDbContext<User, Role, string, UserClaim, UserRole, IdentityUserLogin<string>, RoleClaim, IdentityUserToken<string>>
     {
         public string CurrentUserId { get; set; }
 
@@ -33,6 +33,11 @@ namespace TheRiceMill.Persistence
         public DbSet<BankAccount> BankAccounts { get; set; }
         public DbSet<Ledger> Ledgers { get; set; }
         public DbSet<BankTransaction> BankTransactions { get; set; }
+        public DbSet<Lot> Lots { get; set; }
+        public DbSet<StockIn> StockIns { get; set; }
+        public DbSet<StockOut> StockOuts { get; set; }
+        public DbSet<ProcessedMaterial> ProcessedMaterials { get; set; }
+        public DbSet<RateCost> RateCosts { get; set; }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -76,7 +81,7 @@ namespace TheRiceMill.Persistence
 
             foreach (var entry in modifiedEntries)
             {
-                var entity = (IBase) entry.Entity;
+                var entity = (IBase)entry.Entity;
                 DateTime now = DateTime.UtcNow;
 
                 if (entry.State == EntityState.Added)

@@ -24,5 +24,6 @@ export class Gatepass extends Base {
   saleId: number;
   purchaseId: number;
   biltyNumber: string;
-  lotNumber: string;
+  lotId: number;
+  lotYear: number;
 }
