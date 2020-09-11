@@ -33,7 +33,7 @@ export class GatepassModalComponent implements OnInit {
     type: new FormControl(+GatePassType.InwardGatePass, Validators.required),
     broker: new FormControl(''),
     biltyNumber: new FormControl(''),
-    lotNumber: new FormControl(''),
+    lotId: new FormControl(''),
     partyGroup: new FormGroup({
       name: new FormControl('', Validators.required),
       address: new FormControl('', Validators.required),
@@ -44,12 +44,12 @@ export class GatepassModalComponent implements OnInit {
     }),
     productGroup: new FormGroup({
       name: new FormControl(null, Validators.required),
-      isProcessedMaterial: new FormControl(false, Validators.required)
+      // isProcessedMaterial: new FormControl(false, Validators.required)
     }),
     weightPriceGroup: new FormGroup({
       bagQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
       boriQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
-      weightPerBag: new FormControl(0, [Validators.required, Validators.min(0)]),
+      weightPerBag: new FormControl(0, [Validators.required, Validators.min(1)]),
       kandaWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
       emptyWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
       netWeight: new FormControl(0, [Validators.required, Validators.min(0)]),
@@ -173,7 +173,7 @@ export class GatepassModalComponent implements OnInit {
         }
         this.gatepass.productId = 0;
         if (value) {
-          this.productService.getProducts(5, 0, value,ProductType.All).subscribe(
+          this.productService.getProducts(5, 0, value, ProductType.All).subscribe(
             (response: ProductResponse) => {
               this.productSuggestions = response.data;
             },
@@ -210,17 +210,17 @@ export class GatepassModalComponent implements OnInit {
     this.gatepass = new Gatepass();
     Object.assign(this.gatepass, gatepass);
     this.gatepassForm.setValue({
-      dateTime: moment.utc(gatepass.dateTime).tz('Asia/Karachi').format().slice(0, 16),
+      dateTime: moment(gatepass.dateTime).format().slice(0, 16),
       type: gatepass.type,
       broker: gatepass.broker,
       biltyNumber: gatepass.biltyNumber,
-      lotNumber: gatepass.lotNumber,
+      lotId: gatepass.lotId,
       vehicleGroup: {
         plateNo: gatepass.vehicle.plateNo
       },
       productGroup: {
         name: gatepass.product.name,
-        isProcessedMaterial: gatepass.product.isProcessedMaterial
+        // isProcessedMaterial: gatepass.product.isProcessedMaterial
       },
       partyGroup: {
         name: gatepass.party.name,
@@ -279,7 +279,7 @@ export class GatepassModalComponent implements OnInit {
         this.gatepass.vehicle = new Vehicle();
         this.gatepass.vehicleId = 0;
       }
-      this.gatepass.dateTime = moment(this.gatepassForm.value.dateTime).utc().format();
+      this.gatepass.dateTime = moment(this.gatepassForm.value.dateTime).format();
       this.gatepass.type = +this.gatepassForm.value.type;
       if (this.gatepassForm.value.broker) {
         this.gatepass.broker = this.gatepassForm.value.broker;
@@ -287,20 +287,21 @@ export class GatepassModalComponent implements OnInit {
         this.gatepass.broker = this.gatepassForm.get('partyGroup').value.name;
       }
       this.gatepass.biltyNumber = this.gatepassForm.value.biltyNumber;
-      this.gatepass.lotNumber = this.gatepassForm.value.lotNumber;
+      this.gatepass.lotId = this.gatepassForm.value.lotId ? +this.gatepassForm.value.lotId : 0;
+      this.gatepass.lotYear = moment(this.gatepassForm.value.dateTime).year();
       this.gatepass.product.id = +this.gatepass.productId;
       this.gatepass.product.name = this.gatepassForm.get('productGroup').value.name;
-      this.gatepass.product.createdDate = moment.utc().format();
+      this.gatepass.product.createdDate = moment().format();
 
       this.gatepass.vehicle.id = +this.gatepass.vehicleId;
       this.gatepass.vehicle.plateNo = this.gatepassForm.get('vehicleGroup').value.plateNo;
-      this.gatepass.vehicle.createdDate = moment.utc().format();
+      this.gatepass.vehicle.createdDate = moment().format();
 
       this.gatepass.party.id = +this.gatepass.partyId;
       this.gatepass.party.name = this.gatepassForm.get('partyGroup').value.name;
       this.gatepass.party.phoneNumber = this.gatepassForm.get('partyGroup').value.phoneNumber;
       this.gatepass.party.address = this.gatepassForm.get('partyGroup').value.address;
-      this.gatepass.party.createdDate = moment.utc().format();
+      this.gatepass.party.createdDate = moment().format();
 
       this.gatepass.bagQuantity = this.gatepassForm.get('weightPriceGroup').value.bagQuantity;
       this.gatepass.boriQuantity = this.gatepassForm.get('weightPriceGroup').value.boriQuantity;
@@ -359,7 +360,7 @@ export class GatepassModalComponent implements OnInit {
   selectedProduct(event: MatAutocompleteSelectedEvent) {
     this.gatepassForm.get('productGroup').setValue({
       name: event.option.value.name,
-      isProcessedMaterial: event.option.value.isProcessedMaterial
+      // isProcessedMaterial: event.option.value.isProcessedMaterial
     }, { emitEvent: false });
     if (this.gatepass === undefined || this.gatepass === null) {
       this.gatepass = new Gatepass();

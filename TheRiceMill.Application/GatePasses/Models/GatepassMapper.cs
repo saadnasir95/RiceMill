@@ -40,7 +40,8 @@ namespace TheRiceMill.Application.GatePasses.Models
                     },
                     VehicleId = _gatepass.Vehicle.Id,
                     ProductId = _gatepass.Product.Id,
-                    //LotNumber = _gatepass.LotNumber,
+                    LotId = _gatepass.LotId,
+                    LotYear = _gatepass.LotYear,
                     BiltyNumber = _gatepass.BiltyNumber,
                     CompanyId = (CompanyType)_gatepass.CompanyId
                 });

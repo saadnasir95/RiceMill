@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using TheRiceMill.Application.Enums;
@@ -10,6 +11,7 @@ using TheRiceMill.Common.Util;
 using TheRiceMill.Domain.Entities;
 using TheRiceMill.Persistence;
 using TheRiceMill.Persistence.Extensions;
+using System.Linq;
 
 namespace TheRiceMill.Application.GatePasses.Commands
 {
@@ -42,9 +44,37 @@ namespace TheRiceMill.Application.GatePasses.Commands
                 NetWeight = request.NetWeight,
                 Maund = request.Maund,
                 Broker = request.Broker,
-                //LotNumber = request.LotNumber,
                 BiltyNumber = request.BiltyNumber
             };
+
+            Lot lot = _context.Lots.GetBy(c => c.Id == request.LotId && c.Year == request.LotYear);
+            if (lot != null)
+            {
+                gatePass.LotId = lot.Id;
+                gatePass.LotYear = lot.Year;
+            }
+            else
+            {
+                List<Lot> lots = _context.Lots.GetMany(c => c.Year == request.LotYear, "Id", 1, 1, true, null).ToList();
+                lot = new Lot
+                {
+                    Id = (lots.FirstOrDefault()?.Id + 1) ?? 1,
+                    CompanyId = request.CompanyId.ToInt(),
+                    Year = request.LotYear,
+                    StockIns = new List<StockIn>()
+                };
+                gatePass.Lot = lot;
+            }
+            if (request.Type == GatePassType.InwardGatePass)
+            {
+                lot.StockIns.Add(new StockIn
+                {
+                    BagQuantity = request.BagQuantity,
+                    BoriQuantity = request.BoriQuantity,
+                    TotalKG = request.NetWeight,
+                    GatepassTime = request.DateTime
+                });
+            }
             Party party;
             Vehicle vehicle;
             Product product;
@@ -165,7 +195,8 @@ namespace TheRiceMill.Application.GatePasses.Commands
                 ProductId = product.Id,
                 VehicleId = vehicle.Id,
                 BiltyNumber = request.BiltyNumber,
-                LotNumber = request.LotNumber
+                LotId = lot.Id,
+                LotYear = request.LotYear
             });
         }
     }

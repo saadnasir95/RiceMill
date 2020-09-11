@@ -108,7 +108,7 @@
         </div>
         <div class="col-md-4">
           <mat-form-field class="w-100">
-            <input type="text" matInput placeholder="Enter Lot Number" formControlName="lotNumber">
+            <input type="number" matInput placeholder="Enter Lot Number" formControlName="lotId">
           </mat-form-field>
         </div>
       </div>
@@ -140,7 +140,7 @@
               Weight per bag is required
             </mat-error>
             <mat-error *ngIf="gatepassForm.get('weightPriceGroup.weightPerBag').hasError('min')">
-              Weight per bag must be greater than or equal to 0</mat-error>
+              Weight per bag must be greater than 0</mat-error>
           </mat-form-field>
         </div>
         <div class="col-md-6">
