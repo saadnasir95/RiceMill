@@ -1,22 +1,20 @@
-import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild, Inject } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { GatePassType, ProductType } from '../../../../shared/model/enums';
-import { MatDialogRef, MatAutocompleteSelectedEvent, MatChipInputEvent } from '@angular/material';
-import { Vehicle } from '../../../../shared/model/vehicle.model';
+import { MatDialogRef, MatAutocompleteSelectedEvent, MatChipInputEvent, MAT_DIALOG_DATA } from '@angular/material';
 import { Product } from '../../../../shared/model/product.model';
-import { Party } from '../../../../shared/model/party.model';
 import { Gatepass } from '../../../../shared/model/gatepass.model';
 import { GatepassService } from '../../../../shared/services/gatepass.service';
 import * as moment from 'moment';
 import 'moment-timezone';
-import { GatepassResponse } from '../../../../shared/model/gatepass-response.model';
 import { NotificationService } from '../../../../shared/services/notification.service';
 import { SpinnerService } from '../../../../shared/services/spinner.service';
 import { Purchase } from '../../../../shared/model/purchase.model';
-import { AdditionalCharges } from '../../../../shared/model/additionalcharges.model';
-import { ENTER, COMMA } from '@angular/cdk/keycodes';
-import { ProcessedMaterial } from '../../../../shared/model/processed-material.model';
+import { ProcessedMaterial, CreateProcessedMaterial } from '../../../../shared/model/processed-material.model';
 import { Lot } from '../../../../shared/model/lot.model';
+import { LotService } from '../../../../shared/services/lot.service';
+import { ProductService } from '../../../../shared/services/product.service';
+import { ProductResponse } from '../../../../shared/model/product-response.model';
 @Component({
   selector: 'app-gatepass-modal',
   templateUrl: './lot-modal.component.html',
@@ -25,24 +23,17 @@ import { Lot } from '../../../../shared/model/lot.model';
 export class LotModalComponent implements OnInit {
   @ViewChild('gatepassInput') gatepassInput: ElementRef<HTMLInputElement>;
 
-  visible = true;
-  selectable = true;
-  removable = true;
-  addOnBlur = false;
-  selectedRateOnText: string;
-  selectedPartyId: number = 0;
-  separatorKeysCodes: number[] = [ENTER, COMMA];
   filteredGatepasses: Gatepass[];
-  gatepasses: Gatepass[] = [];
-  vehicleSuggestions: Vehicle[];
-  partySuggestions: Party[];
   productSuggestions: Product[];
   totalKg = 0;
   commission = 0;
   basePrice = 0;
+  processedMaterial: CreateProcessedMaterial;
 
   lotForm: FormGroup = new FormGroup({
     date: new FormControl(moment.tz('Asia/Karachi').format().slice(0, 16), Validators.required),
+    lotId: new FormControl(null, Validators.required),
+    lotYear: new FormControl(null, Validators.required),
     processedMaterial: new FormArray([]),
   });
 
@@ -55,7 +46,10 @@ export class LotModalComponent implements OnInit {
     // private purchaseService: PurchaseService,
     private notificationService: NotificationService,
     private gatepassService: GatepassService,
-    public spinner: SpinnerService) {
+    private lotService: LotService,
+    public spinner: SpinnerService,
+    public productService: ProductService,
+    @Inject(MAT_DIALOG_DATA) public data: any) {
   }
 
   ngOnInit() {
@@ -70,6 +64,8 @@ export class LotModalComponent implements OnInit {
   //   )
   // })
 
+    this.lotForm.controls["lotId"].setValue(this.data.lotId);
+    this.lotForm.controls["lotYear"].setValue(this.data.lotYear);
     this.lotForm.get('processedMaterial').valueChanges.subscribe(
       (value: Array<any>) => {
         this.totalKg = 0;
@@ -103,60 +99,6 @@ export class LotModalComponent implements OnInit {
     }
 
     this.lotForm.controls['gatepass'].setValue(null);
-  }
-
-  remove(gatepass: Gatepass): void {
-    let index = 0
-    this.gatepasses.find((_gatepass, i) => {
-      if (_gatepass.id == gatepass.id) {
-        index = i
-        return true
-      }
-    })
-
-    if (index >= 0) {
-      this.gatepasses.splice(index, 1);
-      this.lotForm.get('weightPriceGroup.totalMaund').setValue(
-        (this.lotForm.get('weightPriceGroup.totalMaund').value - gatepass.maund).toFixed(2)
-      );
-
-      this.lotForm.get('weightPriceGroup.boriQuantity').setValue(
-        (this.lotForm.get('weightPriceGroup.boriQuantity').value - gatepass.boriQuantity).toFixed(2)
-      );
-
-      this.lotForm.get('weightPriceGroup.bagQuantity').setValue(
-        (this.lotForm.get('weightPriceGroup.bagQuantity').value - gatepass.bagQuantity).toFixed(2)
-      );
-    }
-
-    if(this.gatepasses.length === 0){
-      this.selectedPartyId = 0
-    }
-  }
-
-  selected(event: MatAutocompleteSelectedEvent): void {
-    if (!this.isGatepassExists(event.option.value)) {
-      this.gatepasses.push(event.option.value)
-      this.lotForm.get('weightPriceGroup.totalMaund').setValue(
-        +this.lotForm.get('weightPriceGroup.totalMaund').value + event.option.value.maund
-      );
-
-      this.lotForm.get('weightPriceGroup.boriQuantity').setValue(
-        +this.lotForm.get('weightPriceGroup.boriQuantity').value + event.option.value.boriQuantity
-      );
-
-      this.lotForm.get('weightPriceGroup.bagQuantity').setValue(
-        +this.lotForm.get('weightPriceGroup.bagQuantity').value + event.option.value.bagQuantity
-      );
-      this.selectedPartyId = event.option.value.party.id
-    };
-    this.gatepassInput.nativeElement.value = '';
-    this.lotForm.controls['gatepass'].setValue(null);
-  }
-
-  isGatepassExists(gatepass: Gatepass): boolean {
-    const findGatePass = this.gatepasses.find(_gatepass => _gatepass.id == gatepass.id)
-    return findGatePass ? true : false
   }
 
   closeModal() {
@@ -225,7 +167,7 @@ export class LotModalComponent implements OnInit {
     //   });
   }
 
-  // submit() {
+  submit() {
   //   if (this.purchaseForm.valid) {
   //     if (this.gatepasses.length == 0) {
   //       return
@@ -253,71 +195,103 @@ export class LotModalComponent implements OnInit {
   //     this.purchase.basePrice = this.getRateBasedOnTotal();  
 
 
-  //     if (this.purchase.additionalCharges.length >= 0 && (this.purchaseForm.get('additionalCharges') as FormArray).length >= 0) {
-  //       for (let i = 0; i < (this.purchaseForm.get('additionalCharges') as FormArray).length; i++) {
-  //         this.purchase.additionalCharges[i].id = (this.purchaseForm.get('additionalCharges') as FormArray).at(i).value.id;
-  //         this.purchase.additionalCharges[i].addPrice = (this.purchaseForm.get('additionalCharges') as FormArray).at(i).value.addPrice;
-  //         this.purchase.additionalCharges[i].task = (this.purchaseForm.get('additionalCharges') as FormArray).at(i).value.task;
-  //         this.purchase.additionalCharges[i].bagQuantity = (this.purchaseForm.get('additionalCharges') as FormArray).at(i).value.bagQuantity;
-  //         this.purchase.additionalCharges[i].rate = (this.purchaseForm.get('additionalCharges') as FormArray).at(i).value.rate;
-  //         this.purchase.additionalCharges[i].total = (this.purchaseForm.get('additionalCharges') as FormArray).at(i).value.total;
-  //       }
-  //     }
+      if (this.lot.processedMaterials.length >= 0 && (this.lotForm.get('processedMaterial') as FormArray).length >= 0) {
+        for (let i = 0; i < (this.lotForm.get('processedMaterial') as FormArray).length; i++) {
+          this.lot.processedMaterials[i].id = (this.lotForm.get('processedMaterial') as FormArray).at(i).value.id;
+          this.lot.processedMaterials[i].bagQuantity = (this.lotForm.get('processedMaterial') as FormArray).at(i).value.bagQuantity;
+          this.lot.processedMaterials[i].boriQuantity = (this.lotForm.get('processedMaterial') as FormArray).at(i).value.boriQuantity;
+          this.lot.processedMaterials[i].productId = (this.lotForm.get('processedMaterial') as FormArray).at(i).value.productId;
+          this.lot.processedMaterials[i].perKg = (this.lotForm.get('processedMaterial') as FormArray).at(i).value.perKg;
+          this.lot.processedMaterials[i].totalKg = (this.lotForm.get('processedMaterial') as FormArray).at(i).value.totalKg;
+        }
+      }
 
-  //     if (this.isNew) {
-  //       this.purchaseService.addPurchase(this.purchase).subscribe(
-  //         (response: PurchaseResponse) => {
-  //           this.spinner.isLoading = false;
-  //           this.notificationService.successNotifcation('Purchase added successfully');
-  //           this.modalRef.close();
-  //           this.purchaseService.purchaseEmitter.emit(response.data);
-  //         },
-  //         (error) => {
-  //           console.log(error);
-  //           this.spinner.isLoading = false;
-  //           this.notificationService.errorNotifcation('Something went wrong');
-  //         });
+      if (this.isNew) {
+        const createProcessedMaterial = new CreateProcessedMaterial() 
+        createProcessedMaterial.lotId = +this.data.lotId,
+        createProcessedMaterial.lotYear = +this.data.lotYear,
+        createProcessedMaterial.processedMaterials = this.lot.processedMaterials
 
-  //     } else {
-  //       this.purchaseService.updatePurchase(this.purchase).subscribe(
-  //         (data) => {
-  //           this.spinner.isLoading = false;
-  //           this.notificationService.successNotifcation('Purchase updated successfully');
-  //           this.purchaseService.purchaseEmitter.emit(true);
-  //           this.modalRef.close();
-  //         },
-  //         (error) => {
-  //           this.spinner.isLoading = false;
-  //           console.log(error);
-  //           this.notificationService.errorNotifcation('Something went wrong');
-  //         });
-  //     }
+        this.lotService.createProcessedMaterial(createProcessedMaterial).subscribe(
+          (response: any) => {
+            this.spinner.isLoading = false;
+            this.notificationService.successNotifcation('Purchase added successfully');
+            this.modalRef.close();
+            // this.lotService.purchaseEmitter.emit(response.data);
+          },
+          (error) => {
+            console.log(error);
+            this.spinner.isLoading = false;
+            this.notificationService.errorNotifcation('Something went wrong');
+          });
+
+      } else {
+        // this.purchaseService.updatePurchase(this.purchase).subscribe(
+        //   (data) => {
+        //     this.spinner.isLoading = false;
+        //     this.notificationService.successNotifcation('Purchase updated successfully');
+        //     this.lotService.purchaseEmitter.emit(true);
+        //     this.modalRef.close();
+        //   },
+        //   (error) => {
+        //     this.spinner.isLoading = false;
+        //     console.log(error);
+        //     this.notificationService.errorNotifcation('Something went wrong');
+        //   });
+      }
   //   }
-  // }
+  }
+
+  selectedProduct(event: MatAutocompleteSelectedEvent, index: number) {
+    (<FormArray>this.lotForm.controls['processedMaterial']).at(index).patchValue({
+      productId: event.option.value.id,
+    }, { emitEvent: false });
+    if (this.processedMaterial === undefined || this.processedMaterial === null) {
+      this.processedMaterial = new CreateProcessedMaterial();
+    }
+    if (this.processedMaterial.lotId === undefined || this.processedMaterial.lotId === null) {
+      // this.processedMaterial.product = new Product();
+    }
+    // this.processedMaterial.item = event.option.value.id;
+  }
 
 
-  addCharges() {
+  addProcessedMaterial() {
     const formGroup = new FormGroup({
       id: new FormControl(0, Validators.required),
-      item: new FormControl(null, Validators.required),
+      productId: new FormControl(null, Validators.required),
       boriQuantity: new FormControl(null, [Validators.required, Validators.min(0)]),
       bagQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
       perKg: new FormControl(0, [Validators.required, Validators.min(0)]),
       totalKg: new FormControl(null, [Validators.required, Validators.min(0)]),
+      lotId: new FormControl(this.data.lotId, [Validators.required, Validators.min(0)]),
     });
     (this.lotForm.get('processedMaterial') as FormArray).push(formGroup);
     if (this.lot === undefined || this.lot === null) {
       this.lot = new Lot();
     }
-    if (this.lot.processedMaterial === undefined || this.lot.processedMaterial === null) {
-      this.lot.processedMaterial = [];
+    if (this.lot.processedMaterials === undefined || this.lot.processedMaterials === null) {
+      this.lot.processedMaterials = [];
     }
-    this.lot.processedMaterial.push(new ProcessedMaterial());
+    this.lot.processedMaterials.push(new ProcessedMaterial());
+  }
+
+  searchProduct(name){
+    setTimeout(() => {
+      if (name) {
+        this.productService.getProducts(5, 0, name, ProductType.All).subscribe(
+          (response: ProductResponse) => {
+            this.productSuggestions = response.data;
+          },
+          (error) => console.log(error)
+        );
+      }
+    },500)
   }
 
   deleteCharges(id: number) {
     (this.lotForm.get('processedMaterial') as FormArray).removeAt(id);
-    this.lot.processedMaterial.splice(id, 1);
+    this.lot.processedMaterials.splice(id, 1);
   }
 
 

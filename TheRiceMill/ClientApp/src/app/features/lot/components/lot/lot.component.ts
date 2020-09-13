@@ -7,6 +7,11 @@ import { Gatepass } from '../../../../shared/model/gatepass.model';
 import { GatepassResponse } from '../../../../shared/model/gatepass-response.model';
 import { NotificationService } from '../../../../shared/services/notification.service';
 import { CompanyService } from '../../../../shared/services/company.service';
+import { LotService } from '../../../../shared/services/lot.service';
+import { LotResponse } from '../../../../shared/model/lot-response.model';
+import { Lot } from '../../../../shared/model/lot.model';
+import { StockIn } from '../../../../shared/model/stock-in.model';
+import { ProcessedMaterial } from '../../../../shared/model/processed-material.model';
 
 @Component({
   selector: 'app-lot',
@@ -16,42 +21,55 @@ import { CompanyService } from '../../../../shared/services/company.service';
 export class LotComponent implements OnInit, OnDestroy {
 
   // tslint:disable-next-line: max-line-length
-  displayedColumns: string[] = ['Id', 'Type', 'Party.Name', 'Vehicle.PlateNo', 'Product.Name', 'BagQuantity', 'BoriQuantity', 'WeightPerBag', 'NetWeight', 'Maund', 'DateTime', 'Action'];
-  dataSource: MatTableDataSource<Gatepass>;
-  gatepassList: Gatepass[];
+  displayedColumns: string[] = ["id","gatepassTime","boriQuantity","bagQuantity","totalKG","action"];
+  processedMaterialDisplayedColumns: string[] = ["id","productName","boriQuantity","bagQuantity","totalKG","action"];
+  dataSource: MatTableDataSource<StockIn>;
+  processedMaterialDataSource: MatTableDataSource<ProcessedMaterial>;
+
+  lotList: Lot[];
+  stockInsList: StockIn[];  
+  processedMaterialList: ProcessedMaterial[];
   isLoadingData: Boolean = false;
   dialogRef: MatDialogRef<LotModalComponent>;
   gatepassSubscription: Subscription;
   companySubscription: Subscription;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) processedMaterialSort: MatSort;
+  @ViewChild(MatPaginator) processedMaterialPaginator: MatPaginator;
 
   companyId = 0;
-  gatepassSearch = '';
+  lotSearch = '';
+  advanceSearch = '';
   sortDirection = 'false';
   sortOrderBy = '';
   constructor(
-    private gatepassService: GatepassService,
+    private lotService: LotService,
     private matDialog: MatDialog,
     private notificationService: NotificationService,
     private companyService: CompanyService) { }
 
   ngOnInit() {
     this.dataSource = new MatTableDataSource();
+    this.processedMaterialDataSource = new MatTableDataSource();
     this.paginator.pageSize = 10;
-    this.getGatepassList();
-    this.gatepassSubscription = this.gatepassService.gatepassEmitter.subscribe(
+    this.processedMaterialPaginator.pageSize = 10;
+    // this.getLotsList();
+    this.gatepassSubscription = this.lotService.gatepassEmitter.subscribe(
       (data: any) => {
         this.paginator.pageIndex = 0;
-        this.getGatepassList();
+        this.getLotsList();
       }
     );
+
     this.companySubscription = this.companyService.companySubject.subscribe(
       (companyId: number) => {
         if (this.companyId !== companyId) {
           this.companyId = companyId;
           this.paginator.pageIndex = 0;
-          this.getGatepassList();
+          if(this.lotSearch){
+            this.getLotsList();
+          }
         }
       }
     );
@@ -68,25 +86,33 @@ export class LotComponent implements OnInit, OnDestroy {
 
   applyFilter(filterValue: string) {
     this.paginator.pageIndex = 0;
-    this.gatepassSearch = filterValue.trim().toLowerCase();
-    this.getGatepassList();
+    this.lotSearch = filterValue.trim().toLowerCase();
+    this.getLotsList();
   }
+  
   sortData() {
     this.paginator.pageIndex = 0;
     this.sortDirection = this.sort.direction === 'desc' ? 'true' : 'false';
     this.sortOrderBy = this.sort.active;
-    this.getGatepassList();
+    this.getLotsList();
   }
+  
   changePage() {
-    this.getGatepassList();
+    this.getLotsList();
   }
-  openModal() {
+
+  addProcessedMaterial() {
     this.dialogRef = this.matDialog.open(LotModalComponent, {
       disableClose: true,
-      width: '1400px'
+      width: '1400px',
+      data: {
+        lotId: this.lotSearch,
+        lotYear: this.lotList[0].year
+      }
     });
     this.dialogRef.componentInstance.modalRef = this.dialogRef;
   }
+
   editGatepass(gatepass: Gatepass) {
     // this.dialogRef = this.matDialog.open(LotModalComponent, {
     //   disableClose: true,
@@ -104,18 +130,21 @@ export class LotComponent implements OnInit, OnDestroy {
     // this.dialogRef.componentInstance.modalRef = this.dialogRef;
     // this.dialogRef.componentInstance.deleteGatepass(gatepass);
   }
-  getGatepassList() {
-    this.gatepassService
-      .getGatepassList(this.paginator.pageSize, this.paginator.pageIndex, this.gatepassSearch, this.sortDirection, this.sortOrderBy)
+
+  getLotsList() {
+    this.lotService
+      .getLotList(this.paginator.pageSize, this.paginator.pageIndex, this.advanceSearch, this.sortDirection, this.sortOrderBy, this.lotSearch)
       .subscribe(
-        (response: GatepassResponse) => {
-          this.gatepassList = response.data;
-          this.dataSource.data = this.gatepassList;
+        (response: LotResponse) => {
+          this.lotList = response.data;
+          this.stockInsList = response.data[0].stockIns;
+          this.processedMaterialList = response.data[0].processedMaterials;
+          this.dataSource.data = this.stockInsList;
+          this.processedMaterialDataSource.data = this.processedMaterialList;
+          this.processedMaterialPaginator.length = response.count;
           this.paginator.length = response.count;
         },
         (error) => console.log(error)
       );
   }
-
-
 }

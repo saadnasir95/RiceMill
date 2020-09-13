@@ -1,6 +1,6 @@
 <ng-template #header>
-  <h2 mat-dialog-title class="d-inline" *ngIf="isNew">Add Purchase</h2>
-  <h2 mat-dialog-title class="d-inline" *ngIf="!isNew">Edit Purchase</h2>
+  <h2 mat-dialog-title class="d-inline" *ngIf="isNew">Add Processed Materials</h2>
+  <h2 mat-dialog-title class="d-inline" *ngIf="!isNew">Edit Processed Materials</h2>
   <span class="float-right">
     <i class="fa fa-times show-cursor" style="cursor: pointer;" (click)="closeModal()">
     </i>
@@ -50,7 +50,15 @@
           class="row">
           <input type="number" hidden formControlName="id">
           <mat-form-field class="col-3">
-            <input type="text" matInput placeholder="Enter Item" formControlName="item">
+            <input type="text" matInput placeholder="Enter Product Name" (input)="searchProduct($event.target.value)" formControlName="productId" autocomplete="off"
+              [matAutocomplete]="productAutoComplete">
+            <mat-autocomplete #productAutoComplete="matAutocomplete" (optionSelected)="selectedProduct($event,i)">
+              <mat-option *ngFor="let product of productSuggestions" [value]="product">
+                {{ product.name }}</mat-option>
+            </mat-autocomplete>
+            <mat-error *ngIf="lotForm.controls.processedMaterial.controls[i].hasError('required')">
+              Product name is required
+            </mat-error>
           </mat-form-field>
           <mat-form-field class="col-2">
             <input type="number" matInput placeholder="Enter Bori Quantiy" formControlName="boriQuantity">
@@ -74,7 +82,7 @@
         </div>
         <div class="row">
           <div class="col-md-6">
-            <button mat-raised-button type="button" class="btn btn-primary" (click)="addCharges()">Add Processed Material</button>
+            <button mat-raised-button type="button" class="btn btn-primary" (click)="addProcessedMaterial()">Add Processed Material</button>
           </div>
           <div class="col-md-6">
             <span class="grand-total"><p class="d-flex justify-content-end"><b> Total Additional Charges:&nbsp;
