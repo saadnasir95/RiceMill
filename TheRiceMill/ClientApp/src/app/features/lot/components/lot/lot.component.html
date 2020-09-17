@@ -131,6 +131,64 @@
               </mat-paginator>
             </div>
           </div>
+
+          <div class="row">
+            <div class="mat-elevation-z8 col-md-12">
+              <h3> Stock Out </h3>
+              <table class="table-responsive-sm" mat-table [dataSource]="stockOutDataSource" matSort (matSortChange)="sortData()">
+                <ng-container matColumnDef="id">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Id</th>
+                  <td mat-cell *matCellDef="let lot"> {{lot.id}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="gatepassTime">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Date </th>
+                  <td mat-cell *matCellDef="let lot">
+                    {{lot.gatepassTime | localDatetime}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="bagQuantity">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Bag Quantity</th>
+                  <td mat-cell *matCellDef="let lot"> {{lot.bagQuantity}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="boriQuantity">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Bori Quantity</th>
+                  <td mat-cell *matCellDef="let lot"> {{lot.boriQuantity}} </td>
+                </ng-container>
+                
+                <ng-container matColumnDef="totalKG">
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header> Total KG</th>
+                  <td mat-cell *matCellDef="let lot"> {{lot.totalKG}} </td>
+                </ng-container>
+
+                <ng-container matColumnDef="action">
+                  <th mat-header-cell *matHeaderCellDef> Action </th>
+                  <td mat-cell *matCellDef="let stockIn">
+                    <a href="javascript:;" (click)="addProcessedMaterial(stockIn)">
+                      <i class="fa fa-pen" aria-hidden="true"></i></a>
+                    &nbsp;
+                    <!-- <a href="javascript:;" (click)="deleteGatepass(gatepass)"
+                      *ngIf="!gatepass.saleId && !gatepass.purchaseId"><i class="fa fa-trash text-danger"
+                        aria-hidden="true"></i></a> -->
+                  </td>
+                </ng-container>
+                <ng-container matColumnDef="disclaimer">
+                  <td mat-footer-cell *matFooterCellDef colspan="12" class="no-records">
+                    No records found
+                  </td>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="stockOutColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: stockOutColumns;"></tr>
+                <div *ngIf="lotList">
+                  <tr mat-footer-row *matFooterRowDef="['disclaimer']" class="no-records"></tr>
+                </div>
+              </table>
+              <mat-paginator [pageSizeOptions]="[10, 50, 100,200]" [showFirstLastButtons]="true" (page)="changePage()">
+              </mat-paginator>
+            </div>
+          </div>
         </div>
       </div>
     </div>

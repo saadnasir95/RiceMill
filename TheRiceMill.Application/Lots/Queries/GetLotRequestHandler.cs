@@ -27,18 +27,18 @@ namespace TheRiceMill.Application.Lots.Queries
             object lots = null;
             request.SetDefaultValue();
             if (request.LotId != 0) {
-                lots = _context.Lots.GetMany(q => q.Id == request.LotId, request.OrderBy, request.Page,
+                lots = _context.Lots.GetMany(q => q.Id == request.LotId || q.Year == request.LotId, request.OrderBy, request.Page,
                 request.PageSize, request.IsDescending, p => p.Include(pr => pr.StockIns).Include(pt => pt.StockOuts)
-                .Include(py => py.ProcessedMaterials).Include(pu => pu.RateCosts).Include((pi => pi.GatePasses))).Select(p => new GetLotResponseModel()
+                .Include(py => py.ProcessedMaterials).Include(pu => pu.RateCosts).Include(pi => pi.GatePasses)).Include(q => q.ProcessedMaterials).Select(p => new GetLotResponseModel()
                 {
                     GatePasses = p.GatePasses,
                     RateCosts = p.RateCosts,
                     ProcessedMaterials = this.ProcessedMaterialMapper(p.ProcessedMaterials),
                     StockIns = p.StockIns,
                     StockOuts = p.StockOuts,
-                    Year = p.Year
-                }).ToList();
-
+                    Year = p.Year,
+                    Id = p.Id
+                });
             }
             return new ResponseViewModel().CreateOk(lots);
         }
@@ -49,7 +49,7 @@ namespace TheRiceMill.Application.Lots.Queries
             List<Models.ProcessedMaterial> _processedMaterial = new List<Models.ProcessedMaterial>();
             processedMaterial.ForEach(pm =>
             {
-                Models.ProcessedMaterial _pm = new Models.ProcessedMaterial();
+               Models.ProcessedMaterial _pm = new Models.ProcessedMaterial();
                 _pm.BagQuantity = pm.BagQuantity;
                 _pm.BoriQuantity = pm.BoriQuantity;
                 _pm.PerKG = pm.PerKG;

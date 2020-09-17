@@ -36,8 +36,17 @@ namespace TheRiceMill.Application.Lots.Commands
                 processedMaterial.LotId = request.LotId;
                 processedMaterial.LotYear = request.LotYear;
                 _processedMaterial = processedMaterial;
+
+                var stockOut = new StockOut();
+                stockOut.BagQuantity = 0;
+                stockOut.BoriQuantity = 0;
+                stockOut.LotId = request.LotId;
+                stockOut.LotYear = request.LotYear;
+                stockOut.ProductId = pm.ProductId;
+                stockOut.PerKG = 0;
+                stockOut.TotalKG = 0;
+                _context.StockOuts.Add(stockOut);
                 _context.ProcessedMaterials.Add(processedMaterial);
-                //await _context.SaveChangesAsync();
             });
             await _context.SaveChangesAsync(cancellationToken);
             return new ResponseViewModel().CreateOk(new ProcessedMaterialResponseModel()

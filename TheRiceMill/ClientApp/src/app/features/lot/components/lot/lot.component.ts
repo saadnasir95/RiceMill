@@ -10,7 +10,7 @@ import { CompanyService } from '../../../../shared/services/company.service';
 import { LotService } from '../../../../shared/services/lot.service';
 import { LotResponse } from '../../../../shared/model/lot-response.model';
 import { Lot } from '../../../../shared/model/lot.model';
-import { StockIn } from '../../../../shared/model/stock-in.model';
+import { StockIn, StockOut } from '../../../../shared/model/stock-in.model';
 import { ProcessedMaterial } from '../../../../shared/model/processed-material.model';
 
 @Component({
@@ -23,20 +23,27 @@ export class LotComponent implements OnInit, OnDestroy {
   // tslint:disable-next-line: max-line-length
   displayedColumns: string[] = ["id","gatepassTime","boriQuantity","bagQuantity","totalKG","action"];
   processedMaterialDisplayedColumns: string[] = ["id","productName","boriQuantity","bagQuantity","totalKG","action"];
+  stockOutColumns: string[] = ["id","gatepassTime","boriQuantity","bagQuantity","totalKG","action"];
+
   dataSource: MatTableDataSource<StockIn>;
   processedMaterialDataSource: MatTableDataSource<ProcessedMaterial>;
+  stockOutDataSource: MatTableDataSource<StockOut>;
 
   lotList: Lot[];
   stockInsList: StockIn[];  
+  stockOutsList: StockOut[];  
   processedMaterialList: ProcessedMaterial[];
   isLoadingData: Boolean = false;
   dialogRef: MatDialogRef<LotModalComponent>;
   gatepassSubscription: Subscription;
   companySubscription: Subscription;
+
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) processedMaterialSort: MatSort;
   @ViewChild(MatPaginator) processedMaterialPaginator: MatPaginator;
+  @ViewChild(MatSort) stockOutSort: MatSort;
+  @ViewChild(MatPaginator) stockOutPaginator: MatPaginator;
 
   companyId = 0;
   lotSearch = '';
@@ -52,8 +59,11 @@ export class LotComponent implements OnInit, OnDestroy {
   ngOnInit() {
     this.dataSource = new MatTableDataSource();
     this.processedMaterialDataSource = new MatTableDataSource();
+    this.stockOutDataSource = new MatTableDataSource();
+
     this.paginator.pageSize = 10;
     this.processedMaterialPaginator.pageSize = 10;
+    this.stockOutPaginator.pageSize = 10;
     // this.getLotsList();
     this.gatepassSubscription = this.lotService.gatepassEmitter.subscribe(
       (data: any) => {
@@ -106,7 +116,7 @@ export class LotComponent implements OnInit, OnDestroy {
       disableClose: true,
       width: '1400px',
       data: {
-        lotId: this.lotSearch,
+        lotId: this.lotList[0].id,
         lotYear: this.lotList[0].year
       }
     });
@@ -136,11 +146,25 @@ export class LotComponent implements OnInit, OnDestroy {
       .getLotList(this.paginator.pageSize, this.paginator.pageIndex, this.advanceSearch, this.sortDirection, this.sortOrderBy, this.lotSearch)
       .subscribe(
         (response: LotResponse) => {
-          this.lotList = response.data;
-          this.stockInsList = response.data[0].stockIns;
-          this.processedMaterialList = response.data[0].processedMaterials;
-          this.dataSource.data = this.stockInsList;
-          this.processedMaterialDataSource.data = this.processedMaterialList;
+          debugger
+          if(response.data && response.data.length > 0){
+            this.lotList = response.data;
+            this.stockInsList = response.data[0].stockIns;
+            this.stockOutsList = response.data[0].stockOuts;
+            this.processedMaterialList = response.data[0].processedMaterials;
+            this.dataSource.data = this.stockInsList;
+            this.stockOutDataSource.data = this.stockOutsList;
+            this.processedMaterialDataSource.data = this.processedMaterialList;            
+          }else {
+            this.lotList = [];
+            this.stockInsList = [];
+            this.stockOutsList = [];
+            this.processedMaterialList = [];
+            this.dataSource.data = [];
+            this.stockOutDataSource.data = [];
+            this.processedMaterialDataSource.data = [];            
+          }
+
           this.processedMaterialPaginator.length = response.count;
           this.paginator.length = response.count;
         },

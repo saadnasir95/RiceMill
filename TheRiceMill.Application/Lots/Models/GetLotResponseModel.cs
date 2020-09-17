@@ -7,6 +7,7 @@ namespace TheRiceMill.Application.Lots.Models
 {
     public class GetLotResponseModel
     {
+        public int Id { get; set; }
         public int Year { get; set; }
         public List<StockIn> StockIns { get; set; }
         public List<StockOut> StockOuts { get; set; }
