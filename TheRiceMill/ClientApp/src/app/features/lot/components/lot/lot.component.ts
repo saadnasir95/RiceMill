@@ -15,6 +15,7 @@ import { ProcessedMaterial } from '../../../../shared/model/processed-material.m
 import { GridOptions } from 'ag-grid-community';
 import { LocalDatetimePipe } from '../../../../shared/pipes/local-datetime.pipe';
 import { TemplateRendererComponent } from '../../../../shared/components/template-renderer/template-renderer.component';
+import { RateCostModalComponent } from '../rate-cost-modal/rate-cost-modalcomponent';
 
 @Component({
   selector: 'app-lot',
@@ -36,6 +37,7 @@ export class LotComponent implements OnInit, OnDestroy {
   stockInGridOptions: GridOptions;
   processedMaterialGridOptions: GridOptions;
   stockOutGridOptions: GridOptions;
+  rateCostGridOptions: GridOptions;
 
   lotYears: Array<string>;
   selectedYear = "";
@@ -45,6 +47,8 @@ export class LotComponent implements OnInit, OnDestroy {
   processedMaterialList: ProcessedMaterial[];
   isLoadingData: Boolean = false;
   dialogRef: MatDialogRef<LotModalComponent>;
+  dialogRefRateCost: MatDialogRef<RateCostModalComponent>;
+
   gatepassSubscription: Subscription;
   companySubscription: Subscription;
 
@@ -211,6 +215,73 @@ export class LotComponent implements OnInit, OnDestroy {
       }
     };
 
+    this.rateCostGridOptions = {
+      rowData: [],
+      columnDefs: [
+        {
+          headerName: 'Id',
+          field: 'id',
+          hide: true
+        },
+        {
+          headerName: 'Labour Unloading & Loading',
+          field: 'createdDate',
+          // width: 80
+        },
+        {
+          headerName: 'Purchase Brokery',
+          field: 'boriQuantity',
+          // width: 100
+        },
+        {
+          headerName: 'Total',
+          field: 'bagQuantity',
+          // width: 100
+        },
+        {
+          headerName: 'Rate/40 without Processing',
+          field: 'totalKG',
+          // width: 100
+        },
+        {
+          headerName: 'Processing Expense',
+          field: 'totalKG',
+          // width: 100
+        },
+        {
+          headerName: 'Bardana/Misc.',
+          field: 'totalKG',
+          // width: 100
+        },
+        {
+          headerName: 'Grand Total',
+          field: 'totalKG',
+          // width: 100
+        },
+        {
+          headerName: 'Rate/40 Less By Product',
+          field: 'totalKG',
+        },
+        {
+          headerName: 'Sale Brokery',
+          field: 'totalKG',
+        }
+        // {
+        //   headerName: 'Party Name',
+        //   field: 'party.name',
+        // },
+      ],
+      onGridReady: () => {},
+      rowSelection: 'multiple',
+      rowGroupPanelShow: 'always',
+      pivotPanelShow: 'always',
+      enableRangeSelection: true,
+      defaultColDef: {
+        resizable: true,
+        filter: true
+      }
+    };
+
 
 
     this.paginator.pageSize = 10;
@@ -273,6 +344,14 @@ export class LotComponent implements OnInit, OnDestroy {
       }
     });
     this.dialogRef.componentInstance.modalRef = this.dialogRef;
+  }
+
+  openRateCostModal() {
+    this.dialogRefRateCost = this.matDialog.open(RateCostModalComponent, {
+      disableClose: true,
+      width: '1400px',
+    });
+    this.dialogRefRateCost.componentInstance.modalRef = this.dialogRefRateCost;
   }
 
   editGatepass(gatepass: Gatepass) {

@@ -9,9 +9,10 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatChipsModule, MatIconModule } from '@angular/material';
 import { AgGridModule } from 'ag-grid-angular';
 import { TemplateRendererComponent } from '../../shared/components/template-renderer/template-renderer.component';
+import { RateCostModalComponent } from './components/rate-cost-modal/rate-cost-modalcomponent';
 
 @NgModule({
-  declarations: [LotComponent, LotModalComponent,TemplateRendererComponent],
+  declarations: [LotComponent, LotModalComponent,RateCostModalComponent,TemplateRendererComponent],
   imports: [
     MatChipsModule,
     MatIconModule,
@@ -24,6 +25,7 @@ import { TemplateRendererComponent } from '../../shared/components/template-rend
   ],
   entryComponents: [
     LotModalComponent,
+    RateCostModalComponent,
     TemplateRendererComponent
   ],
 })
