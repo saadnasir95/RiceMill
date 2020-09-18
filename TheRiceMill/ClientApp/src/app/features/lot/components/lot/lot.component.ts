@@ -37,6 +37,8 @@ export class LotComponent implements OnInit, OnDestroy {
   processedMaterialGridOptions: GridOptions;
   stockOutGridOptions: GridOptions;
 
+  lotYears: Array<string>;
+  selectedYear = "";
   lotList: Lot[];
   stockInsList: StockIn[];  
   stockOutsList: StockOut[];  
@@ -54,7 +56,7 @@ export class LotComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator) stockOutPaginator: MatPaginator;
 
   companyId = 0;
-  lotSearch = '';
+  lotIdSearch = '';
   advanceSearch = '';
   sortDirection = 'false';
   sortOrderBy = '';
@@ -65,6 +67,7 @@ export class LotComponent implements OnInit, OnDestroy {
     private companyService: CompanyService) { }
 
   ngOnInit() {
+    this.getYears();
     this.dataSource = new MatTableDataSource();
     this.processedMaterialDataSource = new MatTableDataSource();
     this.stockOutDataSource = new MatTableDataSource();
@@ -226,7 +229,7 @@ export class LotComponent implements OnInit, OnDestroy {
         if (this.companyId !== companyId) {
           this.companyId = companyId;
           this.paginator.pageIndex = 0;
-          if(this.lotSearch){
+          if(this.lotIdSearch){
             this.getLotsList();
           }
         }
@@ -245,7 +248,7 @@ export class LotComponent implements OnInit, OnDestroy {
 
   applyFilter(filterValue: string) {
     this.paginator.pageIndex = 0;
-    this.lotSearch = filterValue.trim().toLowerCase();
+    this.lotIdSearch = filterValue.trim().toLowerCase();
     this.getLotsList();
   }
   
@@ -291,11 +294,14 @@ export class LotComponent implements OnInit, OnDestroy {
   }
 
   getLotsList() {
+    if(!this.lotIdSearch || !this.selectedYear){
+      return;
+    }
+
     this.lotService
-      .getLotList(this.paginator.pageSize, this.paginator.pageIndex, this.advanceSearch, this.sortDirection, this.sortOrderBy, this.lotSearch)
+      .getLotList(this.paginator.pageSize, this.paginator.pageIndex, this.advanceSearch, this.sortDirection, this.sortOrderBy, this.lotIdSearch, this.selectedYear)
       .subscribe(
         (response: LotResponse) => {
-          debugger
           if(response.data && response.data.length > 0){
             this.lotList = response.data;
             this.stockInsList = response.data[0].stockIns;
@@ -333,6 +339,17 @@ export class LotComponent implements OnInit, OnDestroy {
         },
         (error) => console.log(error)
       );
+  }
+
+  getYears(){
+    this.lotService
+    .getYears()
+    .subscribe(
+      (response: any) => {
+        if(response.data){
+          this.lotYears = response.data as Array<string>; 
+        }
+      })
   }
 
   calculateSum(list: Array<any>,gridInstance:GridOptions){

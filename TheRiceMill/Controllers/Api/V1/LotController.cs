@@ -18,6 +18,13 @@ namespace TheRiceMill.Presentation.Controllers.Api.V1
             return StatusCode(response.Status, response.Response);
         }
 
+        [HttpGet("Years")]
+        public async Task<IActionResult> GetYears([FromQuery]GetYearRequestModel model)
+        {
+            var response = await Mediator.Send(model);
+            return StatusCode(response.Status, response.Response);
+        }
+
         [HttpPost]
         public async Task<IActionResult> CreateProcessedMaterial(CreateProcessedMaterialRequestModel model)
         {

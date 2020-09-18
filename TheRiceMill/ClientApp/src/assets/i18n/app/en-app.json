@@ -7,6 +7,18 @@
     "emailValid": "Enter a valid email",
     "passwordRequired": "Password is required"
   },
+  "lotPage": {
+    "gatepass": "Gatepass",
+    "searchId": "Search Id",
+    "searchYear": "Search Year",
+    "id": "Id",
+    "plateNumber": "Plate No",
+    "product": "Product",
+    "bagQuantity": "Bag Qty",
+    "bagWeight": "Bag Weight",
+    "date": "Date",
+    "action": "Action"
+  },
   "gatepassPage": {
     "gatepass": "Gatepass",
     "search": "Search",

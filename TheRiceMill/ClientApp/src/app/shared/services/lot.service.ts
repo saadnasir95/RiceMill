@@ -21,7 +21,7 @@ export class LotService {
     private tokenService: TokenService,
     private companyService: CompanyService) { }
 
-  getLotList(pageSize: number, pageIndex: number, search = '', sortDirection = 'false', orderBy = '', lotId: string)
+  getLotList(pageSize: number, pageIndex: number, search = '', sortDirection = 'false', orderBy = '', lotId: string, lotYear: string)
     : Observable<LotResponse> {
     const params = new HttpParams()
       .set('CompanyId', this.companyService.getCompanyId().toString())
@@ -31,7 +31,12 @@ export class LotService {
       .set('isDescending', sortDirection)
       .set('orderBy', orderBy + '')
       .set('lotId', lotId.toString())
+      .set('lotYear', lotYear.toString())
     return this.http.get<LotResponse>(this.apiUrl, { headers: this.tokenService.getHeaders(), params: params });
+  }
+
+  getYears(): Observable<any> {
+    return this.http.get(this.apiUrl+"/Years", { headers: this.tokenService.getHeaders() });
   }
 
   createProcessedMaterial(processedMaterial: CreateProcessedMaterial): Observable<any> {

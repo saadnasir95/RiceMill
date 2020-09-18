@@ -27,7 +27,7 @@ namespace TheRiceMill.Application.Lots.Queries
             object lots = null;
             request.SetDefaultValue();
             if (request.LotId != 0) {
-                lots = _context.Lots.GetMany(q => q.Id == request.LotId || q.Year == request.LotId, request.OrderBy, request.Page,
+                lots = _context.Lots.GetMany(q => q.Id == request.LotId && q.Year == request.LotYear, request.OrderBy, request.Page,
                 request.PageSize, request.IsDescending, p => p.Include(pr => pr.StockIns).Include(pt => pt.StockOuts)
                 .Include(py => py.ProcessedMaterials).Include(pu => pu.RateCosts).Include(pi => pi.GatePasses)).Include(q => q.ProcessedMaterials).Select(p => new GetLotResponseModel()
                 {

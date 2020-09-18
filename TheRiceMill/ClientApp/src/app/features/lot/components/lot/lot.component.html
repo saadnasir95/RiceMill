@@ -8,10 +8,20 @@
         </div>
         <div class="card-body">
           <div class="row">
-            <mat-form-field class="col-md-6">
+            <mat-form-field class="col-md-2">
               <input matInput (keyup)="applyFilter($event.target.value)"
-                [placeholder]="'gatepassPage.search' | translate">
+                [placeholder]="'lotPage.searchId' | translate">
             </mat-form-field>
+
+            <mat-form-field class="col-2">
+              <mat-label>Select Years</mat-label>
+              <mat-select [(ngModel)]="selectedYear">
+                <mat-option *ngFor="let year of lotYears" [value]="year">
+                  {{year}}
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
             <!-- <div class="col-md-4">
               <button mat-raised-button type="button" class="btn btn-primary" (click)="openModal()"><i
                   class="material-icons">add</i> Add Lot</button>

@@ -25,6 +25,8 @@ namespace TheRiceMill.Application.Lots.Models
 
         }
         public int LotId { get; set; }
+        public int LotYear { get; set; }
+
         public CompanyType CompanyId { get; set; }
         public string Search { get; set; }
         public bool IsDescending { get; set; }
