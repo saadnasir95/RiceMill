@@ -1,8 +1,10 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using TheRiceMill.Application.Enums;
 using TheRiceMill.Application.Exceptions;
 using TheRiceMill.Application.GatePasses.Models;
@@ -32,9 +34,11 @@ namespace TheRiceMill.Application.GatePasses.Commands
             {
                 throw new NotFoundException(nameof(GatePass), request.Id);
             }
+            var gatePassInDb = JsonConvert.DeserializeObject<GatePass>(JsonConvert.SerializeObject(gatePass));
             request.Copy(gatePass);
-            gatePass.Type = request.Type.ToInt();
-            gatePass.CompanyId = request.CompanyId.ToInt();
+            //lot id and lot year can not change
+            gatePass.LotId = gatePassInDb.LotId;
+            gatePass.LotYear = gatePassInDb.LotYear;
             Party party;
             Vehicle vehicle;
             Product product;
@@ -106,7 +110,73 @@ namespace TheRiceMill.Application.GatePasses.Commands
             {
                 product = _context.Products.GetBy(p => p.Id == request.ProductId);
             }
+            Lot lot = _context.Lots.GetBy(c => c.Id == gatePassInDb.LotId && c.Year == gatePassInDb.LotYear, c => c.Include(d => d.StockIns).Include(d => d.StockOuts));
+            if (lot == null)
+            {
+                throw new NotFoundException(nameof(Lot), request.LotId);
+            }
+            if (request.Type == GatePassType.InwardGatePass)
+            {
+                var stockIn = lot.StockIns.FirstOrDefault(c => c.GatepassTime == gatePassInDb.DateTime);
+                if (stockIn == null)
+                {
+                    throw new NotFoundException(nameof(StockIn), stockIn.Id);
+                }
+                else
+                {
+                    stockIn.GatepassTime = gatePass.DateTime;
+                    stockIn.BagQuantity = gatePass.BagQuantity;
+                    stockIn.BoriQuantity = gatePass.BoriQuantity;
+                    stockIn.TotalKG = gatePass.NetWeight;
+                }
+            }
+            else
+            {
+                if (product.Id == gatePassInDb.ProductId)
+                {
+                    var stockOut = lot.StockOuts.FirstOrDefault(c => c.ProductId == product.Id);
+                    if (stockOut == null)
+                    {
+                        throw new NotFoundException(nameof(StockOut), product.Name);
+                    }
+                    else
+                    {
+                        stockOut.BagQuantity += (gatePass.BagQuantity - gatePassInDb.BagQuantity);
+                        stockOut.BoriQuantity += (gatePass.BoriQuantity - gatePassInDb.BoriQuantity);
+                        stockOut.TotalKG += (gatePass.NetWeight - gatePassInDb.NetWeight);
+                        stockOut.PerKG = stockOut.TotalKG / (stockOut.BoriQuantity + stockOut.BagQuantity);
+                    }
+                }
+                if (product.Id != gatePassInDb.ProductId)
+                {
+                    var stockOutForOldProduct = lot.StockOuts.FirstOrDefault(c => c.ProductId == gatePassInDb.ProductId);
+                    if (stockOutForOldProduct == null)
+                    {
+                        throw new NotFoundException(nameof(StockOut), product.Name);
+                    }
+                    else
+                    {
+                        stockOutForOldProduct.BagQuantity -= gatePassInDb.BagQuantity;
+                        stockOutForOldProduct.BoriQuantity -= gatePassInDb.BoriQuantity;
+                        stockOutForOldProduct.TotalKG -= gatePassInDb.NetWeight;
+                        stockOutForOldProduct.PerKG = stockOutForOldProduct.TotalKG / (stockOutForOldProduct.BoriQuantity + stockOutForOldProduct.BagQuantity);
+                    }
+                    var stockOutForNewProduct = lot.StockOuts.FirstOrDefault(c => c.ProductId == gatePass.ProductId);
+                    if (stockOutForNewProduct == null)
+                    {
+                        throw new NotFoundException(nameof(StockOut), product.Name);
+                    }
+                    else
+                    {
+                        stockOutForNewProduct.BagQuantity += gatePass.BagQuantity;
+                        stockOutForNewProduct.BoriQuantity += gatePass.BoriQuantity;
+                        stockOutForNewProduct.TotalKG += gatePass.NetWeight;
+                        stockOutForNewProduct.PerKG = stockOutForNewProduct.TotalKG / (stockOutForNewProduct.BoriQuantity + stockOutForNewProduct.BagQuantity);
+                    }
+                }
+            }
             _context.GatePasses.Update(gatePass);
+            _context.Lots.Update(lot);
             await _context.SaveChangesAsync(cancellationToken);
             return new ResponseViewModel().CreateOk(new GatePassResponseModel()
             {
@@ -143,8 +213,8 @@ namespace TheRiceMill.Application.GatePasses.Commands
                 ProductId = product.Id,
                 VehicleId = vehicle.Id,
                 BiltyNumber = request.BiltyNumber,
-                LotId = request.LotId,
-                LotYear = request.LotYear
+                LotId = gatePassInDb.LotId,
+                LotYear = gatePassInDb.LotYear
             });
         }
     }

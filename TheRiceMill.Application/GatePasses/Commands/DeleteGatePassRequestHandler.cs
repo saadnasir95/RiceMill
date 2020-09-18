@@ -1,7 +1,9 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using TheRiceMill.Application.Enums;
 using TheRiceMill.Application.Exceptions;
 using TheRiceMill.Application.GatePasses.Models;
 using TheRiceMill.Common.Response;
@@ -31,6 +33,28 @@ namespace TheRiceMill.Application.GatePasses.Commands
             else if (gatePass != null && (gatePass.SaleId != null || gatePass.PurchaseId != null))
             {
                 throw new CannotDeleteException(nameof(GatePass), request.Id);
+            }
+            else
+            {
+                Lot lot = _context.Lots.GetBy(c => c.Id == gatePass.LotId && c.Year == gatePass.LotYear, c => c.Include(d => d.StockIns).Include(d => d.StockOuts));
+                if (lot == null)
+                {
+                    throw new NotFoundException(nameof(Lot), gatePass.LotId);
+                }
+                if ((GatePassType)gatePass.Type == GatePassType.InwardGatePass)
+                {
+                    var stockIn = lot.StockIns.FirstOrDefault(c => c.GatepassTime == gatePass.DateTime);
+                    lot.StockIns.Remove(stockIn);
+                }
+                else
+                {
+                    var stockOut = lot.StockOuts.FirstOrDefault(c => c.ProductId == gatePass.ProductId);
+                    stockOut.BagQuantity -= gatePass.BagQuantity;
+                    stockOut.BoriQuantity -= gatePass.BoriQuantity;
+                    stockOut.TotalKG -= gatePass.NetWeight;
+                    stockOut.PerKG = stockOut.TotalKG / (stockOut.BoriQuantity + stockOut.BagQuantity);
+                }
+                _context.Lots.Update(lot);
             }
             _context.GatePasses.Remove(gatePass);
             await _context.SaveChangesAsync(cancellationToken);

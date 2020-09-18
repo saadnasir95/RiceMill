@@ -69,22 +69,15 @@ export class GatepassModalComponent implements OnInit {
     public spinner: SpinnerService) { }
 
   ngOnInit() {
-    // this.gatepassForm.get('gatepassType').valueChanges.subscribe(
-    //   (value) => {
-    //     if (value === +GatePassType.InwardGatePass) {
-    //       this.isGatein = true;
-    //     } else {
-    //       this.isGatein = false;
-    //     }
-    //     // this.gatepassForm.get('productGroup.type').setValue(value);
-    //     if (this.isGatein) {
-    //       this.gatepassForm.get('biltyNumber').setValue('123');
-    //       this.gatepassForm.get('productGroup.type').setValue(+ProductType.Purchase);
-    //     } else {
-    //       this.gatepassForm.get('direction').setValue(+GateinDirection.Milling);
-    //       this.gatepassForm.get('productGroup.type').setValue(+ProductType.Sale);
-    //     }
-    //   });
+    this.gatepassForm.get('type').valueChanges.subscribe(
+      (value) => {
+        if (value === +GatePassType.InwardGatePass) {
+          this.gatepassForm.get('lotId').setErrors(null);
+        } else {
+          this.gatepassForm.get('lotId').setErrors({ 'required': true });
+        }
+        // this.gatepassForm.get('productGroup.type').setValue(value);
+      });
 
     // this.gatepassForm.get('weightPriceGroup.bagQuantity').valueChanges.subscribe(
     //   (value) => {
@@ -237,6 +230,8 @@ export class GatepassModalComponent implements OnInit {
         maund: gatepass.maund
       }
     }, { emitEvent: false });
+    this.gatepassForm.get('lotId').disable();
+    this.gatepassForm.get('type').disable();
   }
 
   deleteGatepass(gatepass: Gatepass) {
@@ -280,14 +275,16 @@ export class GatepassModalComponent implements OnInit {
         this.gatepass.vehicleId = 0;
       }
       this.gatepass.dateTime = moment(this.gatepassForm.value.dateTime).format();
-      this.gatepass.type = +this.gatepassForm.value.type;
       if (this.gatepassForm.value.broker) {
         this.gatepass.broker = this.gatepassForm.value.broker;
       } else {
         this.gatepass.broker = this.gatepassForm.get('partyGroup').value.name;
       }
       this.gatepass.biltyNumber = this.gatepassForm.value.biltyNumber;
-      this.gatepass.lotId = this.gatepassForm.value.lotId ? +this.gatepassForm.value.lotId : 0;
+      if (this.isNew) {
+        this.gatepass.lotId = this.gatepassForm.value.lotId ? +this.gatepassForm.value.lotId : 0;
+        this.gatepass.type = +this.gatepassForm.value.type;
+      }
       this.gatepass.lotYear = moment(this.gatepassForm.value.dateTime).year();
       this.gatepass.product.id = +this.gatepass.productId;
       this.gatepass.product.name = this.gatepassForm.get('productGroup').value.name;

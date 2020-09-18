@@ -109,6 +109,9 @@
         <div class="col-md-4">
           <mat-form-field class="w-100">
             <input type="number" matInput placeholder="Enter Lot Number" formControlName="lotId">
+            <mat-error *ngIf="gatepassForm.get('lotId').hasError('required')">
+              Lot number is required
+            </mat-error>
           </mat-form-field>
         </div>
       </div>

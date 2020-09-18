@@ -66,6 +66,8 @@ namespace TheRiceMill.Application.GatePasses.Models
             RuleFor(p => p.BagQuantity).Required().GreaterThanOrEqualTo(0).WithMessage(Messages.LessThan(0));
             RuleFor(p => p.BoriQuantity).Required().GreaterThanOrEqualTo(0).WithMessage(Messages.LessThan(0));
             RuleFor(p => p.DateTime).GreaterThan(DateTime.MinValue).WithMessage(Messages.LessThan(DateTime.MinValue));
+            RuleFor(p => p.LotYear).GreaterThan(0).WithMessage(Messages.LessThan(1));
+            RuleFor(p => p.LotId).GreaterThan(0).WithMessage(Messages.LessThan(1));
         }
     }
 }

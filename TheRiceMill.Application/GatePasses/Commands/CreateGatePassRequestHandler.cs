@@ -12,6 +12,7 @@ using TheRiceMill.Domain.Entities;
 using TheRiceMill.Persistence;
 using TheRiceMill.Persistence.Extensions;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace TheRiceMill.Application.GatePasses.Commands
 {
@@ -47,34 +48,6 @@ namespace TheRiceMill.Application.GatePasses.Commands
                 BiltyNumber = request.BiltyNumber
             };
 
-            Lot lot = _context.Lots.GetBy(c => c.Id == request.LotId && c.Year == request.LotYear);
-            if (lot != null)
-            {
-                gatePass.LotId = lot.Id;
-                gatePass.LotYear = lot.Year;
-            }
-            else
-            {
-                List<Lot> lots = _context.Lots.GetMany(c => c.Year == request.LotYear, "Id", 1, 1, true, null).ToList();
-                lot = new Lot
-                {
-                    Id = (lots.FirstOrDefault()?.Id + 1) ?? 1,
-                    CompanyId = request.CompanyId.ToInt(),
-                    Year = request.LotYear,
-                    StockIns = new List<StockIn>()
-                };
-                gatePass.Lot = lot;
-            }
-            if (request.Type == GatePassType.InwardGatePass)
-            {
-                lot.StockIns.Add(new StockIn
-                {
-                    BagQuantity = request.BagQuantity,
-                    BoriQuantity = request.BoriQuantity,
-                    TotalKG = request.NetWeight,
-                    GatepassTime = request.DateTime
-                });
-            }
             Party party;
             Vehicle vehicle;
             Product product;
@@ -156,6 +129,58 @@ namespace TheRiceMill.Application.GatePasses.Commands
                 if (product == null)
                 {
                     throw new NotFoundException(nameof(Product), request.ProductId);
+                }
+            }
+
+            Lot lot = _context.Lots.GetBy(c => c.Id == request.LotId && c.Year == request.LotYear, c => c.Include(d => d.StockIns).Include(d => d.StockOuts));
+            if (lot != null)
+            {
+                gatePass.LotId = lot.Id;
+                gatePass.LotYear = lot.Year;
+            }
+
+            if (request.Type == GatePassType.InwardGatePass)
+            {
+                if (lot == null)
+                {
+                    List<Lot> lots = _context.Lots.GetMany(c => c.Year == request.LotYear, "Id", 1, 1, true, null).ToList();
+                    lot = new Lot
+                    {
+                        Id = (lots.FirstOrDefault()?.Id + 1) ?? 1,
+                        CompanyId = request.CompanyId.ToInt(),
+                        Year = request.LotYear,
+                        StockIns = new List<StockIn>()
+                    };
+                    gatePass.Lot = lot;
+                }
+                lot.StockIns.Add(new StockIn
+                {
+                    BagQuantity = request.BagQuantity,
+                    BoriQuantity = request.BoriQuantity,
+                    TotalKG = request.NetWeight,
+                    GatepassTime = request.DateTime
+                });
+            }
+            else
+            {
+                if (lot == null)
+                {
+                    throw new NotFoundException(nameof(Lot), request.LotId);
+                }
+                else
+                {
+                    var stockOut = lot.StockOuts.FirstOrDefault(c => c.ProductId == product.Id);
+                    if (stockOut == null)
+                    {
+                        throw new NotFoundException(nameof(StockOut), product.Name);
+                    }
+                    else
+                    {
+                        stockOut.BagQuantity += request.BagQuantity;
+                        stockOut.BoriQuantity += request.BoriQuantity;
+                        stockOut.TotalKG += request.NetWeight;
+                        stockOut.PerKG = stockOut.TotalKG / (stockOut.BoriQuantity + stockOut.BagQuantity);
+                    }
                 }
             }
             _context.GatePasses.Add(gatePass);
