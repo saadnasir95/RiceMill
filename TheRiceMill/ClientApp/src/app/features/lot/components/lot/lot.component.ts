@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
 import { MatTableDataSource, MatDialogRef, MatSort, MatDialog, MatPaginator } from '@angular/material';
 import { Subscription } from 'rxjs';
 import { GatepassService } from '../../../../shared/services/gatepass.service';
@@ -12,6 +12,9 @@ import { LotResponse } from '../../../../shared/model/lot-response.model';
 import { Lot } from '../../../../shared/model/lot.model';
 import { StockIn, StockOut } from '../../../../shared/model/stock-in.model';
 import { ProcessedMaterial } from '../../../../shared/model/processed-material.model';
+import { GridOptions } from 'ag-grid-community';
+import { LocalDatetimePipe } from '../../../../shared/pipes/local-datetime.pipe';
+import { TemplateRendererComponent } from '../../../../shared/components/template-renderer/template-renderer.component';
 
 @Component({
   selector: 'app-lot',
@@ -19,6 +22,7 @@ import { ProcessedMaterial } from '../../../../shared/model/processed-material.m
   styleUrls: ['./lot.component.scss']
 })
 export class LotComponent implements OnInit, OnDestroy {
+  @ViewChild('actionBtn') actionBtn: TemplateRef<any>;
 
   // tslint:disable-next-line: max-line-length
   displayedColumns: string[] = ["id","gatepassTime","boriQuantity","bagQuantity","totalKG","action"];
@@ -28,6 +32,10 @@ export class LotComponent implements OnInit, OnDestroy {
   dataSource: MatTableDataSource<StockIn>;
   processedMaterialDataSource: MatTableDataSource<ProcessedMaterial>;
   stockOutDataSource: MatTableDataSource<StockOut>;
+
+  stockInGridOptions: GridOptions;
+  processedMaterialGridOptions: GridOptions;
+  stockOutGridOptions: GridOptions;
 
   lotList: Lot[];
   stockInsList: StockIn[];  
@@ -60,6 +68,147 @@ export class LotComponent implements OnInit, OnDestroy {
     this.dataSource = new MatTableDataSource();
     this.processedMaterialDataSource = new MatTableDataSource();
     this.stockOutDataSource = new MatTableDataSource();
+
+    this.stockInGridOptions = {
+      rowData: [],
+      columnDefs: [
+        {
+          headerName: 'Id',
+          field: 'id',
+          width: 80
+        },
+        {
+          headerName: 'Date',
+          field: 'createdDate',
+          valueFormatter: this.datePipe,
+          width: 200
+        },
+        {
+          headerName: 'Bori Quantity',
+          field: 'boriQuantity',
+          width: 200
+        },
+        {
+          headerName: 'Bag Quantity',
+          field: 'bagQuantity',
+          width: 200
+        },
+        {
+          headerName: 'Total KG',
+          field: 'totalKG',
+          width: 100
+        },
+        {
+          headerName: 'Add Processed Material',
+          field: 'actionButton',
+          cellRendererFramework: TemplateRendererComponent,
+          cellRendererParams: {
+          ngTemplate: this.actionBtn,
+          width: 100
+        }
+        },
+      ],
+      onGridReady: () => {},
+      rowSelection: 'multiple',
+      rowGroupPanelShow: 'always',
+      pivotPanelShow: 'always',
+      enableRangeSelection: true,
+      defaultColDef: {
+        resizable: true,
+        filter: true
+      }
+    };
+
+    this.processedMaterialGridOptions = {
+      rowData: [],
+      columnDefs: [
+        {
+          headerName: 'Id',
+          field: 'id',
+          width: 80
+        },
+        {
+          headerName: 'Product Name',
+          field: 'productName',
+          width: 200
+        },
+        {
+          headerName: 'Bori Quantity',
+          field: 'boriQuantity',
+          width: 200
+        },
+        {
+          headerName: 'Bag Quantity',
+          field: 'bagQuantity',
+          width: 200
+        },
+        {
+          headerName: 'Total KG',
+          field: 'totalKG',
+          width: 200
+        },
+        // {
+        //   headerName: 'Action',
+        //   field: '',
+        // },
+      ],
+      onGridReady: () => {},
+      rowSelection: 'multiple',
+      rowGroupPanelShow: 'always',
+      pivotPanelShow: 'always',
+      enableRangeSelection: true,
+      defaultColDef: {
+        resizable: true,
+        filter: true
+      }
+    };
+
+    this.stockOutGridOptions = {
+      rowData: [],
+      columnDefs: [
+        {
+          headerName: 'Id',
+          field: 'id',
+          // width: 80
+        },
+        {
+          headerName: 'Date',
+          field: 'createdDate',
+          valueFormatter: this.datePipe,
+          // width: 80
+        },
+        {
+          headerName: 'Bori Quantity',
+          field: 'boriQuantity',
+          // width: 100
+        },
+        {
+          headerName: 'Bag Quantity',
+          field: 'bagQuantity',
+          // width: 100
+        },
+        {
+          headerName: 'Total KG',
+          field: 'totalKG',
+          // width: 100
+        },
+        // {
+        //   headerName: 'Party Name',
+        //   field: 'party.name',
+        // },
+      ],
+      onGridReady: () => {},
+      rowSelection: 'multiple',
+      rowGroupPanelShow: 'always',
+      pivotPanelShow: 'always',
+      enableRangeSelection: true,
+      defaultColDef: {
+        resizable: true,
+        filter: true
+      }
+    };
+
+
 
     this.paginator.pageSize = 10;
     this.processedMaterialPaginator.pageSize = 10;
@@ -154,7 +303,14 @@ export class LotComponent implements OnInit, OnDestroy {
             this.processedMaterialList = response.data[0].processedMaterials;
             this.dataSource.data = this.stockInsList;
             this.stockOutDataSource.data = this.stockOutsList;
-            this.processedMaterialDataSource.data = this.processedMaterialList;            
+            this.processedMaterialDataSource.data = this.processedMaterialList;
+            // AG GRID
+            this.stockInGridOptions.api.setRowData(this.stockInsList);
+            this.stockOutGridOptions.api.setRowData(this.stockOutsList);
+            this.processedMaterialGridOptions.api.setRowData(this.processedMaterialList);
+            this.calculateSum(this.stockInsList,this.stockInGridOptions);
+            this.calculateSum(this.stockOutsList,this.stockOutGridOptions);
+            this.calculateSum(this.processedMaterialList,this.processedMaterialGridOptions);
           }else {
             this.lotList = [];
             this.stockInsList = [];
@@ -163,6 +319,13 @@ export class LotComponent implements OnInit, OnDestroy {
             this.dataSource.data = [];
             this.stockOutDataSource.data = [];
             this.processedMaterialDataSource.data = [];            
+            // AG GRID
+            this.stockInGridOptions.api.setRowData([]);
+            this.stockOutGridOptions.api.setRowData([]);
+            this.processedMaterialGridOptions.api.setRowData([]);
+            this.calculateSum([],this.stockInGridOptions);
+            this.calculateSum([],this.stockOutGridOptions);
+            this.calculateSum([],this.processedMaterialGridOptions);
           }
 
           this.processedMaterialPaginator.length = response.count;
@@ -171,4 +334,32 @@ export class LotComponent implements OnInit, OnDestroy {
         (error) => console.log(error)
       );
   }
+
+  calculateSum(list: Array<any>,gridInstance:GridOptions){
+    let _bagQuantity = 0;
+    let _boriQuantity = 0;
+    let _totalKG = 0;
+    list.forEach(item => {
+      _bagQuantity += item.bagQuantity;
+      _boriQuantity += item.boriQuantity;
+      _totalKG += item.totalKG;
+    })
+
+    const result = [{
+      boriQuantity:_bagQuantity.toFixed(2),
+      bagQuantity:_boriQuantity.toFixed(2),
+      totalKG:_totalKG.toFixed(2),
+      actionButton: "footer"
+    }];
+
+    gridInstance.api.setPinnedBottomRowData(result);
+
+  }
+
+  datePipe(date: any){
+    if(date.value){
+      return new LocalDatetimePipe().transform(date.value);
+    }
+  }
+  
 }

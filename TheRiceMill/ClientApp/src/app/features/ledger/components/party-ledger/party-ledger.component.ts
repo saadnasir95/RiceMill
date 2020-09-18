@@ -232,6 +232,7 @@ export class PartyLedgerComponent implements OnInit, OnDestroy {
       this.companySubscription.unsubscribe();
     }
   }
+  
   getParties() {
     this.partyService.getParties(100, 0).subscribe(
       (response: PartyResponse) => {

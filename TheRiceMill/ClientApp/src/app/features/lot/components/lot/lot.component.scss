@@ -17,6 +17,12 @@ table {
   color: red;
 }
 
+.action-btn {
+  font-size: 18px;
+  border: none;
+  background: none;
+}
+
 
 @media print {
   :not(app-gatepass-receipt) {

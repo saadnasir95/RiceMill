@@ -7,19 +7,23 @@ import { LotModalComponent } from './components/lot-modal/lot-modal.component';
 import { SharedModule } from '../../shared/shared.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatChipsModule, MatIconModule } from '@angular/material';
+import { AgGridModule } from 'ag-grid-angular';
+import { TemplateRendererComponent } from '../../shared/components/template-renderer/template-renderer.component';
 
 @NgModule({
-  declarations: [LotComponent, LotModalComponent],
+  declarations: [LotComponent, LotModalComponent,TemplateRendererComponent],
   imports: [
     MatChipsModule,
     MatIconModule,
     CommonModule,
     GatepassRoutingModule,
     SharedModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    AgGridModule.withComponents([]),
   ],
   entryComponents: [
-    LotModalComponent
+    LotModalComponent,
+    TemplateRendererComponent
   ],
 })
 export class LotModule { }

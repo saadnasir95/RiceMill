@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { LotComponent } from './components/lot/lot.component';
+import { TemplateRendererComponent } from '../../shared/components/template-renderer/template-renderer.component';
 
 const routes: Routes = [
   { path: '', component: LotComponent }
@@ -8,6 +9,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forChild(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
 export class GatepassRoutingModule { }
