@@ -46,41 +46,62 @@
       </div> -->
 
       <div formArrayName="processedMaterial">
-        <div *ngFor="let labour of lotForm.get('processedMaterial')['controls']; index as i" [formGroupName]="i"
+        <div *ngFor="let material of lotForm.get('processedMaterial')['controls']; index as i" [formGroupName]="i"
           class="row">
-          <input type="number" hidden formControlName="id">
+          <input type="hidden" formControlName="id">
+          <input type="hidden" formControlName="productId">
           <mat-form-field class="col-3">
-            <input type="text" matInput placeholder="Enter Product Name" (input)="searchProduct($event.target.value)" formControlName="productId" autocomplete="off"
+
+            <!-- <input type="text" matInput placeholder="Enter Product Name" (input)="searchProduct($event.target.value)" formControlName="productId" autocomplete="off"
               [matAutocomplete]="productAutoComplete">
             <mat-autocomplete #productAutoComplete="matAutocomplete" (optionSelected)="selectedProduct($event,i)">
               <mat-option *ngFor="let product of productSuggestions" [value]="product">
                 {{ product.name }}</mat-option>
-            </mat-autocomplete>
-            <mat-error *ngIf="lotForm.controls.processedMaterial.controls[i].hasError('required')">
+            </mat-autocomplete> -->
+            <input type="text" matInput placeholder="Product Name" formControlName="productName" readonly>
+            <mat-error *ngIf="material.get('productName').hasError('required')">
               Product name is required
             </mat-error>
           </mat-form-field>
           <mat-form-field class="col-2">
             <input type="number" matInput placeholder="Enter Bori Quantiy" formControlName="boriQuantity">
+            <mat-error *ngIf="material.get('boriQuantity').hasError('required')">
+              Bori quantity is required
+            </mat-error>
+            <mat-error *ngIf="material.get('boriQuantity').hasError('min')">
+              Bori quantity should be greater than 0
+            </mat-error>
           </mat-form-field>
           <mat-form-field class="col-2">
             <input type="number" matInput placeholder="Enter Bag Quantiy" formControlName="bagQuantity">
+            <mat-error *ngIf="material.get('bagQuantity').hasError('required')">
+              Bag quantity is required
+            </mat-error>
+            <mat-error *ngIf="material.get('bagQuantity').hasError('min')">
+              Bag quantity should be greater than 0
+            </mat-error>
           </mat-form-field>
           <mat-form-field class="col-2">
-            <input type="number" matInput placeholder="Enter Per Rate" formControlName="perKg">
+            <input type="number" matInput placeholder="Enter Per KG" formControlName="perKg">
+            <mat-error *ngIf="material.get('perKg').hasError('required')">
+              Per KG is required
+            </mat-error>
+            <mat-error *ngIf="material.get('perKg').hasError('min')">
+              Per KG should be greater than 0
+            </mat-error>
           </mat-form-field>
           <div class="col-2 d-flex justify-content-center align-items-center">
             <span class="grand-total pt-3"><p class="d-flex justify-content-end"><b> Total Kg:&nbsp;
-            </b> {{ lotForm.controls.processedMaterial.controls[i].controls.bagQuantity?.value * lotForm.controls.processedMaterial.controls[i].controls.perKg?.value }} </p>
+            </b> {{ material.get('totalKg').value }} </p>
             </span>
           </div>
           <div class="col-1 d-flex">
             <i class="fas fa-window-close fa-lg show-cursor my-auto text-danger" style="cursor: pointer;"
-              (click)="deleteCharges(i)">
+              (click)="deleteProcessedMaterial(i)">
             </i>
           </div>
         </div>
-        <div class="row">
+        <!-- <div class="row">
           <div class="col-md-6">
             <button mat-raised-button type="button" class="btn btn-primary" (click)="addProcessedMaterial()">Add Processed Material</button>
           </div>
@@ -89,10 +110,10 @@
             </b> {{ totalKg |currency:"PKR":"symbol":'1.2-2' }} </p>
             </span>
           </div>
-        </div>
-        <div class="col-md-12">
+        </div> -->
+        <!-- <div class="col-md-12">
           <mat-divider class="mb-2"></mat-divider>
-        </div>
+        </div> -->
       </div>
     </mat-dialog-content>
     <mat-dialog-actions>

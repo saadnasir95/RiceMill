@@ -97,7 +97,8 @@ namespace TheRiceMill.Application.GatePasses.Commands
                     {
                         Name = request.Product.Name,
                         NormalizedName = request.Product.Name.ToUpper(),
-                        CompanyId = request.CompanyId.ToInt()
+                        CompanyId = request.CompanyId.ToInt(),
+                        IsProcessedMaterial = true
                     };
                     product = gatePass.Product;
                 }
