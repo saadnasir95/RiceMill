@@ -39,7 +39,7 @@ export class LotComponent implements OnInit, OnDestroy {
   stockOutGridOptions: GridOptions;
   rateCostGridOptions: GridOptions;
 
-  lotYears: Array<string>;
+  lotYearIds: Array<string>;
   selectedYear = "";
   lotList: Lot[];
   stockInsList: StockIn[];  
@@ -86,7 +86,7 @@ export class LotComponent implements OnInit, OnDestroy {
         },
         {
           headerName: 'Date',
-          field: 'createdDate',
+          field: 'gatepassTime',
           valueFormatter: this.datePipe,
           width: 200
         },
@@ -320,7 +320,7 @@ export class LotComponent implements OnInit, OnDestroy {
   applyFilter(filterValue: string) {
     this.paginator.pageIndex = 0;
     this.lotIdSearch = filterValue.trim().toLowerCase();
-    this.getLotsList();
+    // this.getLotsList();
   }
   
   sortData() {
@@ -426,7 +426,7 @@ export class LotComponent implements OnInit, OnDestroy {
     .subscribe(
       (response: any) => {
         if(response.data){
-          this.lotYears = response.data as Array<string>; 
+          this.lotYearIds = response.data as Array<string>; 
         }
       })
   }

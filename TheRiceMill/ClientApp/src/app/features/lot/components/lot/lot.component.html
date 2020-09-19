@@ -16,16 +16,17 @@
             <mat-form-field class="col-2">
               <mat-label>Select Year</mat-label>
               <mat-select [(ngModel)]="selectedYear">
-                <mat-option *ngFor="let year of lotYears" [value]="year">
-                  {{year}}
+                <mat-option *ngFor="let year of lotYearIds" [value]="year.yearId">
+                  {{year.yearId}}
                 </mat-option>
               </mat-select>
             </mat-form-field>
 
-            <!-- <div class="col-md-4">
-              <button mat-raised-button type="button" class="btn btn-primary" (click)="openModal()"><i
-                  class="material-icons">add</i> Add Lot</button>
-            </div> -->
+            <div class="col-md-4">
+              <button mat-raised-button type="button" class="btn btn-primary" (click)="getLotsList()">
+                <!-- <i  class="material-icons">add</i>  -->
+                Search</button>
+            </div>
           </div>
           <mat-spinner *ngIf="isLoadingData"></mat-spinner>
           <div class="row">
@@ -78,7 +79,7 @@
                   <tr mat-footer-row *matFooterRowDef="['disclaimer']" class="no-records"></tr>
                 </div>
               </table> -->
-              <ag-grid-angular style="height: 500px;" class="ag-theme-balham w-100" [gridOptions]="stockInGridOptions">
+              <ag-grid-angular style="height: 350px;" class="ag-theme-balham w-100" [gridOptions]="stockInGridOptions">
               </ag-grid-angular>
               <mat-paginator [pageSizeOptions]="[10, 50, 100,200]" [showFirstLastButtons]="true" (page)="changePage()">
               </mat-paginator>
@@ -138,7 +139,7 @@
                   <tr mat-footer-row *matFooterRowDef="['disclaimer']" class="no-records"></tr>
                 </div>
               </table> -->
-              <ag-grid-angular style="height: 500px;" class="ag-theme-balham w-100" [gridOptions]="processedMaterialGridOptions">
+              <ag-grid-angular style="height: 350px;" class="ag-theme-balham w-100" [gridOptions]="processedMaterialGridOptions">
               </ag-grid-angular>
               <mat-paginator [pageSizeOptions]="[10, 50, 100,200]" [showFirstLastButtons]="true" (page)="changePage()">
               </mat-paginator>
@@ -148,7 +149,7 @@
           <div class="row">
             <div class="mat-elevation-z8 col-md-12">
               <h3> Stock Out </h3>
-              <ag-grid-angular style="height: 500px;" class="ag-theme-balham w-100" [gridOptions]="stockOutGridOptions">
+              <ag-grid-angular style="height: 350px;" class="ag-theme-balham w-100" [gridOptions]="stockOutGridOptions">
               </ag-grid-angular>
               <!-- <table class="table-responsive-sm" mat-table [dataSource]="stockOutDataSource" matSort (matSortChange)="sortData()">
                 <ng-container matColumnDef="id">
@@ -213,7 +214,7 @@
                     class="material-icons">add</i> Add Rate/Cost</button>
                 </div>
               </div>
-              <ag-grid-angular style="height: 500px;" class="ag-theme-balham w-100" [gridOptions]="rateCostGridOptions">
+              <ag-grid-angular style="height: 350px;" class="ag-theme-balham w-100" [gridOptions]="rateCostGridOptions">
               </ag-grid-angular>
               <mat-paginator [pageSizeOptions]="[10, 50, 100,200]" [showFirstLastButtons]="true" (page)="changePage()">
               </mat-paginator>
