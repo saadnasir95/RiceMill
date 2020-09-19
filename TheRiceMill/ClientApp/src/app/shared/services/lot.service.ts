@@ -13,7 +13,7 @@ import { ProcessedMaterial, CreateProcessedMaterial } from '../model/processed-m
   providedIn: 'root'
 })
 export class LotService {
-  gatepassEmitter = new EventEmitter<any>();
+  lotEmitter = new EventEmitter<any>();
   apiUrl = environment.baseUrl + '/api/v1/Lot';
 
   constructor(
@@ -36,7 +36,7 @@ export class LotService {
   }
 
   getYears(): Observable<any> {
-    return this.http.get(this.apiUrl+"/Years", { headers: this.tokenService.getHeaders() });
+    return this.http.get(this.apiUrl + '/Years', { headers: this.tokenService.getHeaders() });
   }
 
   createProcessedMaterial(processedMaterial: CreateProcessedMaterial): Observable<any> {

@@ -42,8 +42,8 @@ export class LotComponent implements OnInit, OnDestroy {
   lotYears: Array<string>;
   selectedYear = "";
   lotList: Lot[];
-  stockInsList: StockIn[];  
-  stockOutsList: StockOut[];  
+  stockInsList: StockIn[];
+  stockOutsList: StockOut[];
   processedMaterialList: ProcessedMaterial[];
   isLoadingData: Boolean = false;
   dialogRef: MatDialogRef<LotModalComponent>;
@@ -288,7 +288,7 @@ export class LotComponent implements OnInit, OnDestroy {
     this.processedMaterialPaginator.pageSize = 10;
     this.stockOutPaginator.pageSize = 10;
     // this.getLotsList();
-    this.gatepassSubscription = this.lotService.gatepassEmitter.subscribe(
+    this.gatepassSubscription = this.lotService.lotEmitter.subscribe(
       (data: any) => {
         this.paginator.pageIndex = 0;
         this.getLotsList();
@@ -322,14 +322,14 @@ export class LotComponent implements OnInit, OnDestroy {
     this.lotIdSearch = filterValue.trim().toLowerCase();
     this.getLotsList();
   }
-  
+
   sortData() {
     this.paginator.pageIndex = 0;
     this.sortDirection = this.sort.direction === 'desc' ? 'true' : 'false';
     this.sortOrderBy = this.sort.active;
     this.getLotsList();
   }
-  
+
   changePage() {
     this.getLotsList();
   }
@@ -403,7 +403,7 @@ export class LotComponent implements OnInit, OnDestroy {
             this.processedMaterialList = [];
             this.dataSource.data = [];
             this.stockOutDataSource.data = [];
-            this.processedMaterialDataSource.data = [];            
+            this.processedMaterialDataSource.data = [];
             // AG GRID
             this.stockInGridOptions.api.setRowData([]);
             this.stockOutGridOptions.api.setRowData([]);
@@ -426,7 +426,7 @@ export class LotComponent implements OnInit, OnDestroy {
     .subscribe(
       (response: any) => {
         if(response.data){
-          this.lotYears = response.data as Array<string>; 
+          this.lotYears = response.data as Array<string>;
         }
       })
   }
@@ -457,5 +457,5 @@ export class LotComponent implements OnInit, OnDestroy {
       return new LocalDatetimePipe().transform(date.value);
     }
   }
-  
+
 }
