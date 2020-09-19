@@ -23,10 +23,15 @@ namespace TheRiceMill.Application.Lots.Queries
         public async Task<ResponseViewModel> Handle(GetYearRequestModel request, CancellationToken cancellationToken)
         {
 
-            var yearList = _context.Lots.Select(q => new List<string>() {
-                q.Year.ToString()
-            });
+            var yearList = _context.Lots.Select(q => new Year() {
+                YearId = q.Year.ToString()
+            }).Distinct().ToList();
             return new ResponseViewModel().CreateOk(yearList);
         }
+    }
+
+    public class Year
+    {
+        public string YearId { get; set; }
     }
 }
