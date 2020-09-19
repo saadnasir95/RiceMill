@@ -15,6 +15,7 @@ import { Lot } from '../../../../shared/model/lot.model';
 import { LotService } from '../../../../shared/services/lot.service';
 import { ProductService } from '../../../../shared/services/product.service';
 import { ProductResponse } from '../../../../shared/model/product-response.model';
+import { CreateRateCost, RateCost } from '../../../../shared/model/create-rate-cost.model';
 @Component({
   selector: 'app-rate-cost-modal',
   templateUrl: './rate-cost-modal.component.html',
@@ -29,10 +30,13 @@ export class RateCostModalComponent implements OnInit {
   commission = 0;
   basePrice = 0;
   processedMaterial: CreateProcessedMaterial;
+  rateCost: RateCost;
 
   rateCostForm: FormGroup = new FormGroup({
     // date: new FormControl(moment.tz('Asia/Karachi').format().slice(0, 16), Validators.required),
     labourUnloadingAndLoading: new FormControl(null, Validators.required),
+    freight: new FormControl(null, Validators.required),
+    purchaseBrokery: new FormControl(null, Validators.required),
     total: new FormControl(null, Validators.required),
     ratePer40WithoutProcessing : new FormControl(null, Validators.required),
     processingExpense : new FormControl(null, Validators.required),
@@ -63,18 +67,45 @@ export class RateCostModalComponent implements OnInit {
     this.modalRef.close();
   }
 
+  editRateCost(rateCost: CreateRateCost){
+    this.isNew = false;
+    debugger
+    this.rateCost = new RateCost();
+    Object.assign(this.rateCost, rateCost);
+    this.rateCostForm.setValue({
+      labourUnloadingAndLoading: rateCost.labourUnloadingAndLoading,
+      freight: rateCost.freight,
+      purchaseBrokery: rateCost.purchaseBrokery,
+      total: rateCost.total,
+      ratePer40WithoutProcessing : rateCost.ratePer40WithoutProcessing,
+      processingExpense : rateCost.processingExpense,
+      bardanaMisc : rateCost.bardanaAndMisc,
+      grandTotal : rateCost.grandTotal,
+      ratePer40LessByProduct: rateCost.ratePer40LessByProduct,
+      saleBrokery: rateCost.saleBrockery
+    }, { emitEvent: false });
+  }
+
 
   submit() {
+      const rateCost = new RateCost() 
+      rateCost.lotId = +this.data.lotId;
+      rateCost.lotYear = +this.data.lotYear;
+      rateCost.bardanaAndMisc = this.rateCostForm.value.bardanaAndMisc;
+      rateCost.freight = this.rateCostForm.value.freight;
+      rateCost.grandTotal = this.rateCostForm.value.grandTotal;
+      rateCost.labourUnloadingAndLoading = this.rateCostForm.value.labourUnloadingAndLoading; 
+      rateCost.ratePer40LessByProduct = this.rateCostForm.value.ratePer40LessByProduct;
+      rateCost.ratePer40WithoutProcessing = this.rateCostForm.value.ratePer40WithoutProcessing;
+      rateCost.saleBrockery = this.rateCostForm.value.saleBrockery;
+      rateCost.total = this.rateCostForm.value.total;
+      rateCost.processingExpense = this.rateCostForm.value.processingExpense;
+      rateCost.purchaseBrokery = this.rateCostForm.value.purchaseBrokery;
       if (this.isNew) {
-        const createProcessedMaterial = new CreateProcessedMaterial() 
-        createProcessedMaterial.lotId = +this.data.lotId,
-        createProcessedMaterial.lotYear = +this.data.lotYear,
-        createProcessedMaterial.processedMaterials = this.lot.processedMaterials
-
-        this.lotService.createProcessedMaterial(createProcessedMaterial).subscribe(
+        this.lotService.createRateCost(rateCost).subscribe(
           (response: any) => {
             this.spinner.isLoading = false;
-            this.notificationService.successNotifcation('Purchase added successfully');
+            this.notificationService.successNotifcation('Rate Cost added successfully');
             this.modalRef.close();
             // this.lotService.purchaseEmitter.emit(response.data);
           },
@@ -85,18 +116,19 @@ export class RateCostModalComponent implements OnInit {
           });
 
       } else {
-        // this.purchaseService.updatePurchase(this.purchase).subscribe(
-        //   (data) => {
-        //     this.spinner.isLoading = false;
-        //     this.notificationService.successNotifcation('Purchase updated successfully');
-        //     this.lotService.purchaseEmitter.emit(true);
-        //     this.modalRef.close();
-        //   },
-        //   (error) => {
-        //     this.spinner.isLoading = false;
-        //     console.log(error);
-        //     this.notificationService.errorNotifcation('Something went wrong');
-        //   });
+        rateCost.id = this.rateCost.id;
+        this.lotService.updateRateCost(rateCost).subscribe(
+          (data) => {
+            this.spinner.isLoading = false;
+            this.notificationService.successNotifcation('Rate Cost updated successfully');
+            // this.lotService.purchaseEmitter.emit(true);
+            this.modalRef.close();
+          },
+          (error) => {
+            this.spinner.isLoading = false;
+            console.log(error);
+            this.notificationService.errorNotifcation('Something went wrong');
+          });
       }
   //   }
   }

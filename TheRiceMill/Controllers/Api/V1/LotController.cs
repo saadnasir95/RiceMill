@@ -31,5 +31,20 @@ namespace TheRiceMill.Presentation.Controllers.Api.V1
             var response = await Mediator.Send(model);
             return StatusCode(response.Status, response.Response);
         }
+
+
+        [HttpPost("RateCost")]
+        public async Task<IActionResult> CreateRateCost(CreateRateCostRequestModel model)
+        {
+            var response = await Mediator.Send(model);
+            return StatusCode(response.Status, response.Response);
+        }
+
+        [HttpPut("RateCost")]
+        public async Task<IActionResult> UpdateRateCost(UpdateRateCostRequestModel model)
+        {
+            var response = await Mediator.Send(model);
+            return StatusCode(response.Status, response.Response);
+        }
     }
 }
