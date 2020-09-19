@@ -300,12 +300,12 @@ export class LotComponent implements OnInit, OnDestroy {
     this.processedMaterialPaginator.pageSize = 10;
     this.stockOutPaginator.pageSize = 10;
     // this.getLotsList();
-    this.gatepassSubscription = this.lotService.gatepassEmitter.subscribe(
-      (data: any) => {
-        this.paginator.pageIndex = 0;
-        this.getLotsList();
-      }
-    );
+    // this.gatepassSubscription = this.lotService.gatepassEmitter.subscribe(
+    //   (data: any) => {
+    //     this.paginator.pageIndex = 0;
+    //     this.getLotsList();
+    //   }
+    // );
 
     this.companySubscription = this.companyService.companySubject.subscribe(
       (companyId: number) => {
