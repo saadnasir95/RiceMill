@@ -120,10 +120,10 @@ export class LotModalComponent implements OnInit {
 
         this.lotService.createProcessedMaterial(createProcessedMaterial).subscribe(
           (response: any) => {
-            this.spinner.isLoading = false;
-            this.notificationService.successNotifcation('Purchase added successfully');
+            this.spinner.isLoading = true;
+            this.notificationService.successNotifcation('Processed material added successfully');
             this.modalRef.close();
-            // this.lotService.purchaseEmitter.emit(response.data);
+            this.lotService.lotEmitter.emit(response);
           },
           (error) => {
             console.log(error);
