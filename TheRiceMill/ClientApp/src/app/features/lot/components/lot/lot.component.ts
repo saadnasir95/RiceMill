@@ -16,6 +16,7 @@ import { GridOptions } from 'ag-grid-community';
 import { LocalDatetimePipe } from '../../../../shared/pipes/local-datetime.pipe';
 import { TemplateRendererComponent } from '../../../../shared/components/template-renderer/template-renderer.component';
 import { RateCostModalComponent } from '../rate-cost-modal/rate-cost-modalcomponent';
+import { RateCost } from '../../../../shared/model/create-rate-cost.model';
 
 @Component({
   selector: 'app-lot',
@@ -24,6 +25,7 @@ import { RateCostModalComponent } from '../rate-cost-modal/rate-cost-modalcompon
 })
 export class LotComponent implements OnInit, OnDestroy {
   @ViewChild('actionBtn') actionBtn: TemplateRef<any>;
+  @ViewChild('rateCostActionBtn') rateCostActionBtn: TemplateRef<any>;
 
   // tslint:disable-next-line: max-line-length
   displayedColumns: string[] = ['id', 'gatepassTime', 'boriQuantity', 'bagQuantity', 'totalKG', 'action'];
@@ -230,51 +232,61 @@ export class LotComponent implements OnInit, OnDestroy {
         },
         {
           headerName: 'Labour Unloading & Loading',
-          field: 'createdDate',
+          field: 'labourUnloadingAndLoading',
+          // width: 80
+        },
+        {
+          headerName: 'Freight',
+          field: 'freight',
           // width: 80
         },
         {
           headerName: 'Purchase Brokery',
-          field: 'boriQuantity',
+          field: 'purchaseBrokery',
           // width: 100
         },
         {
           headerName: 'Total',
-          field: 'bagQuantity',
+          field: 'total',
           // width: 100
         },
         {
           headerName: 'Rate/40 without Processing',
-          field: 'totalKG',
+          field: 'ratePer40WithoutProcessing',
           // width: 100
         },
         {
           headerName: 'Processing Expense',
-          field: 'totalKG',
+          field: 'processingExpense',
           // width: 100
         },
         {
           headerName: 'Bardana/Misc.',
-          field: 'totalKG',
+          field: 'bardanaMisc',
           // width: 100
         },
         {
           headerName: 'Grand Total',
-          field: 'totalKG',
+          field: 'grandTotal',
           // width: 100
         },
         {
           headerName: 'Rate/40 Less By Product',
-          field: 'totalKG',
+          field: 'ratePer40LessByProduct',
         },
         {
           headerName: 'Sale Brokery',
-          field: 'totalKG',
+          field: 'saleBrockery',
+        },
+        {
+          headerName: 'Edit RateCost',
+          field: 'rateCostActionBtn',
+          cellRendererFramework: TemplateRendererComponent,
+          cellRendererParams: {
+          ngTemplate: this.rateCostActionBtn,
+          width: 100
+          }
         }
-        // {
-        //   headerName: 'Party Name',
-        //   field: 'party.name',
-        // },
       ],
       onGridReady: () => { },
       rowSelection: 'multiple',
@@ -355,17 +367,25 @@ export class LotComponent implements OnInit, OnDestroy {
     this.dialogRefRateCost = this.matDialog.open(RateCostModalComponent, {
       disableClose: true,
       width: '1400px',
+      data: {
+        lotId: this.lot.id,
+        lotYear: this.lot.year
+      }
     });
     this.dialogRefRateCost.componentInstance.modalRef = this.dialogRefRateCost;
   }
 
-  editGatepass(gatepass: Gatepass) {
-    // this.dialogRef = this.matDialog.open(LotModalComponent, {
-    //   disableClose: true,
-    //   width: '1400px'
-    // });
-    // this.dialogRef.componentInstance.modalRef = this.dialogRef;
-    // this.dialogRef.componentInstance.editGatepass(gatepass);
+  editRateCost(rateCost: RateCost) {
+    this.dialogRefRateCost = this.matDialog.open(RateCostModalComponent, {
+      disableClose: true,
+      width: '1400px',
+      data: {
+        lotId: this.lot.id,
+        lotYear: this.lot.year
+      }
+    });
+    this.dialogRefRateCost.componentInstance.modalRef = this.dialogRefRateCost;
+    this.dialogRefRateCost.componentInstance.editRateCost(rateCost);
   }
 
   deleteGatepass(gatepass: Gatepass) {
@@ -398,6 +418,7 @@ export class LotComponent implements OnInit, OnDestroy {
             this.stockInGridOptions.api.setRowData(this.stockInsList);
             this.stockOutGridOptions.api.setRowData(this.stockOutsList);
             this.processedMaterialGridOptions.api.setRowData(this.processedMaterialList);
+            this.rateCostGridOptions.api.setRowData(response.data.rateCosts);
             this.calculateSum(this.stockInsList, this.stockInGridOptions);
             this.calculateSum(this.stockOutsList, this.stockOutGridOptions);
             this.calculateSum(this.processedMaterialList, this.processedMaterialGridOptions);
@@ -413,9 +434,10 @@ export class LotComponent implements OnInit, OnDestroy {
             this.stockInGridOptions.api.setRowData([]);
             this.stockOutGridOptions.api.setRowData([]);
             this.processedMaterialGridOptions.api.setRowData([]);
-            this.calculateSum([], this.stockInGridOptions);
-            this.calculateSum([], this.stockOutGridOptions);
-            this.calculateSum([], this.processedMaterialGridOptions);
+            this.rateCostGridOptions.api.setRowData([]);
+            this.calculateSum([],this.stockInGridOptions);
+            this.calculateSum([],this.stockOutGridOptions);
+            this.calculateSum([],this.processedMaterialGridOptions);
           }
 
           this.processedMaterialPaginator.length = response.count;
