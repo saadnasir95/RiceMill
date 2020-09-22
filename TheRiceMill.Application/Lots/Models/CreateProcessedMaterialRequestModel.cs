@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using TheRiceMill.Application.Extensions;
+using TheRiceMill.Application.GatePasses.Models;
 using TheRiceMill.Common.Constants;
 using TheRiceMill.Common.Response;
 using TheRiceMill.Domain.Entities;
@@ -14,15 +15,15 @@ namespace TheRiceMill.Application.Lots.Models
     {
         public int LotId { get; set; }
         public int LotYear { get; set; }
-        public List<ProcessedMaterial> ProcessedMaterials { get; set; }
+        public List<ProcessedMaterialRequest> ProcessedMaterials { get; set; }
   
     }
 
-    public class ProcessedMaterial
+    public class ProcessedMaterialRequest
     {
         public int Id { get; set; }
         public int ProductId { get; set; }
-        public Product Product { get; set; }
+        public ProductRequestModel Product { get; set; }
         public double BoriQuantity { get; set; }
         public double BagQuantity { get; set; }
         public double PerKG { get; set; }

@@ -13,6 +13,6 @@ namespace TheRiceMill.Application.Lots.Models
         public int LotId { get; set; }
         public int LotYear { get; set; }
         public Lot Lot { get; set; }
-        public List<ProcessedMaterial> ProcessedMaterials { get; set; }
+        public List<ProcessedMaterialRequest> ProcessedMaterials { get; set; }
     }
 }

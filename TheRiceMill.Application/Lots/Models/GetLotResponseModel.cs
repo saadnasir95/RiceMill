@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using TheRiceMill.Application.GatePasses.Models;
 using TheRiceMill.Domain.Entities;
 
 namespace TheRiceMill.Application.Lots.Models
@@ -9,10 +10,48 @@ namespace TheRiceMill.Application.Lots.Models
     {
         public int Id { get; set; }
         public int Year { get; set; }
-        public List<StockIn> StockIns { get; set; }
-        public List<StockOut> StockOuts { get; set; }
-        public List<ProcessedMaterial> ProcessedMaterials { get; set; }
-        public List<RateCost> RateCosts { get; set; }
-        public List<GatePass> GatePasses { get; set; }
+        public List<StockInRequestModel> StockIns { get; set; }
+        public List<StockOutRequestModel> StockOuts { get; set; }
+        public List<ProcessedMaterialRequest> ProcessedMaterials { get; set; }
+        public List<RateCostRequestModel> RateCosts { get; set; }
+        public List<GatePassResponseModel> GatePasses { get; set; }
+    }
+    public class StockInRequestModel
+    {
+        public int Id { get; set; }
+        public int LotId { get; set; }
+        public int LotYear { get; set; }
+        public double BoriQuantity { get; set; }
+        public double BagQuantity { get; set; }
+        public double TotalKG { get; set; }
+        public DateTime GatepassTime { get; set; }
+    }
+    public class StockOutRequestModel
+    {
+        public int Id { get; set; }
+        public int ProductId { get; set; }
+        public ProductRequestModel Product { get; set; }
+        public int LotId { get; set; }
+        public int LotYear { get; set; }
+        public double BoriQuantity { get; set; }
+        public double BagQuantity { get; set; }
+        public double PerKG { get; set; }
+        public double TotalKG { get; set; }
+    }
+    public class RateCostRequestModel
+    {
+        public int Id { get; set; }
+        public int LotId { get; set; }
+        public int LotYear { get; set; }
+        public double LabourUnloadingAndLoading { get; set; }
+        public double Freight { get; set; }
+        public double PurchaseBrokery { get; set; }
+        public double Total { get; set; }
+        public double RatePer40WithoutProcessing { get; set; }
+        public double ProcessingExpense { get; set; }
+        public double BardanaAndMisc { get; set; }
+        public double GrandTotal { get; set; }
+        public double RatePer40LessByProduct { get; set; }
+        public double SaleBrockery { get; set; }
     }
 }

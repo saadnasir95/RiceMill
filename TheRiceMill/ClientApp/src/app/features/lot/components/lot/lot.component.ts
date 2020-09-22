@@ -26,9 +26,9 @@ export class LotComponent implements OnInit, OnDestroy {
   @ViewChild('actionBtn') actionBtn: TemplateRef<any>;
 
   // tslint:disable-next-line: max-line-length
-  displayedColumns: string[] = ["id","gatepassTime","boriQuantity","bagQuantity","totalKG","action"];
-  processedMaterialDisplayedColumns: string[] = ["id","productName","boriQuantity","bagQuantity","totalKG","action"];
-  stockOutColumns: string[] = ["id","gatepassTime","boriQuantity","bagQuantity","totalKG","action"];
+  displayedColumns: string[] = ['id', 'gatepassTime', 'boriQuantity', 'bagQuantity', 'totalKG', 'action'];
+  processedMaterialDisplayedColumns: string[] = ['id', 'productName', 'boriQuantity', 'bagQuantity', 'totalKG', 'action'];
+  stockOutColumns: string[] = ['id', 'gatepassTime', 'boriQuantity', 'bagQuantity', 'totalKG', 'action'];
 
   dataSource: MatTableDataSource<StockIn>;
   processedMaterialDataSource: MatTableDataSource<ProcessedMaterial>;
@@ -40,10 +40,10 @@ export class LotComponent implements OnInit, OnDestroy {
   rateCostGridOptions: GridOptions;
 
   lotYearIds: Array<string>;
-  selectedYear = "";
-  lotList: Lot[];
-  stockInsList: StockIn[];  
-  stockOutsList: StockOut[];  
+  selectedYear = '';
+  lot: Lot;
+  stockInsList: StockIn[];
+  stockOutsList: StockOut[];
   processedMaterialList: ProcessedMaterial[];
   isLoadingData: Boolean = false;
   dialogRef: MatDialogRef<LotModalComponent>;
@@ -110,12 +110,12 @@ export class LotComponent implements OnInit, OnDestroy {
           field: 'actionButton',
           cellRendererFramework: TemplateRendererComponent,
           cellRendererParams: {
-          ngTemplate: this.actionBtn,
-          width: 100
-        }
+            ngTemplate: this.actionBtn,
+            width: 100
+          }
         },
       ],
-      onGridReady: () => {},
+      onGridReady: () => { },
       rowSelection: 'multiple',
       rowGroupPanelShow: 'always',
       pivotPanelShow: 'always',
@@ -136,7 +136,7 @@ export class LotComponent implements OnInit, OnDestroy {
         },
         {
           headerName: 'Product Name',
-          field: 'productName',
+          field: 'product.name',
           width: 200
         },
         {
@@ -159,7 +159,7 @@ export class LotComponent implements OnInit, OnDestroy {
         //   field: '',
         // },
       ],
-      onGridReady: () => {},
+      onGridReady: () => { },
       rowSelection: 'multiple',
       rowGroupPanelShow: 'always',
       pivotPanelShow: 'always',
@@ -185,6 +185,11 @@ export class LotComponent implements OnInit, OnDestroy {
           // width: 80
         },
         {
+          headerName: 'Product Name',
+          field: 'product.name',
+          width: 200
+        },
+        {
           headerName: 'Bori Quantity',
           field: 'boriQuantity',
           // width: 100
@@ -204,7 +209,7 @@ export class LotComponent implements OnInit, OnDestroy {
         //   field: 'party.name',
         // },
       ],
-      onGridReady: () => {},
+      onGridReady: () => { },
       rowSelection: 'multiple',
       rowGroupPanelShow: 'always',
       pivotPanelShow: 'always',
@@ -271,7 +276,7 @@ export class LotComponent implements OnInit, OnDestroy {
         //   field: 'party.name',
         // },
       ],
-      onGridReady: () => {},
+      onGridReady: () => { },
       rowSelection: 'multiple',
       rowGroupPanelShow: 'always',
       pivotPanelShow: 'always',
@@ -288,7 +293,7 @@ export class LotComponent implements OnInit, OnDestroy {
     this.processedMaterialPaginator.pageSize = 10;
     this.stockOutPaginator.pageSize = 10;
     // this.getLotsList();
-    this.gatepassSubscription = this.lotService.gatepassEmitter.subscribe(
+    this.gatepassSubscription = this.lotService.lotEmitter.subscribe(
       (data: any) => {
         this.paginator.pageIndex = 0;
         this.getLotsList();
@@ -300,7 +305,7 @@ export class LotComponent implements OnInit, OnDestroy {
         if (this.companyId !== companyId) {
           this.companyId = companyId;
           this.paginator.pageIndex = 0;
-          if(this.lotIdSearch){
+          if (this.lotIdSearch) {
             this.getLotsList();
           }
         }
@@ -322,14 +327,14 @@ export class LotComponent implements OnInit, OnDestroy {
     this.lotIdSearch = filterValue.trim().toLowerCase();
     // this.getLotsList();
   }
-  
+
   sortData() {
     this.paginator.pageIndex = 0;
     this.sortDirection = this.sort.direction === 'desc' ? 'true' : 'false';
     this.sortOrderBy = this.sort.active;
     this.getLotsList();
   }
-  
+
   changePage() {
     this.getLotsList();
   }
@@ -339,8 +344,8 @@ export class LotComponent implements OnInit, OnDestroy {
       disableClose: true,
       width: '1400px',
       data: {
-        lotId: this.lotList[0].id,
-        lotYear: this.lotList[0].year
+        lotId: this.lot.id,
+        lotYear: this.lot.year
       }
     });
     this.dialogRef.componentInstance.modalRef = this.dialogRef;
@@ -373,7 +378,7 @@ export class LotComponent implements OnInit, OnDestroy {
   }
 
   getLotsList() {
-    if(!this.lotIdSearch || !this.selectedYear){
+    if (!this.lotIdSearch || !this.selectedYear) {
       return;
     }
 
@@ -381,11 +386,11 @@ export class LotComponent implements OnInit, OnDestroy {
       .getLotList(this.paginator.pageSize, this.paginator.pageIndex, this.advanceSearch, this.sortDirection, this.sortOrderBy, this.lotIdSearch, this.selectedYear)
       .subscribe(
         (response: LotResponse) => {
-          if(response.data && response.data.length > 0){
-            this.lotList = response.data;
-            this.stockInsList = response.data[0].stockIns;
-            this.stockOutsList = response.data[0].stockOuts;
-            this.processedMaterialList = response.data[0].processedMaterials;
+          if (response.data) {
+            this.lot = response.data;
+            this.stockInsList = response.data.stockIns;
+            this.stockOutsList = response.data.stockOuts;
+            this.processedMaterialList = response.data.processedMaterials;
             this.dataSource.data = this.stockInsList;
             this.stockOutDataSource.data = this.stockOutsList;
             this.processedMaterialDataSource.data = this.processedMaterialList;
@@ -393,24 +398,24 @@ export class LotComponent implements OnInit, OnDestroy {
             this.stockInGridOptions.api.setRowData(this.stockInsList);
             this.stockOutGridOptions.api.setRowData(this.stockOutsList);
             this.processedMaterialGridOptions.api.setRowData(this.processedMaterialList);
-            this.calculateSum(this.stockInsList,this.stockInGridOptions);
-            this.calculateSum(this.stockOutsList,this.stockOutGridOptions);
-            this.calculateSum(this.processedMaterialList,this.processedMaterialGridOptions);
-          }else {
-            this.lotList = [];
+            this.calculateSum(this.stockInsList, this.stockInGridOptions);
+            this.calculateSum(this.stockOutsList, this.stockOutGridOptions);
+            this.calculateSum(this.processedMaterialList, this.processedMaterialGridOptions);
+          } else {
+            this.lot = new Lot();
             this.stockInsList = [];
             this.stockOutsList = [];
             this.processedMaterialList = [];
             this.dataSource.data = [];
             this.stockOutDataSource.data = [];
-            this.processedMaterialDataSource.data = [];            
+            this.processedMaterialDataSource.data = [];
             // AG GRID
             this.stockInGridOptions.api.setRowData([]);
             this.stockOutGridOptions.api.setRowData([]);
             this.processedMaterialGridOptions.api.setRowData([]);
-            this.calculateSum([],this.stockInGridOptions);
-            this.calculateSum([],this.stockOutGridOptions);
-            this.calculateSum([],this.processedMaterialGridOptions);
+            this.calculateSum([], this.stockInGridOptions);
+            this.calculateSum([], this.stockOutGridOptions);
+            this.calculateSum([], this.processedMaterialGridOptions);
           }
 
           this.processedMaterialPaginator.length = response.count;
@@ -420,18 +425,18 @@ export class LotComponent implements OnInit, OnDestroy {
       );
   }
 
-  getYears(){
+  getYears() {
     this.lotService
-    .getYears()
-    .subscribe(
-      (response: any) => {
-        if(response.data){
-          this.lotYearIds = response.data as Array<string>; 
-        }
-      })
+      .getYears()
+      .subscribe(
+        (response: any) => {
+          if (response.data) {
+            this.lotYearIds = response.data as Array<string>;
+          }
+        })
   }
 
-  calculateSum(list: Array<any>,gridInstance:GridOptions){
+  calculateSum(list: Array<any>, gridInstance: GridOptions) {
     let _bagQuantity = 0;
     let _boriQuantity = 0;
     let _totalKG = 0;
@@ -442,9 +447,9 @@ export class LotComponent implements OnInit, OnDestroy {
     })
 
     const result = [{
-      boriQuantity:_bagQuantity.toFixed(2),
-      bagQuantity:_boriQuantity.toFixed(2),
-      totalKG:_totalKG.toFixed(2),
+      boriQuantity: _bagQuantity.toFixed(2),
+      bagQuantity: _boriQuantity.toFixed(2),
+      totalKG: _totalKG.toFixed(2),
       actionButton: "footer"
     }];
 
@@ -452,10 +457,10 @@ export class LotComponent implements OnInit, OnDestroy {
 
   }
 
-  datePipe(date: any){
-    if(date.value){
+  datePipe(date: any) {
+    if (date.value) {
       return new LocalDatetimePipe().transform(date.value);
     }
   }
-  
+
 }

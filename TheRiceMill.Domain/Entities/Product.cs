@@ -16,8 +16,8 @@ namespace TheRiceMill.Domain.Entities
         /// </summary>
         public string NormalizedName { get; set; }
         public bool IsProcessedMaterial { get; set; }
-        public IList<GatePass> GatePasses { get; set; }
-        public IList<ProcessedMaterial> ProcessedMaterials { get; set; }
-        public IList<StockOut> StockOuts { get; set; }
+        public List<GatePass> GatePasses { get; set; }
+        public List<ProcessedMaterial> ProcessedMaterials { get; set; }
+        public List<StockOut> StockOuts { get; set; }
     }
 }

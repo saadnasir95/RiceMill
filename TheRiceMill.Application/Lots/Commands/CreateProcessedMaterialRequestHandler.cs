@@ -23,11 +23,11 @@ namespace TheRiceMill.Application.Lots.Commands
         public async Task<ResponseViewModel> Handle(CreateProcessedMaterialRequestModel request,
             CancellationToken cancellationToken)
         {
-            var _processedMaterial = new Domain.Entities.ProcessedMaterial();
-            List<Models.ProcessedMaterial> _processedMaterials = new List<Models.ProcessedMaterial>();
+            var _processedMaterial = new ProcessedMaterial();
+            List<ProcessedMaterialRequest> _processedMaterials = new List<ProcessedMaterialRequest>();
             request.ProcessedMaterials.ForEach(async pm =>
             {
-                var processedMaterial = new Domain.Entities.ProcessedMaterial();
+                var processedMaterial = new ProcessedMaterial();
                 processedMaterial.BagQuantity = pm.BagQuantity;
                 processedMaterial.BoriQuantity = pm.BoriQuantity;
                 processedMaterial.PerKG = pm.PerKG;
