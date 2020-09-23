@@ -3,13 +3,10 @@ import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
 import { ProductType } from '../../../../shared/model/enums';
 import { MatDialogRef, MatAutocompleteSelectedEvent, MatChipInputEvent, MAT_DIALOG_DATA } from '@angular/material';
 import { Product } from '../../../../shared/model/product.model';
-import { Gatepass } from '../../../../shared/model/gatepass.model';
-import { GatepassService } from '../../../../shared/services/gatepass.service';
 import * as moment from 'moment';
 import 'moment-timezone';
 import { NotificationService } from '../../../../shared/services/notification.service';
 import { SpinnerService } from '../../../../shared/services/spinner.service';
-import { Purchase } from '../../../../shared/model/purchase.model';
 import { ProcessedMaterial, CreateProcessedMaterial } from '../../../../shared/model/processed-material.model';
 import { Lot } from '../../../../shared/model/lot.model';
 import { LotService } from '../../../../shared/services/lot.service';
@@ -29,14 +26,14 @@ export class LotModalComponent implements OnInit {
 
   lotForm: FormGroup = new FormGroup({
     date: new FormControl(moment.tz('Asia/Karachi').format().slice(0, 16), Validators.required),
-    lotId: new FormControl(null, Validators.required),
-    lotYear: new FormControl(null, Validators.required),
     processedMaterial: new FormArray([]),
   });
 
   public modalRef: MatDialogRef<LotModalComponent>;
   public isNew = true;
   public isDelete = false;
+  lotId = 0;
+  lotYear = 0;
   private lot: Lot;
 
   constructor(
@@ -44,84 +41,110 @@ export class LotModalComponent implements OnInit {
     private notificationService: NotificationService,
     private lotService: LotService,
     public spinner: SpinnerService,
-    public productService: ProductService,
-    @Inject(MAT_DIALOG_DATA) public data: any) {
+    public productService: ProductService) {
   }
 
   ngOnInit() {
-    this.productService.getProducts(20, 0, '', ProductType.ProcessedMaterial).subscribe(
-      (response: ProductResponse) => {
-        for (let i = 0; i < response.data.length; i++) {
-          const formGroup = new FormGroup({
-            id: new FormControl(0, Validators.required),
-            productId: new FormControl(response.data[i].id, Validators.required),
-            productName: new FormControl(response.data[i].name, Validators.required),
-            boriQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
-            bagQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
-            perKg: new FormControl(0, [Validators.required, Validators.min(0)]),
-            totalKg: new FormControl(0, [Validators.required, Validators.min(0)]),
-            lotId: new FormControl(this.data.lotId, [Validators.required, Validators.min(0)]),
-          });
-          (this.lotForm.get('processedMaterial') as FormArray).push(formGroup);
-          if (this.lot === undefined || this.lot === null) {
-            this.lot = new Lot();
-          }
-          if (this.lot.processedMaterials === undefined || this.lot.processedMaterials === null) {
-            this.lot.processedMaterials = [];
-          }
-          this.lot.processedMaterials.push(new ProcessedMaterial());
-        }
-      },
-      (error) => console.log(error)
-    );
-    this.lotForm.get('lotId').setValue(this.data.lotId);
-    this.lotForm.get('lotYear').setValue(this.data.lotYear);
-    this.lotForm.get('processedMaterial').valueChanges.subscribe(
-      (value: Array<any>) => {
-        this.totalKg = 0;
-        if (value.length !== 0) {
-          for (let i = 0; i < value.length; i++) {
-            value[i].totalKg = (+value[i].bagQuantity + (+value[i].boriQuantity)) * +value[i].perKg;
-            // if (value[i].item) {
-            //   this.totalKg += +value[i].totalKg;
-            // } else {
-            //   this.totalKg -= +value[i].totalKg;
-            // }
-          }
-          this.lotForm.get('processedMaterial').setValue(value, { emitEvent: false });
-        }
-      }
-    );
+    // this.lotForm.get('processedMaterial').valueChanges.subscribe(
+    //   (value: Array<any>) => {
+    //     this.totalKg = 0;
+    //     if (value.length !== 0) {
+    //       for (let i = 0; i < value.length; i++) {
+    //         value[i].totalKg = (+value[i].bagQuantity + (+value[i].boriQuantity)) * +value[i].perKg;
+    //       }
+    //       this.lotForm.get('processedMaterial').setValue(value, { emitEvent: false });
+    //     }
+    //   }
+    // );
   }
 
   closeModal() {
     this.modalRef.close();
   }
-
+  populateLotData(lotId: number, lotYear: number, processedMaterials: ProcessedMaterial[]) {
+    this.lotId = lotId;
+    this.lotYear = lotYear;
+    if (!this.lot) {
+      this.lot = new Lot();
+    }
+    if (!this.lot.processedMaterials) {
+      this.lot.processedMaterials = [];
+    }
+    if (processedMaterials && processedMaterials.length > 0) {
+      this.isNew = false;
+      this.lot.processedMaterials = processedMaterials;
+      this.populateProcessedMaterialData();
+    } else {
+      this.productService.getProducts(20, 0, '', ProductType.ProcessedMaterial).subscribe(
+        (response: ProductResponse) => {
+          for (let i = 0; i < response.data.length; i++) {
+            const processedMaterial = new ProcessedMaterial();
+            processedMaterial.boriQuantity = 0;
+            processedMaterial.bagQuantity = 0;
+            processedMaterial.id = 0;
+            processedMaterial.perKG = 0;
+            processedMaterial.totalKG = 0;
+            processedMaterial.productId = response.data[i].id;
+            processedMaterial.product = new Product();
+            processedMaterial.product.name = response.data[i].name;
+            this.lot.processedMaterials.push(processedMaterial);
+          }
+        },
+        (error) => console.log(error)
+      );
+    }
+  }
+  populateProcessedMaterialData() {
+    for (let i = 0; i < this.lot.processedMaterials.length; i++) {
+      const formGroup = new FormGroup({
+        id: new FormControl(this.lot.processedMaterials[i].id, Validators.required),
+        productId: new FormControl(this.lot.processedMaterials[i].productId, Validators.required),
+        productName: new FormControl(this.lot.processedMaterials[i].product.name, Validators.required),
+        boriQuantity: new FormControl(this.lot.processedMaterials[i].boriQuantity, [Validators.required, Validators.min(0)]),
+        bagQuantity: new FormControl(this.lot.processedMaterials[i].bagQuantity, [Validators.required, Validators.min(0)]),
+        perKg: new FormControl(this.lot.processedMaterials[i].perKG, [Validators.required, Validators.min(0)]),
+        totalKg: new FormControl(this.lot.processedMaterials[i].totalKG, [Validators.required, Validators.min(0)]),
+      });
+      (this.lotForm.get('processedMaterial') as FormArray).push(formGroup);
+    }
+  }
 
   submit() {
     if (this.lotForm.valid) {
+      this.spinner.isLoading = true;
       if (this.lot.processedMaterials.length >= 0 && (this.lotForm.get('processedMaterial') as FormArray).length >= 0) {
         for (let i = 0; i < (this.lotForm.get('processedMaterial') as FormArray).length; i++) {
           this.lot.processedMaterials[i].id = (this.lotForm.get('processedMaterial') as FormArray).at(i).value.id;
           this.lot.processedMaterials[i].bagQuantity = (this.lotForm.get('processedMaterial') as FormArray).at(i).value.bagQuantity;
           this.lot.processedMaterials[i].boriQuantity = (this.lotForm.get('processedMaterial') as FormArray).at(i).value.boriQuantity;
           this.lot.processedMaterials[i].productId = (this.lotForm.get('processedMaterial') as FormArray).at(i).value.productId;
-          this.lot.processedMaterials[i].perKg = (this.lotForm.get('processedMaterial') as FormArray).at(i).value.perKg;
-          this.lot.processedMaterials[i].totalKg = (this.lotForm.get('processedMaterial') as FormArray).at(i).value.totalKg;
+          this.lot.processedMaterials[i].perKG = (this.lotForm.get('processedMaterial') as FormArray).at(i).value.perKg;
+          this.lot.processedMaterials[i].totalKG = (this.lotForm.get('processedMaterial') as FormArray).at(i).value.totalKg;
         }
       }
-
+      const createProcessedMaterial = new CreateProcessedMaterial();
+      createProcessedMaterial.lotId = +this.lotId;
+      createProcessedMaterial.lotYear = +this.lotYear;
+      createProcessedMaterial.processedMaterials = this.lot.processedMaterials;
       if (this.isNew) {
-        const createProcessedMaterial = new CreateProcessedMaterial();
-        createProcessedMaterial.lotId = +this.data.lotId;
-        createProcessedMaterial.lotYear = +this.data.lotYear;
-        createProcessedMaterial.processedMaterials = this.lot.processedMaterials;
-
         this.lotService.createProcessedMaterial(createProcessedMaterial).subscribe(
           (response: any) => {
-            this.spinner.isLoading = true;
+            this.spinner.isLoading = false;
             this.notificationService.successNotifcation('Processed material added successfully');
+            this.modalRef.close();
+            this.lotService.lotEmitter.emit(response);
+          },
+          (error) => {
+            this.spinner.isLoading = false;
+            console.log(error);
+            this.notificationService.errorNotifcation('Something went wrong');
+          });
+
+      } else {
+        this.lotService.updateProcessedMaterial(createProcessedMaterial).subscribe(
+          (response: any) => {
+            this.spinner.isLoading = false;
+            this.notificationService.successNotifcation('Processed material updated successfully');
             this.modalRef.close();
             this.lotService.lotEmitter.emit(response);
           },
@@ -130,20 +153,6 @@ export class LotModalComponent implements OnInit {
             this.spinner.isLoading = false;
             this.notificationService.errorNotifcation('Something went wrong');
           });
-
-      } else {
-        // this.purchaseService.updatePurchase(this.purchase).subscribe(
-        //   (data) => {
-        //     this.spinner.isLoading = false;
-        //     this.notificationService.successNotifcation('Purchase updated successfully');
-        //     this.lotService.purchaseEmitter.emit(true);
-        //     this.modalRef.close();
-        //   },
-        //   (error) => {
-        //     this.spinner.isLoading = false;
-        //     console.log(error);
-        //     this.notificationService.errorNotifcation('Something went wrong');
-        //   });
       }
     }
   }
@@ -171,7 +180,6 @@ export class LotModalComponent implements OnInit {
       bagQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
       perKg: new FormControl(0, [Validators.required, Validators.min(0)]),
       totalKg: new FormControl(0, [Validators.required, Validators.min(0)]),
-      lotId: new FormControl(this.data.lotId, [Validators.required, Validators.min(0)]),
     });
     (this.lotForm.get('processedMaterial') as FormArray).push(formGroup);
     if (this.lot === undefined || this.lot === null) {

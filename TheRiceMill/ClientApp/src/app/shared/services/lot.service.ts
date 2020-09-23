@@ -32,7 +32,7 @@ export class LotService {
       .set('isDescending', sortDirection)
       .set('orderBy', orderBy + '')
       .set('lotId', lotId.toString())
-      .set('lotYear', lotYear.toString())
+      .set('lotYear', lotYear.toString());
     return this.http.get<LotResponse>(this.apiUrl, { headers: this.tokenService.getHeaders(), params: params });
   }
 
@@ -45,21 +45,15 @@ export class LotService {
   }
 
   createRateCost(createRateCost: CreateRateCost): Observable<any> {
-    return this.http.post(this.apiUrl+"/RateCost", JSON.stringify(createRateCost), { headers: this.tokenService.getHeaders() });
+    return this.http.post(this.apiUrl + '/RateCost', JSON.stringify(createRateCost), { headers: this.tokenService.getHeaders() });
   }
 
   updateRateCost(createRateCost: CreateRateCost): Observable<any> {
-    return this.http.put(this.apiUrl+"/RateCost", JSON.stringify(createRateCost), { headers: this.tokenService.getHeaders() });
+    return this.http.put(this.apiUrl + '/RateCost', JSON.stringify(createRateCost), { headers: this.tokenService.getHeaders() });
   }
 
-  updateGatepass(gatepass: Gatepass): Observable<any> {
-    gatepass.companyId = this.companyService.getCompanyId();
-    return this.http.put(this.apiUrl, JSON.stringify(gatepass), { headers: this.tokenService.getHeaders() });
+  updateProcessedMaterial(processedMaterial: CreateProcessedMaterial): Observable<any> {
+    return this.http.put(this.apiUrl + '/ProcessedMaterial', JSON.stringify(processedMaterial), { headers: this.tokenService.getHeaders() });
   }
 
-  deleteGatepass(gatepass: Gatepass): Observable<any> {
-    const params = new HttpParams()
-      .set('id', gatepass.id.toString());
-    return this.http.delete(this.apiUrl, { headers: this.tokenService.getHeaders(), params: params });
-  }
 }

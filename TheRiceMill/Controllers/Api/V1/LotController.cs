@@ -46,5 +46,12 @@ namespace TheRiceMill.Presentation.Controllers.Api.V1
             var response = await Mediator.Send(model);
             return StatusCode(response.Status, response.Response);
         }
+
+        [HttpPut("ProcessedMaterial")]
+        public async Task<IActionResult> UpdateProcessedMaterial(UpdateProcessedMaterialRequestModel model)
+        {
+            var response = await Mediator.Send(model);
+            return StatusCode(response.Status, response.Response);
+        }
     }
 }

@@ -283,8 +283,8 @@ export class LotComponent implements OnInit, OnDestroy {
           field: 'rateCostActionBtn',
           cellRendererFramework: TemplateRendererComponent,
           cellRendererParams: {
-          ngTemplate: this.rateCostActionBtn,
-          width: 100
+            ngTemplate: this.rateCostActionBtn,
+            width: 100
           }
         }
       ],
@@ -361,6 +361,7 @@ export class LotComponent implements OnInit, OnDestroy {
       }
     });
     this.dialogRef.componentInstance.modalRef = this.dialogRef;
+    this.dialogRef.componentInstance.populateLotData(this.lot.id, +this.lot.year, this.processedMaterialList);
   }
 
   openRateCostModal() {
@@ -435,9 +436,9 @@ export class LotComponent implements OnInit, OnDestroy {
             this.stockOutGridOptions.api.setRowData([]);
             this.processedMaterialGridOptions.api.setRowData([]);
             this.rateCostGridOptions.api.setRowData([]);
-            this.calculateSum([],this.stockInGridOptions);
-            this.calculateSum([],this.stockOutGridOptions);
-            this.calculateSum([],this.processedMaterialGridOptions);
+            this.calculateSum([], this.stockInGridOptions);
+            this.calculateSum([], this.stockOutGridOptions);
+            this.calculateSum([], this.processedMaterialGridOptions);
           }
 
           this.processedMaterialPaginator.length = response.count;
@@ -466,13 +467,13 @@ export class LotComponent implements OnInit, OnDestroy {
       _bagQuantity += item.bagQuantity;
       _boriQuantity += item.boriQuantity;
       _totalKG += item.totalKG;
-    })
+    });
 
     const result = [{
-      boriQuantity: _bagQuantity.toFixed(2),
-      bagQuantity: _boriQuantity.toFixed(2),
+      boriQuantity: _boriQuantity.toFixed(2),
+      bagQuantity: _bagQuantity.toFixed(2),
       totalKG: _totalKG.toFixed(2),
-      actionButton: "footer"
+      actionButton: 'footer'
     }];
 
     gridInstance.api.setPinnedBottomRowData(result);

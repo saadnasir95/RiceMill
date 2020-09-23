@@ -90,11 +90,15 @@
               Per KG should be greater than 0
             </mat-error>
           </mat-form-field>
-          <div class="col-2 d-flex justify-content-center align-items-center">
-            <span class="grand-total pt-3"><p class="d-flex justify-content-end"><b> Total Kg:&nbsp;
-            </b> {{ material.get('totalKg').value }} </p>
-            </span>
-          </div>
+          <mat-form-field class="col-2">
+            <input type="number" matInput placeholder="Enter Total KG" formControlName="totalKg">
+            <mat-error *ngIf="material.get('totalKg').hasError('required')">
+              Total KG is required
+            </mat-error>
+            <mat-error *ngIf="material.get('totalKg').hasError('min')">
+              Total KG should be greater than 0
+            </mat-error>
+          </mat-form-field>
           <div class="col-1 d-flex">
             <i class="fas fa-window-close fa-lg show-cursor my-auto text-danger" style="cursor: pointer;"
               (click)="deleteProcessedMaterial(i)">

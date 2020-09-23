@@ -51,10 +51,10 @@ namespace TheRiceMill.Application.Lots.Commands
             await _context.SaveChangesAsync(cancellationToken);
             return new ResponseViewModel().CreateOk(new ProcessedMaterialResponseModel()
             {
-              LotId = _processedMaterial.LotId,
-              Id = _processedMaterial.Id,
-              Lot = _processedMaterial.Lot,
-              LotYear = _processedMaterial.LotYear,
+                LotId = _processedMaterial.LotId,
+                Id = _processedMaterial.Id,
+                Lot = _processedMaterial.Lot,
+                LotYear = _processedMaterial.LotYear,
             });
         }
     }
