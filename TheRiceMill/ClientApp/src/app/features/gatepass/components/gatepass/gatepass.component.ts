@@ -99,6 +99,7 @@ export class GatepassComponent implements OnInit, OnDestroy {
     this.dialogRef.componentInstance.modalRef = this.dialogRef;
     this.dialogRef.componentInstance.editGatepass(gatepass);
   }
+
   printGatepass(gatepass: Gatepass) {
     this.gatepassReceiptComponent.gatepass = gatepass;
     setTimeout(() => {
@@ -106,6 +107,7 @@ export class GatepassComponent implements OnInit, OnDestroy {
       window.print();
     }, 500);
   }
+  
   deleteGatepass(gatepass: Gatepass) {
     this.dialogRef = this.matDialog.open(GatepassModalComponent, {
       disableClose: true,
