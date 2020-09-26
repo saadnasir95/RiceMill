@@ -19,7 +19,7 @@
   <div *ngIf="isMobileMenu()">
 
   </div>
-  <ul class="nav h-100">
+  <ul class="nav sidebar-height">
     <li routerLinkActive="active" [routerLinkActiveOptions]="{exact:true}" *ngFor="let menuItem of menuItems"
       class="{{menuItem.class}} nav-item ps-child">
       <a class="nav-link" [routerLink]="[menuItem.path]">
@@ -27,7 +27,7 @@
         <p>{{menuItem.title}}</p>
       </a>
     </li>
-    <li class="nav-item" (click)="logout()" [ngStyle]="{'cursor':'pointer'}">
+    <li class="nav-item mb-5" (click)="logout()" [ngStyle]="{'cursor':'pointer'}">
       <a class="nav-link">
         <i class="fa fa-sign-out-alt"></i>
         <p>Logout</p>

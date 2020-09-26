@@ -107,7 +107,7 @@ export class GatepassComponent implements OnInit, OnDestroy {
       window.print();
     }, 500);
   }
-  
+
   deleteGatepass(gatepass: Gatepass) {
     this.dialogRef = this.matDialog.open(GatepassModalComponent, {
       disableClose: true,

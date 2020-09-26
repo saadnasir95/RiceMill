@@ -18,7 +18,6 @@ import { RateCostModalComponent } from '../rate-cost-modal/rate-cost-modalcompon
 import { RateCost } from '../../../../shared/model/create-rate-cost.model';
 import { LotReceiptComponent } from '../lot-receipt/lot-receipt.component';
 import { Stock } from '../../../../shared/model/stock-in.model';
-import { timeStamp } from 'console';
 import { Balance } from '../../../../shared/model/balance.model';
 
 @Component({
@@ -209,12 +208,12 @@ export class LotComponent implements OnInit, OnDestroy {
         {
           headerName: 'Bag Qty',
           field: 'bagQuantity',
-          width: 90        
+          width: 90
         },
         {
           headerName: 'Total KG',
           field: 'totalKG',
-          width: 90        
+          width: 90
         },
       ],
       onGridReady: () => { },
@@ -375,13 +374,13 @@ export class LotComponent implements OnInit, OnDestroy {
     this.lot.balances = this.balanceList;
     this.lotReceiptComponent.lot = this.lot;
     setTimeout(() => {
-      this.notificationService.closeNotification();    
+      this.notificationService.closeNotification();
       var head = document.head || document.getElementsByTagName('head')[0];
       var style =  document.createElement('style');
       style.type = 'text/css';
       style.media = 'print';
-    
-      style.appendChild(document.createTextNode('@page { size: A4 landscape;}'));    
+
+      style.appendChild(document.createTextNode('@page { size: A4 landscape;}'));
       head.appendChild(style);
       window.print();
     }, 500);
@@ -484,7 +483,7 @@ export class LotComponent implements OnInit, OnDestroy {
             this.stockOutGridOptions.api.setRowData(this.stockOutsList);
             this.processedMaterialGridOptions.api.setRowData(this.processedMaterialList);
             this.rateCostGridOptions.api.setRowData(response.data.rateCosts);
-            
+
             this.calculateSum(this.stockInsList, this.stockInGridOptions);
             this.calculateSum(this.stockOutsList, this.stockOutGridOptions);
             this.calculateSum(this.processedMaterialList, this.processedMaterialGridOptions);

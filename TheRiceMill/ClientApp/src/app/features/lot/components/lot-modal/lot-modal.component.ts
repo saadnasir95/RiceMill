@@ -61,9 +61,8 @@ export class LotModalComponent implements OnInit {
   closeModal() {
     this.modalRef.close();
   }
-  
+
   populateLotData(lotId: number, lotYear: number, processedMaterials: ProcessedMaterial[]) {
-    debugger
     this.lotId = lotId;
     this.lotYear = lotYear;
     if (!this.lot) {
