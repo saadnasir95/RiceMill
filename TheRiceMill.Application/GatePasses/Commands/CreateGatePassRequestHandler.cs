@@ -159,7 +159,7 @@ namespace TheRiceMill.Application.GatePasses.Commands
                     BagQuantity = request.BagQuantity,
                     BoriQuantity = request.BoriQuantity,
                     TotalKG = request.NetWeight,
-                    GatepassTime = request.DateTime
+                    GatepassTime = request.DateTime,
                 });
             }
             else

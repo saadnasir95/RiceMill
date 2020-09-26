@@ -456,7 +456,7 @@ export class LotComponent implements OnInit, OnDestroy {
           if (response.data) {
             this.lotYearIds = response.data as Array<string>;
           }
-        })
+        });
   }
 
   calculateSum(list: Array<any>, gridInstance: GridOptions) {

@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using TheRiceMill.Application.Lots.Models;
+using TheRiceMill.Common.Extensions;
 using TheRiceMill.Common.Response;
 using TheRiceMill.Persistence;
 
@@ -22,8 +23,8 @@ namespace TheRiceMill.Application.Lots.Queries
 
         public async Task<ResponseViewModel> Handle(GetYearRequestModel request, CancellationToken cancellationToken)
         {
-
-            var yearList = _context.Lots.Select(q => new Year() {
+            var yearList = _context.Lots.Where(c => c.CompanyId == request.CompanyId.ToInt()).Select(q => new Year()
+            {
                 YearId = q.Year.ToString()
             }).Distinct().ToList();
             return new ResponseViewModel().CreateOk(yearList);

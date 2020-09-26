@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TheRiceMill.Application.GatePasses.Models;
 using TheRiceMill.Application.Lots.Models;
+using TheRiceMill.Common.Extensions;
 using TheRiceMill.Common.Response;
 using TheRiceMill.Domain.Entities;
 using TheRiceMill.Persistence;
@@ -30,7 +31,7 @@ namespace TheRiceMill.Application.Lots.Queries
             request.SetDefaultValue();
             if (request.LotId != 0)
             {
-                lot = _context.Lots.GetBy(q => q.Id == request.LotId && q.Year == request.LotYear,
+                lot = _context.Lots.GetBy(q => q.Id == request.LotId && q.Year == request.LotYear && q.CompanyId == request.CompanyId.ToInt(),
                 p => p.Include(pr => pr.StockIns)
                 .Include(pt => pt.StockOuts).ThenInclude(c => c.Product)
                 .Include(py => py.ProcessedMaterials).ThenInclude(c => c.Product)
@@ -114,7 +115,7 @@ namespace TheRiceMill.Application.Lots.Queries
                     PerKG = stockOut.PerKG,
                     Product = new ProductRequestModel
                     {
-                        Name= stockOut.Product.Name
+                        Name = stockOut.Product.Name
                     },
                     ProductId = stockOut.ProductId
                 };

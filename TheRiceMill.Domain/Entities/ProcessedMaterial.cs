@@ -4,9 +4,8 @@ using System.Text;
 
 namespace TheRiceMill.Domain.Entities
 {
-    public class ProcessedMaterial
+    public class ProcessedMaterial : Base
     {
-        public int Id { get; set; }
         public int ProductId { get; set; }
         public Product Product { get; set; }
         public int LotId { get; set; }
@@ -16,18 +15,5 @@ namespace TheRiceMill.Domain.Entities
         public double BagQuantity { get; set; }
         public double PerKG { get; set; }
         public double TotalKG { get; set; }
-        public DateTime CreatedDate { get; set; }
-        /// <summary>
-        /// The Date it was Updated
-        /// </summary>
-        public DateTime UpdatedDate { get; set; }
-        /// <summary>
-        /// The UserId of the User that created this entity
-        /// </summary>
-        public string CreatedBy { get; set; }
-        /// <summary>
-        /// The UserId of the User that updated this entity
-        /// </summary>
-        public string UpdatedBy { get; set; }
     }
 }

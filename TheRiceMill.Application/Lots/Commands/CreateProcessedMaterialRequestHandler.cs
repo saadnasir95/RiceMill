@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using TheRiceMill.Application.Lots.Models;
+using TheRiceMill.Common.Extensions;
 using TheRiceMill.Common.Response;
 using TheRiceMill.Domain.Entities;
 using TheRiceMill.Persistence;
@@ -35,6 +36,7 @@ namespace TheRiceMill.Application.Lots.Commands
                 processedMaterial.TotalKG = pm.TotalKG;
                 processedMaterial.LotId = request.LotId;
                 processedMaterial.LotYear = request.LotYear;
+                processedMaterial.CompanyId = request.CompanyId.ToInt();
                 _processedMaterial = processedMaterial;
 
                 var stockOut = new StockOut();
@@ -42,6 +44,7 @@ namespace TheRiceMill.Application.Lots.Commands
                 stockOut.BoriQuantity = 0;
                 stockOut.LotId = request.LotId;
                 stockOut.LotYear = request.LotYear;
+                stockOut.CompanyId = request.CompanyId.ToInt();
                 stockOut.ProductId = pm.ProductId;
                 stockOut.PerKG = 0;
                 stockOut.TotalKG = 0;
@@ -55,6 +58,7 @@ namespace TheRiceMill.Application.Lots.Commands
                 Id = _processedMaterial.Id,
                 Lot = _processedMaterial.Lot,
                 LotYear = _processedMaterial.LotYear,
+                CompanyId = request.CompanyId
             });
         }
     }

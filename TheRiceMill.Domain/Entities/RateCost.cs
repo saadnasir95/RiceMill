@@ -4,9 +4,8 @@ using System.Text;
 
 namespace TheRiceMill.Domain.Entities
 {
-    public class RateCost
+    public class RateCost : Base
     {
-        public int Id { get; set; }
         public int LotId { get; set; }
         public int LotYear { get; set; }
         public Lot Lot { get; set; }
@@ -20,18 +19,5 @@ namespace TheRiceMill.Domain.Entities
         public double GrandTotal { get; set; }
         public double RatePer40LessByProduct { get; set; }
         public double SaleBrockery { get; set; }
-        public DateTime CreatedDate { get; set; }
-        /// <summary>
-        /// The Date it was Updated
-        /// </summary>
-        public DateTime UpdatedDate { get; set; }
-        /// <summary>
-        /// The UserId of the User that created this entity
-        /// </summary>
-        public string CreatedBy { get; set; }
-        /// <summary>
-        /// The UserId of the User that updated this entity
-        /// </summary>
-        public string UpdatedBy { get; set; }
     }
 }

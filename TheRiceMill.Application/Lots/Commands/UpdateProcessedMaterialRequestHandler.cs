@@ -8,6 +8,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using TheRiceMill.Application.Exceptions;
 using TheRiceMill.Application.Lots.Models;
+using TheRiceMill.Common.Extensions;
 using TheRiceMill.Common.Response;
 using TheRiceMill.Domain.Entities;
 using TheRiceMill.Persistence;
@@ -26,7 +27,7 @@ namespace TheRiceMill.Application.Lots.Commands
         public async Task<ResponseViewModel> Handle(UpdateProcessedMaterialRequestModel request,
             CancellationToken cancellationToken)
         {
-            var processedMaterialsListInDB = _context.ProcessedMaterials.GetMany(c => c.LotId == request.LotId && c.LotYear == request.LotYear, "Id", 1, 20).ToList();
+            var processedMaterialsListInDB = _context.ProcessedMaterials.GetMany(c => c.LotId == request.LotId && c.LotYear == request.LotYear && c.CompanyId == request.CompanyId.ToInt(), "Id", 1, 20).ToList();
             if (processedMaterialsListInDB != null && processedMaterialsListInDB.Count > 0)
             {
                 foreach (var processedMaterial in processedMaterialsListInDB)
@@ -48,12 +49,13 @@ namespace TheRiceMill.Application.Lots.Commands
             }
             else
             {
-                throw new NotFoundException(nameof(ProcessedMaterial), request.ProcessedMaterials); 
+                throw new NotFoundException(nameof(ProcessedMaterial), request.ProcessedMaterials);
             }
             return new ResponseViewModel().CreateOk(new ProcessedMaterialResponseModel()
             {
                 LotId = request.LotId,
                 LotYear = request.LotYear,
+                CompanyId = request.CompanyId
             });
         }
     }

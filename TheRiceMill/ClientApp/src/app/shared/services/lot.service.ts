@@ -37,10 +37,13 @@ export class LotService {
   }
 
   getYears(): Observable<any> {
-    return this.http.get(this.apiUrl + '/Years', { headers: this.tokenService.getHeaders() });
+    const params = new HttpParams()
+      .set('CompanyId', this.companyService.getCompanyId().toString());
+    return this.http.get(this.apiUrl + '/Years', { headers: this.tokenService.getHeaders(), params: params });
   }
 
   createProcessedMaterial(processedMaterial: CreateProcessedMaterial): Observable<any> {
+    processedMaterial.companyId = this.companyService.getCompanyId();
     return this.http.post(this.apiUrl, JSON.stringify(processedMaterial), { headers: this.tokenService.getHeaders() });
   }
 
@@ -53,6 +56,7 @@ export class LotService {
   }
 
   updateProcessedMaterial(processedMaterial: CreateProcessedMaterial): Observable<any> {
+    processedMaterial.companyId = this.companyService.getCompanyId();
     return this.http.put(this.apiUrl + '/ProcessedMaterial', JSON.stringify(processedMaterial), { headers: this.tokenService.getHeaders() });
   }
 

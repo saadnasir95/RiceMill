@@ -1,4 +1,4 @@
-import { Product } from "./product.model";
+import { Product } from './product.model';
 
 export class ProcessedMaterial {
   id: number;
@@ -13,6 +13,7 @@ export class ProcessedMaterial {
 export class CreateProcessedMaterial {
   lotId: number;
   lotYear: number;
+  companyId: number;
   processedMaterials: Array<ProcessedMaterial>;
 }
 

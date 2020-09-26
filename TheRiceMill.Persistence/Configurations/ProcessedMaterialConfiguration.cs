@@ -10,7 +10,7 @@ namespace TheRiceMill.Persistence.Configurations
         {
             builder.HasOne(c => c.Lot)
                 .WithMany(c => c.ProcessedMaterials)
-                .HasForeignKey(c => new { c.LotId, c.LotYear });
+                .HasForeignKey(c => new { c.LotId, c.LotYear, c.CompanyId });
             builder.HasOne(c => c.Product)
                 .WithMany(c => c.ProcessedMaterials)
                 .HasForeignKey(c => c.ProductId);

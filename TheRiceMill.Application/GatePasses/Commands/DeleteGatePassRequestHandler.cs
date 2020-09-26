@@ -36,7 +36,7 @@ namespace TheRiceMill.Application.GatePasses.Commands
             }
             else
             {
-                Lot lot = _context.Lots.GetBy(c => c.Id == gatePass.LotId && c.Year == gatePass.LotYear, c => c.Include(d => d.StockIns).Include(d => d.StockOuts));
+                Lot lot = _context.Lots.GetBy(c => c.Id == gatePass.LotId && c.Year == gatePass.LotYear && c.CompanyId == gatePass.CompanyId, c => c.Include(d => d.StockIns).Include(d => d.StockOuts));
                 if (lot == null)
                 {
                     throw new NotFoundException(nameof(Lot), gatePass.LotId);

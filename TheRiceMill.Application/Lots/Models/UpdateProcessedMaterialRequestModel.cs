@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using FluentValidation;
 using MediatR;
+using TheRiceMill.Application.Enums;
 using TheRiceMill.Application.Extensions;
 using TheRiceMill.Common.Response;
 
@@ -12,6 +13,7 @@ namespace TheRiceMill.Application.Lots.Models
     {
         public int LotId { get; set; }
         public int LotYear { get; set; }
+        public CompanyType CompanyId { get; set; }
         public List<ProcessedMaterialRequest> ProcessedMaterials { get; set; }
     }
     public class UpdateProcessedMaterialRequestModelValidator : AbstractValidator<UpdateProcessedMaterialRequestModel>
@@ -21,7 +23,7 @@ namespace TheRiceMill.Application.Lots.Models
             //RuleFor(p => p.ProcessedMaterials).NotNull();
             RuleFor(p => p.LotId).Required();
             RuleFor(p => p.LotYear).Required();
+            RuleFor(p => p.CompanyId).IsInEnum();
         }
-
     }
 }

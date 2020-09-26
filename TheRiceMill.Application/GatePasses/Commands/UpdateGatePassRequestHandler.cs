@@ -111,7 +111,7 @@ namespace TheRiceMill.Application.GatePasses.Commands
             {
                 product = _context.Products.GetBy(p => p.Id == request.ProductId);
             }
-            Lot lot = _context.Lots.GetBy(c => c.Id == gatePassInDb.LotId && c.Year == gatePassInDb.LotYear, c => c.Include(d => d.StockIns).Include(d => d.StockOuts));
+            Lot lot = _context.Lots.GetBy(c => c.Id == gatePassInDb.LotId && c.Year == gatePassInDb.LotYear && c.CompanyId == gatePassInDb.CompanyId, c => c.Include(d => d.StockIns).Include(d => d.StockOuts));
             if (lot == null)
             {
                 throw new NotFoundException(nameof(Lot), request.LotId);

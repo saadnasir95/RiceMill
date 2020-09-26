@@ -8,7 +8,7 @@ namespace TheRiceMill.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<Lot> builder)
         {
-            builder.HasKey(c => new { c.Id, c.Year });
+            builder.HasKey(c => new { c.Id, c.Year, c.CompanyId });
         }
     }
 }

@@ -3,6 +3,7 @@ using MediatR;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using TheRiceMill.Application.Enums;
 using TheRiceMill.Application.Extensions;
 using TheRiceMill.Application.GatePasses.Models;
 using TheRiceMill.Common.Constants;
@@ -15,6 +16,7 @@ namespace TheRiceMill.Application.Lots.Models
     {
         public int LotId { get; set; }
         public int LotYear { get; set; }
+        public CompanyType CompanyId { get; set; }
         public List<ProcessedMaterialRequest> ProcessedMaterials { get; set; }
   
     }
@@ -37,6 +39,7 @@ namespace TheRiceMill.Application.Lots.Models
             //RuleFor(p => p.ProcessedMaterials).NotNull();
             RuleFor(p => p.LotId).Required();
             RuleFor(p => p.LotYear).Required();
+            RuleFor(p => p.CompanyId).IsInEnum();
         }
 
     }
