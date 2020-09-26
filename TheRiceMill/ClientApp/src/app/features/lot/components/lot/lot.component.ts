@@ -374,7 +374,6 @@ export class LotComponent implements OnInit, OnDestroy {
   printLotHistory() {
     this.lot.balances = this.balanceList;
     this.lotReceiptComponent.lot = this.lot;
-    debugger
     setTimeout(() => {
       this.notificationService.closeNotification();    
       var head = document.head || document.getElementsByTagName('head')[0];
@@ -384,7 +383,6 @@ export class LotComponent implements OnInit, OnDestroy {
     
       style.appendChild(document.createTextNode('@page { size: A4 landscape;}'));    
       head.appendChild(style);
-      // window.print();
       window.print();
     }, 500);
   }
