@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, TemplateRef, ChangeDetectorRef } from '@angular/core';
 import { MatTableDataSource, MatDialogRef, MatSort, MatDialog, MatPaginator } from '@angular/material';
 import { Subscription } from 'rxjs';
 import { GatepassService } from '../../../../shared/services/gatepass.service';
@@ -10,13 +10,16 @@ import { CompanyService } from '../../../../shared/services/company.service';
 import { LotService } from '../../../../shared/services/lot.service';
 import { LotResponse } from '../../../../shared/model/lot-response.model';
 import { Lot } from '../../../../shared/model/lot.model';
-import { StockIn, StockOut } from '../../../../shared/model/stock-in.model';
 import { ProcessedMaterial } from '../../../../shared/model/processed-material.model';
 import { GridOptions } from 'ag-grid-community';
 import { LocalDatetimePipe } from '../../../../shared/pipes/local-datetime.pipe';
 import { TemplateRendererComponent } from '../../../../shared/components/template-renderer/template-renderer.component';
 import { RateCostModalComponent } from '../rate-cost-modal/rate-cost-modalcomponent';
 import { RateCost } from '../../../../shared/model/create-rate-cost.model';
+import { LotReceiptComponent } from '../lot-receipt/lot-receipt.component';
+import { Stock } from '../../../../shared/model/stock-in.model';
+import { timeStamp } from 'console';
+import { Balance } from '../../../../shared/model/balance.model';
 
 @Component({
   selector: 'app-lot',
@@ -26,27 +29,30 @@ import { RateCost } from '../../../../shared/model/create-rate-cost.model';
 export class LotComponent implements OnInit, OnDestroy {
   @ViewChild('actionBtn') actionBtn: TemplateRef<any>;
   @ViewChild('rateCostActionBtn') rateCostActionBtn: TemplateRef<any>;
+  @ViewChild(LotReceiptComponent) lotReceiptComponent: LotReceiptComponent;
 
   // tslint:disable-next-line: max-line-length
   displayedColumns: string[] = ['id', 'gatepassTime', 'boriQuantity', 'bagQuantity', 'totalKG', 'action'];
   processedMaterialDisplayedColumns: string[] = ['id', 'productName', 'boriQuantity', 'bagQuantity', 'totalKG', 'action'];
   stockOutColumns: string[] = ['id', 'gatepassTime', 'boriQuantity', 'bagQuantity', 'totalKG', 'action'];
 
-  dataSource: MatTableDataSource<StockIn>;
+  dataSource: MatTableDataSource<Stock>;
   processedMaterialDataSource: MatTableDataSource<ProcessedMaterial>;
-  stockOutDataSource: MatTableDataSource<StockOut>;
+  stockOutDataSource: MatTableDataSource<Stock>;
 
   stockInGridOptions: GridOptions;
   processedMaterialGridOptions: GridOptions;
   stockOutGridOptions: GridOptions;
+  balanceOutGridOptions: GridOptions;
   rateCostGridOptions: GridOptions;
 
   lotYearIds: Array<string>;
   selectedYear = '';
   lot: Lot;
-  stockInsList: StockIn[];
-  stockOutsList: StockOut[];
+  stockInsList: Array<Stock>;
+  stockOutsList: Stock[];
   processedMaterialList: ProcessedMaterial[];
+  balanceList: Array<Balance> = [];
   isLoadingData: Boolean = false;
   dialogRef: MatDialogRef<LotModalComponent>;
   dialogRefRateCost: MatDialogRef<RateCostModalComponent>;
@@ -70,7 +76,8 @@ export class LotComponent implements OnInit, OnDestroy {
     private lotService: LotService,
     private matDialog: MatDialog,
     private notificationService: NotificationService,
-    private companyService: CompanyService) { }
+    private companyService: CompanyService,
+    private cdf: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.getYears();
@@ -107,15 +114,15 @@ export class LotComponent implements OnInit, OnDestroy {
           field: 'totalKG',
           width: 100
         },
-        {
-          headerName: 'Add Processed Material',
-          field: 'actionButton',
-          cellRendererFramework: TemplateRendererComponent,
-          cellRendererParams: {
-            ngTemplate: this.actionBtn,
-            width: 100
-          }
-        },
+        // {
+        //   headerName: 'Add Processed Material',
+        //   field: 'actionButton',
+        //   cellRendererFramework: TemplateRendererComponent,
+        //   cellRendererParams: {
+        //     ngTemplate: this.actionBtn,
+        //     width: 100
+        //   }
+        // },
       ],
       onGridReady: () => { },
       rowSelection: 'multiple',
@@ -134,27 +141,28 @@ export class LotComponent implements OnInit, OnDestroy {
         {
           headerName: 'Id',
           field: 'id',
+          hide: true,
           width: 80
         },
         {
-          headerName: 'Product Name',
+          headerName: 'Item',
           field: 'product.name',
-          width: 200
+          width: 150
         },
         {
-          headerName: 'Bori Quantity',
+          headerName: 'Bori Qty',
           field: 'boriQuantity',
-          width: 200
+          width: 90
         },
         {
-          headerName: 'Bag Quantity',
+          headerName: 'Bag Qty',
           field: 'bagQuantity',
-          width: 200
+          width: 90
         },
         {
           headerName: 'Total KG',
           field: 'totalKG',
-          width: 200
+          width: 90
         },
         // {
         //   headerName: 'Action',
@@ -178,38 +186,67 @@ export class LotComponent implements OnInit, OnDestroy {
         {
           headerName: 'Id',
           field: 'id',
+          hide: true
           // width: 80
         },
         {
           headerName: 'Date',
           field: 'createdDate',
           valueFormatter: this.datePipe,
+          hide: true
           // width: 80
         },
         {
-          headerName: 'Product Name',
+          headerName: 'Item',
           field: 'product.name',
-          width: 200
+          width: 150
         },
         {
-          headerName: 'Bori Quantity',
+          headerName: 'Bori Qty',
           field: 'boriQuantity',
-          // width: 100
+          width: 90
         },
         {
-          headerName: 'Bag Quantity',
+          headerName: 'Bag Qty',
           field: 'bagQuantity',
-          // width: 100
+          width: 90        
         },
         {
           headerName: 'Total KG',
           field: 'totalKG',
-          // width: 100
+          width: 90        
         },
-        // {
-        //   headerName: 'Party Name',
-        //   field: 'party.name',
-        // },
+      ],
+      onGridReady: () => { },
+      rowSelection: 'multiple',
+      rowGroupPanelShow: 'always',
+      pivotPanelShow: 'always',
+      enableRangeSelection: true,
+      defaultColDef: {
+        resizable: true,
+        filter: true
+      }
+    };
+
+    this.balanceOutGridOptions = {
+      rowData: [],
+      columnDefs: [
+        {
+          headerName: 'Bori/Bags',
+          field: 'bagQuantity',
+          width: 75
+        },
+        {
+          headerName: 'Bori/Bags',
+          field: 'BoriQuantity',
+          width: 75,
+          hide: true
+        },
+        {
+          headerName: 'KGS.',
+          field: 'totalKG',
+          width: 75
+        },
       ],
       onGridReady: () => { },
       rowSelection: 'multiple',
@@ -308,7 +345,7 @@ export class LotComponent implements OnInit, OnDestroy {
     this.gatepassSubscription = this.lotService.lotEmitter.subscribe(
       (data: any) => {
         this.paginator.pageIndex = 0;
-        this.getLotsList();
+        this.getLotHistory();
       }
     );
 
@@ -318,7 +355,7 @@ export class LotComponent implements OnInit, OnDestroy {
           this.companyId = companyId;
           this.paginator.pageIndex = 0;
           if (this.lotIdSearch) {
-            this.getLotsList();
+            this.getLotHistory();
           }
         }
       }
@@ -334,21 +371,37 @@ export class LotComponent implements OnInit, OnDestroy {
     }
   }
 
+  printLotHistory() {
+    this.lot.balances = this.balanceList;
+    this.lotReceiptComponent.lot = this.lot;
+    setTimeout(() => {
+      this.notificationService.closeNotification();    
+      var head = document.head || document.getElementsByTagName('head')[0];
+      var style =  document.createElement('style');
+      style.type = 'text/css';
+      style.media = 'print';
+    
+      style.appendChild(document.createTextNode('@page { size: A4 landscape;}'));    
+      head.appendChild(style);
+      window.print();
+    }, 500);
+  }
+
   applyFilter(filterValue: string) {
     this.paginator.pageIndex = 0;
     this.lotIdSearch = filterValue.trim().toLowerCase();
-    // this.getLotsList();
+    // this.getLotHistory();
   }
 
   sortData() {
     this.paginator.pageIndex = 0;
     this.sortDirection = this.sort.direction === 'desc' ? 'true' : 'false';
     this.sortOrderBy = this.sort.active;
-    this.getLotsList();
+    this.getLotHistory();
   }
 
   changePage() {
-    this.getLotsList();
+    this.getLotHistory();
   }
 
   addProcessedMaterial() {
@@ -398,13 +451,13 @@ export class LotComponent implements OnInit, OnDestroy {
     // this.dialogRef.componentInstance.deleteGatepass(gatepass);
   }
 
-  getLotsList() {
+  getLotHistory() {
     if (!this.lotIdSearch || !this.selectedYear) {
       return;
     }
 
     this.lotService
-      .getLotList(this.paginator.pageSize, this.paginator.pageIndex, this.advanceSearch, this.sortDirection, this.sortOrderBy, this.lotIdSearch, this.selectedYear)
+      .getLot(this.paginator.pageSize, this.paginator.pageIndex, this.advanceSearch, this.sortDirection, this.sortOrderBy, this.lotIdSearch, this.selectedYear)
       .subscribe(
         (response: LotResponse) => {
           if (response.data) {
@@ -415,14 +468,27 @@ export class LotComponent implements OnInit, OnDestroy {
             this.dataSource.data = this.stockInsList;
             this.stockOutDataSource.data = this.stockOutsList;
             this.processedMaterialDataSource.data = this.processedMaterialList;
+
+            debugger
+            this.processedMaterialList.length > 0 && this.processedMaterialList.forEach((item,index) => {
+              let balance = new Balance();
+              if(this.stockOutsList[index].bagQuantity > 0){
+                balance.bagQuantity = item.bagQuantity - this.stockOutsList[index].bagQuantity;
+                balance.totalKG = item.totalKG - this.stockOutsList[index].totalKG;
+              }
+              this.balanceList.push(balance);
+            })
+            this.balanceOutGridOptions.api.setRowData(this.balanceList);
             // AG GRID
             this.stockInGridOptions.api.setRowData(this.stockInsList);
             this.stockOutGridOptions.api.setRowData(this.stockOutsList);
             this.processedMaterialGridOptions.api.setRowData(this.processedMaterialList);
             this.rateCostGridOptions.api.setRowData(response.data.rateCosts);
+            
             this.calculateSum(this.stockInsList, this.stockInGridOptions);
             this.calculateSum(this.stockOutsList, this.stockOutGridOptions);
             this.calculateSum(this.processedMaterialList, this.processedMaterialGridOptions);
+            this.calculateSum(this.balanceList, this.balanceOutGridOptions);
           } else {
             this.lot = new Lot();
             this.stockInsList = [];

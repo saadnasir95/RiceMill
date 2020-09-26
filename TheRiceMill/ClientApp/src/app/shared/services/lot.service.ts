@@ -22,7 +22,7 @@ export class LotService {
     private tokenService: TokenService,
     private companyService: CompanyService) { }
 
-  getLotList(pageSize: number, pageIndex: number, search = '', sortDirection = 'false', orderBy = '', lotId: string, lotYear: string)
+  getLot(pageSize: number, pageIndex: number, search = '', sortDirection = 'false', orderBy = '', lotId: string, lotYear: string)
     : Observable<LotResponse> {
     const params = new HttpParams()
       .set('CompanyId', this.companyService.getCompanyId().toString())

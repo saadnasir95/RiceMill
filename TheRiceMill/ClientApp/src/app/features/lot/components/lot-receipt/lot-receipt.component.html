@@ -1,0 +1,149 @@
+<div class="container">
+  <!-- <div class="row invoice-header px-3 py-2">
+    <div class="col-5">
+      <h3 class="mt-0">Company Name</h3>
+      <h4>Purchase Receipt</h4>
+    </div>
+    <div class="col-3 text-right">
+      <p class="mb-0">Phone Number # 1</p>
+      <p class="mb-0">Phone Number # 2</p>
+      <p class="mb-0">Phone Number # 3</p>
+    </div>
+    <div class="col-4 text-right">
+      <p class="mb-0">Company Address</p>
+      <p>Company City, Country</p>
+    </div>
+  </div> -->
+
+  <div class="invoice-content row px-3 pt-2">
+    <div class="col-12 d-flex justify-content-center">
+      <h5 class="gray-ish">Lot # {{lot?.id}} - {{lot?.year}} History</h5>
+      <!-- <p class="gray-ish">{{gatepass?.party.name}}</p>
+      <p class="gray-ish">{{gatepass?.party.address}}</p>
+      <p class="gray-ish">{{gatepass?.party.phoneNumber}}</p> -->
+    </div>
+    <!-- <div class="col-3">
+      <h5 class="gray-ish">Gatepass number:</h5>
+      <p class="gray-ish">{{gatepass?.id}}</p>
+
+      <h5 class="gray-ish">Gatepass Date</h5>
+      <p class="gray-ish">{{gatepass?.dateTime | localDatetime}}</p>
+
+    </div>
+    <div class="col-6 text-right total-field">
+      <h4 class="gray-ish">Gatepass Type</h4>
+      <h1 class="gray-ish">{{gatepass?.type | gatepassType}}</h1>
+    </div> -->
+  </div>
+
+  <div class="row mt-5">
+    <div class="col-4 pt-1">
+      <table class="table">
+        <thead class="thead">
+          <tr>
+            <th ></th>
+            <th colspan="2" scope="col gray-ish">Stock In</th>
+            <th></th>
+          </tr>
+        </thead>
+        <thead class="thead">
+          <tr>
+            <th scope="col gray-ish">Date</th>
+            <th scope="col gray-ish">Bori Qty</th>
+            <th scope="col gray-ish">Bag Qty</th>
+            <th scope="col gray-ish">Total KG</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let stockIn of lot.stockIns">
+            <td>{{stockIn.gatepassTime}}</td>
+            <td>{{stockIn.boriQuantity}}</td>
+            <td>{{stockIn.bagQuantity}}</td>
+            <td>{{stockIn.totalKG}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col-3 pt-1">
+      <table class="table table-hover">
+        <thead class="thead splitForPrint">
+          <tr>
+            <th colspan="4" scope="col gray-ish">Processed Material</th>
+          </tr>
+        </thead>
+        <thead class="thead splitForPrint">
+          <tr>
+            <th scope="col gray-ish">Item</th>
+            <th scope="col gray-ish">Bori Qty</th>
+            <th scope="col gray-ish">Bag Qty</th>
+            <th scope="col gray-ish">Per KG</th>
+            <th scope="col gray-ish">Total KG</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let material of lot?.processedMaterials">
+            <td>{{material?.product?.name}}</td>
+            <td>{{material.boriQuantity}}</td>
+            <td>{{material.bagQuantity}}</td>
+            <td>{{material.perKG}}</td>
+            <td>{{material.totalKG}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col-3 pt-1">
+      <table class="table table-hover">
+        <thead class="thead splitForPrint">
+          <tr>
+            <th ></th>
+            <th colspan="2" scope="col gray-ish">Stock Out</th>
+            <th></th>
+          </tr>
+        </thead>
+        <thead class="thead splitForPrint">
+          <tr>
+            <th scope="col gray-ish">Date</th>
+            <th scope="col gray-ish">Bori Qty</th>
+            <th scope="col gray-ish">Bag Qty</th>
+            <th scope="col gray-ish">Total KG</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let stock of lot.stockOuts">
+            <td>{{stock.gatepassTime}}</td>
+            <td>{{stock.boriQuantity}}</td>
+            <td>{{stock.bagQuantity}}</td>
+            <td>{{stock.totalKG}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col-2 pt-1">
+      <table class="table table-hover">
+        <thead class="thead splitForPrint">
+          <tr>
+            <th ></th>
+            <th scope="col gray-ish">Balance</th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <thead class="thead splitForPrint">
+          <tr>
+            <th scope="col gray-ish">Bag/Bori</th>
+            <th scope="col gray-ish">Total KG</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let balance of lot.balances">
+            <td>{{balance.bagQuantity}}</td>
+            <td>{{balance.totalKG}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

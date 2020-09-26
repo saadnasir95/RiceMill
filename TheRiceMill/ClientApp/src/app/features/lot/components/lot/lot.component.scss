@@ -25,10 +25,10 @@ table {
 
 
 @media print {
-  :not(app-gatepass-receipt) {
+  :not(app-lot-receipt) {
     display: none;
   }
-  app-gatepass-receipt {
+  app-lot-receipt {
     display: block !important;
   }
 }
