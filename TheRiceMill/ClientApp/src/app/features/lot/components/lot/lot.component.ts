@@ -372,6 +372,7 @@ export class LotComponent implements OnInit, OnDestroy {
   }
 
   printLotHistory() {
+    this.lot.balances = this.balanceList;
     this.lotReceiptComponent.lot = this.lot;
     debugger
     setTimeout(() => {

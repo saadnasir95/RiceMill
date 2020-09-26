@@ -5,66 +5,48 @@
 //   font-weight: 600;
 // }
 
-// @media screen and (min-width: 320px) and (max-width: 767px) and (orientation: landscape) {
-//   html {
-//     transform: rotate(-90deg);
-//     transform-origin: left top;
-//     width: 100vh;
-//     overflow-x: hidden;
-//     position: absolute;
-//     top: 100%;
-//     left: 0;
-//   }
-// }
-
 @page {
-  // bleed: 1cm;
-  // size: A4 landscape;
-  // size:  auto;   /* auto is the initial value */
-  size: A4 landscape;
-  size: 287mm 210mm;
+  bleed: 1cm;
+  size: A4 portrait;
+  size:  auto;   /* auto is the initial value */
+  margin-bottom: 50pt;
+  margin-top: 0cm;
+  font-size: 12pt;
 
-  // margin-bottom: 50pt;
-  // margin-top: 0cm;
-  // font-size: 12pt;
-
-  // #content, #page {
-  // width: 100%;
-  // margin: 0;
-  // float: none;
-  // }
+  #content, #page {
+  width: 100%;
+  margin: 0;
+  float: none;
+  }
 }
-
-// @page {size: landscape}
 
 
 @media print {
-  // .page {
-  //   size: landscape;
-  //   border: initial;
-  //   border-radius: initial;
-  //   width: initial;
-  //   min-height: initial;
-  //   box-shadow: initial;
-  //   background: initial;
-  //   page-break-after: always;
-  // }
+  .page {
+    border: initial;
+    border-radius: initial;
+    width: initial;
+    min-height: initial;
+    box-shadow: initial;
+    background: initial;
+    page-break-after: always;
+  }
 
-  // table{
-  //   page-break-inside: auto;
-  // }
+  table{
+    page-break-inside: auto;
+  }
 
-  // tr.last-row {
-  //     background-color: #555!important;
-  // }
+  tr.last-row {
+      background-color: #555!important;
+  }
 
-  // tr.last-row > th, tr.last-row > td {
-  //   background-color: unset!important;
-  // }
+  tr.last-row > th, tr.last-row > td {
+    background-color: unset!important;
+  }
 
-  // div.page-break{
-  //   page-break-before: auto;
-  // }
+  div.page-break{
+    page-break-before: auto;
+  }
 }
 
 .gray{
@@ -80,7 +62,6 @@
 }
 
 body{
-  transform: rotate(-90deg);
   background-color: #eee;
   padding-top: 25px;
   -webkit-print-color-adjust: exact !important;

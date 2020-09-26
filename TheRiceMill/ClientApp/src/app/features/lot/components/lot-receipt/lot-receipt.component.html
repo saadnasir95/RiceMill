@@ -41,7 +41,6 @@
       <table class="table table-hover">
         <thead class="thead splitForPrint">
           <tr>
-            <!-- <th scope="col gray-ish">Id</th> -->
             <th ></th>
             <th scope="col gray-ish">Stock In</th>
             <th></th>
@@ -50,7 +49,6 @@
         </thead>
         <thead class="thead splitForPrint">
           <tr>
-            <!-- <th scope="col gray-ish">Id</th> -->
             <th scope="col gray-ish">Date</th>
             <th scope="col gray-ish">Bori Qty</th>
             <th scope="col gray-ish">Bag Qty</th>
@@ -59,7 +57,6 @@
         </thead>
         <tbody>
           <tr *ngFor="let stockIn of lot.stockIns">
-            <!-- <td>{{lot?.id}}</td> -->
             <td>{{stockIn.gatepassTime}}</td>
             <td>{{stockIn.boriQuantity}}</td>
             <td>{{stockIn.bagQuantity}}</td>
@@ -69,7 +66,7 @@
       </table>
     </div>
 
-    <div class="col-4 pt-1">
+    <div class="col-3 pt-1">
       <table class="table table-hover">
         <thead class="thead splitForPrint">
           <tr>
@@ -103,7 +100,7 @@
       </table>
     </div>
 
-    <div class="col-4 pt-1">
+    <div class="col-3 pt-1">
       <table class="table table-hover">
         <thead class="thead splitForPrint">
           <tr>
@@ -130,6 +127,31 @@
             <td>{{stock.boriQuantity}}</td>
             <td>{{stock.bagQuantity}}</td>
             <td>{{stock.totalKG}}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="col-2 pt-1">
+      <table class="table table-hover">
+        <thead class="thead splitForPrint">
+          <tr>
+            <th ></th>
+            <th scope="col gray-ish">Balance</th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <thead class="thead splitForPrint">
+          <tr>
+            <th scope="col gray-ish">Bag/Bori</th>
+            <th scope="col gray-ish">Total KG</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let balance of lot.balances">
+            <td>{{balance.bagQuantity}}</td>
+            <td>{{balance.totalKG}}</td>
           </tr>
         </tbody>
       </table>
