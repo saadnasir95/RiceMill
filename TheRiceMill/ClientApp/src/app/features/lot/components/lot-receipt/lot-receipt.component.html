@@ -38,16 +38,15 @@
 
   <div class="row mt-5">
     <div class="col-4 pt-1">
-      <table class="table table-hover">
-        <thead class="thead splitForPrint">
+      <table class="table">
+        <thead class="thead">
           <tr>
             <th ></th>
-            <th scope="col gray-ish">Stock In</th>
-            <th></th>
+            <th colspan="2" scope="col gray-ish">Stock In</th>
             <th></th>
           </tr>
         </thead>
-        <thead class="thead splitForPrint">
+        <thead class="thead">
           <tr>
             <th scope="col gray-ish">Date</th>
             <th scope="col gray-ish">Bori Qty</th>
@@ -70,16 +69,11 @@
       <table class="table table-hover">
         <thead class="thead splitForPrint">
           <tr>
-            <!-- <th scope="col gray-ish">Id</th> -->
-            <th ></th>
-            <th scope="col gray-ish">Processed Material</th>
-            <th></th>
-            <th></th>
+            <th colspan="4" scope="col gray-ish">Processed Material</th>
           </tr>
         </thead>
         <thead class="thead splitForPrint">
           <tr>
-            <!-- <th scope="col gray-ish">Id</th> -->
             <th scope="col gray-ish">Item</th>
             <th scope="col gray-ish">Bori Qty</th>
             <th scope="col gray-ish">Bag Qty</th>
@@ -89,7 +83,6 @@
         </thead>
         <tbody>
           <tr *ngFor="let material of lot?.processedMaterials">
-            <!-- <td>{{lot?.id}}</td> -->
             <td>{{material?.product?.name}}</td>
             <td>{{material.boriQuantity}}</td>
             <td>{{material.bagQuantity}}</td>
@@ -104,16 +97,13 @@
       <table class="table table-hover">
         <thead class="thead splitForPrint">
           <tr>
-            <!-- <th scope="col gray-ish">Id</th> -->
             <th ></th>
-            <th scope="col gray-ish">Stock Out</th>
-            <th></th>
+            <th colspan="2" scope="col gray-ish">Stock Out</th>
             <th></th>
           </tr>
         </thead>
         <thead class="thead splitForPrint">
           <tr>
-            <!-- <th scope="col gray-ish">Id</th> -->
             <th scope="col gray-ish">Date</th>
             <th scope="col gray-ish">Bori Qty</th>
             <th scope="col gray-ish">Bag Qty</th>
@@ -122,7 +112,6 @@
         </thead>
         <tbody>
           <tr *ngFor="let stock of lot.stockOuts">
-            <!-- <td>{{lot?.id}}</td> -->
             <td>{{stock.gatepassTime}}</td>
             <td>{{stock.boriQuantity}}</td>
             <td>{{stock.bagQuantity}}</td>
