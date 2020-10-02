@@ -14,7 +14,9 @@ namespace TheRiceMill.Application.Lots.Models
         public List<StockOutRequestModel> StockOuts { get; set; }
         public List<ProcessedMaterialRequest> ProcessedMaterials { get; set; }
         public List<RateCostRequestModel> RateCosts { get; set; }
-        public List<GatePassResponseModel> GatePasses { get; set; }
+        public List<LotPurchaseRequestModel> Purchases { get; set; }
+        public List<LotSaleRequestModel> Sales { get; set; }
+
     }
     public class StockInRequestModel
     {
@@ -53,5 +55,39 @@ namespace TheRiceMill.Application.Lots.Models
         public double GrandTotal { get; set; }
         public double RatePer40LessByProduct { get; set; }
         public double SaleBrockery { get; set; }
+    }
+
+
+    public class LotPurchaseRequestModel
+    {
+        public string Date { get; set; }
+        public string BrokerName { get; set; }
+        public PartyRequestModel Party { get; set; }
+        public int GatepassId { get; set; }
+        public VehicleRequestModel Vehicle { get; set;  }
+        public double BoriBag { get; set; }
+        public double NetWeight { get; set; }
+        public double Maund { get; set; }
+        public double RatePer40 { get; set; }
+        public double Total { get; set; }
+        public double Freight { get; set; }
+        public double Brokery { get; set; }
+
+    }
+
+    public class LotSaleRequestModel
+    {
+        public string Date { get; set; }
+        public string BrokerName { get; set; }
+        public PartyRequestModel Party { get; set; }
+        public int GatepassId { get; set; }
+        public double BoriBag { get; set; }
+        public double NetWeight { get; set; }
+        public double Maund { get; set; }
+        public double RatePer40 { get; set; }
+        public double Total { get; set; }
+        public int InvoiceNo { get; set; }
+        public double Brokery { get; set; }
+
     }
 }

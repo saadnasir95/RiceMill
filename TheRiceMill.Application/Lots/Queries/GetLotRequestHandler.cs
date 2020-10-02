@@ -36,13 +36,17 @@ namespace TheRiceMill.Application.Lots.Queries
                 .Include(pt => pt.StockOuts).ThenInclude(c => c.Product)
                 .Include(py => py.ProcessedMaterials).ThenInclude(c => c.Product)
                 .Include(pu => pu.RateCosts)
-                .Include(pi => pi.GatePasses));
+                .Include(pi => pi.GatePasses).ThenInclude(sa => sa.Purhcase)
+                .Include(pi => pi.GatePasses).ThenInclude(inv => inv.Sale)
+                .Include(pi => pi.GatePasses).ThenInclude(pa => pa.Party)
+                .Include(pi => pi.GatePasses).ThenInclude(pa => pa.Vehicle));
             }
             if (lot != null)
             {
                 return new ResponseViewModel().CreateOk(new GetLotResponseModel
                 {
-                    GatePasses = new GatepassMapper().MapFull(lot.GatePasses),
+                    Purchases = new GatepassMapper().MapGatepassToLotPurchase(lot.GatePasses),
+                    Sales = new GatepassMapper().MapGatepassToLotSale(lot.GatePasses),
                     RateCosts = this.RateCostMapper(lot.RateCosts),
                     ProcessedMaterials = this.ProcessedMaterialMapper(lot.ProcessedMaterials),
                     StockIns = this.StockInMapper(lot.StockIns),

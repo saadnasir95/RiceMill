@@ -19,6 +19,7 @@ import { RateCost } from '../../../../shared/model/create-rate-cost.model';
 import { LotReceiptComponent } from '../lot-receipt/lot-receipt.component';
 import { Stock } from '../../../../shared/model/stock-in.model';
 import { Balance } from '../../../../shared/model/balance.model';
+import { isEmpty } from 'rxjs/operators';
 
 @Component({
   selector: 'app-lot',
@@ -44,6 +45,8 @@ export class LotComponent implements OnInit, OnDestroy {
   stockOutGridOptions: GridOptions;
   balanceOutGridOptions: GridOptions;
   rateCostGridOptions: GridOptions;
+  purchaseGridOptions: GridOptions;
+  saleGridOptions: GridOptions;
 
   lotYearIds: Array<string>;
   selectedYear = '';
@@ -335,6 +338,159 @@ export class LotComponent implements OnInit, OnDestroy {
       }
     };
 
+    this.purchaseGridOptions = {
+      rowData: [],
+      columnDefs: [
+        {
+          headerName: 'Id',
+          field: 'id',
+          hide: true
+        },
+        {
+          headerName: 'Date',
+          field: 'date',
+          valueFormatter: this.datePipe,
+          // width: 80
+        },
+        {
+          headerName: 'Party Name',
+          field: 'party.name',
+          // width: 80
+        },
+        {
+          headerName: 'Broker Name',
+          field: 'brokerName',
+          // width: 100
+        },
+        {
+          headerName: 'INW#',
+          field: 'gatepassId',
+          // width: 100
+        },
+        {
+          headerName: 'Vehicle#',
+          field: 'vehicle.plateNo',
+          // width: 100
+        },
+        {
+          headerName: 'Bori/Bag',
+          field: 'boriBag',
+          // width: 100
+        },
+        {
+          headerName: 'Net. Wet.',
+          field: 'netWeight',
+          // width: 100
+        },
+        {
+          headerName: 'Maund',
+          field: 'maund',
+          // width: 100
+        },
+        {
+          headerName: 'Rate/40',
+          field: 'ratePer40',
+        },
+        {
+          headerName: 'Total',
+          field: 'total',
+        },
+        {
+          headerName: 'Freight',
+          field: 'freight',
+        },
+        {
+          headerName: 'Brokery',
+          field: 'brokery',
+        },
+      ],
+      onGridReady: () => { },
+      rowSelection: 'multiple',
+      rowGroupPanelShow: 'always',
+      pivotPanelShow: 'always',
+      enableRangeSelection: true,
+      defaultColDef: {
+        resizable: true,
+        filter: true
+      }
+    };
+
+    this.saleGridOptions = {
+      rowData: [],
+      columnDefs: [
+        {
+          headerName: 'Id',
+          field: 'id',
+          hide: true
+        },
+        {
+          headerName: 'Date',
+          field: 'date',
+          // width: 80
+        },
+        {
+          headerName: 'Party Name',
+          field: 'party.name',
+          // width: 80
+        },
+        {
+          headerName: 'Broker Name',
+          field: 'brokerName',
+          // width: 100
+        },
+        {
+          headerName: 'OGP#',
+          field: 'gatepassId',
+          // width: 100
+        },
+        {
+          headerName: 'Sale/Gift/Welfare',
+          field: 'ratePer40WithoutProcessing',
+          // width: 100
+        },
+        {
+          headerName: 'Bori/Bag',
+          field: 'boriBag',
+          // width: 100
+        },
+        {
+          headerName: 'Net. Wet.',
+          field: 'netWeight',
+          // width: 100
+        },
+        {
+          headerName: 'Maund',
+          field: 'maund',
+          // width: 100
+        },
+        {
+          headerName: 'Rate/40',
+          field: 'ratePer40',
+        },
+        {
+          headerName: 'Brokery',
+          field: 'brokery',
+        },
+        {
+          headerName: 'Inv#',
+          field: 'invoiceNo',
+        },
+        {
+          headerName: 'Total',
+          field: 'total',
+        },
+      ],
+      onGridReady: () => { },
+      rowSelection: 'multiple',
+      rowGroupPanelShow: 'always',
+      pivotPanelShow: 'always',
+      enableRangeSelection: true,
+      defaultColDef: {
+        resizable: true,
+        filter: true
+      }
+    };
+
 
 
     this.paginator.pageSize = 10;
@@ -459,7 +615,8 @@ export class LotComponent implements OnInit, OnDestroy {
       .getLot(this.paginator.pageSize, this.paginator.pageIndex, this.advanceSearch, this.sortDirection, this.sortOrderBy, this.lotIdSearch, this.selectedYear)
       .subscribe(
         (response: LotResponse) => {
-          if (response.data) {
+          debugger
+          if (Object.keys(response.data).length > 0) {
             this.lot = response.data;
             this.stockInsList = response.data.stockIns;
             this.stockOutsList = response.data.stockOuts;
@@ -468,7 +625,6 @@ export class LotComponent implements OnInit, OnDestroy {
             this.stockOutDataSource.data = this.stockOutsList;
             this.processedMaterialDataSource.data = this.processedMaterialList;
 
-            debugger
             this.processedMaterialList.length > 0 && this.processedMaterialList.forEach((item,index) => {
               let balance = new Balance();
               if(this.stockOutsList[index].bagQuantity > 0){
@@ -483,6 +639,9 @@ export class LotComponent implements OnInit, OnDestroy {
             this.stockOutGridOptions.api.setRowData(this.stockOutsList);
             this.processedMaterialGridOptions.api.setRowData(this.processedMaterialList);
             this.rateCostGridOptions.api.setRowData(response.data.rateCosts);
+
+            this.purchaseGridOptions.api.setRowData(response.data.purchases);
+            this.saleGridOptions.api.setRowData(response.data.sales);
 
             this.calculateSum(this.stockInsList, this.stockInGridOptions);
             this.calculateSum(this.stockOutsList, this.stockOutGridOptions);
@@ -504,6 +663,7 @@ export class LotComponent implements OnInit, OnDestroy {
             this.calculateSum([], this.stockInGridOptions);
             this.calculateSum([], this.stockOutGridOptions);
             this.calculateSum([], this.processedMaterialGridOptions);
+            this.calculateSum([], this.balanceOutGridOptions);
           }
 
           this.processedMaterialPaginator.length = response.count;

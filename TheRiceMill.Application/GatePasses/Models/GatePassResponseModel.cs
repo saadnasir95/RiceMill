@@ -1,5 +1,7 @@
 ﻿using System;
 using TheRiceMill.Application.Enums;
+using TheRiceMill.Application.Purchases.Shared;
+using TheRiceMill.Application.Sales.Shared;
 
 namespace TheRiceMill.Application.GatePasses.Models
 {
@@ -37,6 +39,9 @@ namespace TheRiceMill.Application.GatePasses.Models
         public string Broker { get; set; }
         public int? PurchaseId { get; set; }
         public int? SaleId { get; set; }
+        public SaleResponseViewModel Sale { get; set; }
+        public PurchaseResponseViewModel Purchase { get; set; }
+
         public string BiltyNumber { get; set; }
         public int LotId { get; set; }
         public int LotYear { get; set; }

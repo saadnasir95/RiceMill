@@ -7,7 +7,8 @@ export class Lot {
     id: number;
     year: string;
     processedMaterials: Array<ProcessedMaterial>;
-    gatePasses: Array<Gatepass>;
+    purchases: Array<any>;
+    sales: Array<any>;
     rateCosts: [];
     balances: Balance[];
     stockIns: Array<Stock>;

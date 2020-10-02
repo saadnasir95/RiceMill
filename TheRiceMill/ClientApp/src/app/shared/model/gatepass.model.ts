@@ -2,6 +2,8 @@ import { Party } from './party.model';
 import { Vehicle } from './vehicle.model';
 import { Product } from './product.model';
 import { Base } from './base.model';
+import { Purchase } from './purchase.model';
+import { Sale } from './sale.model';
 
 export class Gatepass extends Base {
   id: number;
@@ -26,4 +28,6 @@ export class Gatepass extends Base {
   biltyNumber: string;
   lotId: number;
   lotYear: number;
+  purchase: Purchase;
+  sale: Sale;
 }
