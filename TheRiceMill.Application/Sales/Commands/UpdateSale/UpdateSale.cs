@@ -113,7 +113,8 @@ namespace TheRiceMill.Application.Sales.Commands.UpdateSale
                     BagQuantity = sale.BagQuantity,
                     BoriQuantity = sale.BoriQuantity,
                     CreatedDate = new DateConverter().ConvertToDateTimeIso(sale.CreatedDate),
-                    CompanyId = (CompanyType)sale.CompanyId
+                    CompanyId = (CompanyType)sale.CompanyId,
+                    Type = sale.Type
                 });
             }
         }

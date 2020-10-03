@@ -1,19 +1,13 @@
 import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FormGroup, FormControl, Validators, FormArray } from '@angular/forms';
-import { ProductType, RateBasedOn, GatePassType } from '../../../../shared/model/enums';
+import { ProductType, RateBasedOn, GatePassType, SaleType } from '../../../../shared/model/enums';
 import { MatDialogRef, MatAutocompleteSelectedEvent, MatChipInputEvent } from '@angular/material';
 import { Vehicle } from '../../../../shared/model/vehicle.model';
 import { Product } from '../../../../shared/model/product.model';
 import { Party } from '../../../../shared/model/party.model';
-import { PartyService } from '../../../../shared/services/party.service';
-import { VehicleService } from '../../../../shared/services/vehicle.service';
-import { ProductService } from '../../../../shared/services/product.service';
 import { Sale } from '../../../../shared/model/sale.model';
 import { SaleService } from '../../../../shared/services/sale.service';
 import { AdditionalCharges } from '../../../../shared/model/additionalcharges.model';
-import { PartyResponse } from '../../../../shared/model/party-response.model';
-import { ProductResponse } from '../../../../shared/model/product-response.model';
-import { VehicleResponse } from '../../../../shared/model/vehicle-response.model';
 import * as moment from 'moment';
 import 'moment-timezone';
 import { NotificationService } from '../../../../shared/services/notification.service';
@@ -23,15 +17,15 @@ import { GatepassService } from '../../../../shared/services/gatepass.service';
 import { GatepassResponse } from '../../../../shared/model/gatepass-response.model';
 import { Gatepass } from '../../../../shared/model/gatepass.model';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Purchase } from '../../../../shared/model/purchase.model';
 @Component({
   selector: 'app-sale-modal',
   templateUrl: './sale-modal.component.html',
   styleUrls: ['./sale-modal.component.scss']
 })
 export class SaleModalComponent implements OnInit {
+  saleType = SaleType;
   @ViewChild('gatepassInput') gatepassInput: ElementRef<HTMLInputElement>;
-  selectedPartyId: number = 0;
+  selectedPartyId = 0;
   vehicleSuggestions: Vehicle[];
   partySuggestions: Party[];
   productSuggestions: Product[];
@@ -46,8 +40,9 @@ export class SaleModalComponent implements OnInit {
     date: new FormControl(moment.tz('Asia/Karachi').format().slice(0, 16), Validators.required),
     additionalCharges: new FormArray([]),
     gatepass: new FormControl(),
+    type: new FormControl(SaleType.Sale, Validators.required),
     weightPriceGroup: new FormGroup({
-      isMaundBasedRate: new FormControl("1"),
+      isMaundBasedRate: new FormControl('1'),
       bagQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
       boriQuantity: new FormControl(0, [Validators.required, Validators.min(0)]),
       totalMaund: new FormControl(0, [Validators.required, Validators.min(0)]),
@@ -64,34 +59,36 @@ export class SaleModalComponent implements OnInit {
   private sale: Sale;
   constructor(
     private saleService: SaleService,
-    private partyService: PartyService,
-    private vehicleService: VehicleService,
-    private productService: ProductService,
     private notificationService: NotificationService,
     private gatepassService: GatepassService,
     public spinner: SpinnerService) { }
 
   ngOnInit() {
     this.saleForm.controls['gatepass'].valueChanges.subscribe(
-      (response: string) => {
+      (value: string) => {
         this.gatepassService
-        .getGatepassList(10, 0, response, 'false', '',true,GatePassType.OutwardGatePass)
-        .subscribe(
-          (response: GatepassResponse) => {
-            this.filteredGatepasses = response.data;
-          }
-    )
-  })
+          .getGatepassList(10, 0, value, 'false', '', true, GatePassType.OutwardGatePass)
+          .subscribe(
+            (response: GatepassResponse) => {
+              this.filteredGatepasses = response.data;
+            }
+          );
+      });
+    this.saleForm.get('type').valueChanges.subscribe(
+      (value) => {
+        if (+value !== SaleType.Sale) {
+          this.saleForm.get('weightPriceGroup.rate').setValue(0);
+        }
+      });
 
-  this.saleForm.get('weightPriceGroup.isMaundBasedRate').valueChanges.subscribe(
-    (response: string) => {
-      if(+response == RateBasedOn.Maund){
-        this.selectedRateOnText = "Maund";
-      } 
-      else if(+response == RateBasedOn.Bag) {
-        this.selectedRateOnText = "Bag"; 
-      }
-  })
+    this.saleForm.get('weightPriceGroup.isMaundBasedRate').valueChanges.subscribe(
+      (response: string) => {
+        if (+response === RateBasedOn.Maund) {
+          this.selectedRateOnText = 'Maund';
+        } else if (+response === RateBasedOn.Bag) {
+          this.selectedRateOnText = 'Bag';
+        }
+      });
 
     this.saleForm.get('additionalCharges').valueChanges.subscribe(
       (value: Array<any>) => {
@@ -129,13 +126,13 @@ export class SaleModalComponent implements OnInit {
   }
 
   remove(gatepass: Gatepass): void {
-    let index = 0     
-    this.gatepasses.find((_gatepass,i) => {
-      if(_gatepass.id == gatepass.id){
-        index = i
-        return true
+    let index = 0;
+    this.gatepasses.find((_gatepass, i) => {
+      if (_gatepass.id == gatepass.id) {
+        index = i;
+        return true;
       }
-    })
+    });
 
     if (index >= 0) {
       this.gatepasses.splice(index, 1);
@@ -152,14 +149,14 @@ export class SaleModalComponent implements OnInit {
       );
     }
 
-    if(this.gatepasses.length === 0){
-      this.selectedPartyId = 0
+    if (this.gatepasses.length === 0) {
+      this.selectedPartyId = 0;
     }
   }
 
   selected(event: MatAutocompleteSelectedEvent): void {
-    if(!this.isGatepassExists(event.option.value)){
-      this.gatepasses.push(event.option.value)
+    if (!this.isGatepassExists(event.option.value)) {
+      this.gatepasses.push(event.option.value);
       this.saleForm.get('weightPriceGroup.totalMaund').setValue(
         +this.saleForm.get('weightPriceGroup.totalMaund').value + event.option.value.maund
       );
@@ -171,15 +168,15 @@ export class SaleModalComponent implements OnInit {
       this.saleForm.get('weightPriceGroup.bagQuantity').setValue(
         +this.saleForm.get('weightPriceGroup.bagQuantity').value + event.option.value.bagQuantity
       );
-      this.selectedPartyId = event.option.value.party.id
-    };
+      this.selectedPartyId = event.option.value.party.id;
+    }
     this.gatepassInput.nativeElement.value = '';
     this.saleForm.controls['gatepass'].setValue(null);
   }
 
-  isGatepassExists(gatepass: Gatepass): boolean{
-    const findGatePass = this.gatepasses.find(_gatepass => _gatepass.id == gatepass.id)
-    return findGatePass ? true : false 
+  isGatepassExists(gatepass: Gatepass): boolean {
+    const findGatePass = this.gatepasses.find(_gatepass => _gatepass.id == gatepass.id);
+    return findGatePass ? true : false;
   }
 
   closeModal() {
@@ -195,6 +192,7 @@ export class SaleModalComponent implements OnInit {
 
     this.saleForm.patchValue({
       date: moment.utc(sale.date).tz('Asia/Karachi').format().slice(0, 16),
+      type: sale.type,
       // direction: purchase.direction,
       weightPriceGroup: {
         // bagQuantity: purchase.bagQuantity,
@@ -266,20 +264,21 @@ export class SaleModalComponent implements OnInit {
 
   submit() {
     if (this.saleForm.valid) {
-      if(this.gatepasses.length == 0){
-        return
+      if (this.gatepasses.length == 0) {
+        return;
       }
 
       this.spinner.isLoading = true;
       if (this.sale === undefined || this.sale === null) {
-        this.sale = new Purchase();
+        this.sale = new Sale();
       }
-     
+
       if (this.sale.additionalCharges === undefined || this.sale.additionalCharges === null) {
         this.sale.additionalCharges = [];
       }
 
-      this.sale.date = moment(this.saleForm.value.date).utc().format(); 
+      this.sale.date = moment(this.saleForm.value.date).utc().format();
+      this.sale.type = this.saleForm.value.type;
       this.sale.gatepassIds = this.gatepasses.map(gatepass => gatepass.id);
       this.sale.rateBasedOn = this.saleForm.get('weightPriceGroup').value.isMaundBasedRate;
       this.sale.totalMaund = this.saleForm.get('weightPriceGroup').value.totalMaund;
@@ -289,7 +288,7 @@ export class SaleModalComponent implements OnInit {
       this.sale.totalPrice = this.getRateBasedOnTotal() + this.saleForm.get('weightPriceGroup.commission').value + this.additionalCharges;
       this.sale.commission = this.saleForm.get('weightPriceGroup').value.commission;
       // this.sale.freight = this.saleForm.get('weightPriceGroup').value.freight;
-      this.sale.basePrice = this.getRateBasedOnTotal();  
+      this.sale.basePrice = this.getRateBasedOnTotal();
 
       if (this.sale.additionalCharges.length >= 0 && (this.saleForm.get('additionalCharges') as FormArray).length >= 0) {
         for (let i = 0; i < (this.saleForm.get('additionalCharges') as FormArray).length; i++) {
@@ -368,11 +367,11 @@ export class SaleModalComponent implements OnInit {
     (this.saleForm.get('commissions') as FormArray).removeAt(id);
   }
 
-  getRateBasedOnTotal():number{
-    return this.saleForm.get('weightPriceGroup.isMaundBasedRate').value == '1' ? 
-    +this.saleForm.get('weightPriceGroup.rate').value * +this.saleForm.get('weightPriceGroup.totalMaund').value :  
-    +this.saleForm.get('weightPriceGroup.rate').value * (+this.saleForm.get('weightPriceGroup.bagQuantity').value + 
-    +this.saleForm.get('weightPriceGroup.boriQuantity').value)
+  getRateBasedOnTotal(): number {
+    return this.saleForm.get('weightPriceGroup.isMaundBasedRate').value == '1' ?
+      +this.saleForm.get('weightPriceGroup.rate').value * +this.saleForm.get('weightPriceGroup.totalMaund').value :
+      +this.saleForm.get('weightPriceGroup.rate').value * (+this.saleForm.get('weightPriceGroup.bagQuantity').value +
+        +this.saleForm.get('weightPriceGroup.boriQuantity').value);
   }
 
 }

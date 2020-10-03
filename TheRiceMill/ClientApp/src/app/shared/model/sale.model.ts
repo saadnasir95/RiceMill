@@ -4,6 +4,7 @@ import { Product } from './product.model';
 import { AdditionalCharges } from './additionalcharges.model';
 import { Gatepass } from './gatepass.model';
 import { Base } from './base.model';
+import { SaleType } from './enums';
 
 export class Sale extends Base {
   id: number;
@@ -39,4 +40,5 @@ export class Sale extends Base {
   percentCommission: number;
   commission: number;
   additionalCharges: AdditionalCharges[];
+  type: SaleType;
 }

@@ -64,6 +64,7 @@ namespace TheRiceMill.Application.Sales.Commands.CreateSale
             sale.BagQuantity = request.BagQuantity;
             sale.Date = request.Date;
             sale.CompanyId = request.CompanyId.ToInt();
+            sale.Type = request.Type;
             _context.Sales.Add(sale);
 
             List<GatePass> gatepasses = new List<GatePass>();
@@ -118,7 +119,8 @@ namespace TheRiceMill.Application.Sales.Commands.CreateSale
                 Rate = sale.Rate,
                 Date = new DateConverter().ConvertToDateTimeIso(sale.Date),
                 CreatedDate = new DateConverter().ConvertToDateTimeIso(sale.CreatedDate),
-                CompanyId = (CompanyType)sale.CompanyId
+                CompanyId = (CompanyType)sale.CompanyId,
+                Type = sale.Type
             });
         }
     }

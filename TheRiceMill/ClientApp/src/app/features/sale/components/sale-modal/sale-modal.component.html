@@ -12,11 +12,19 @@
   <form [formGroup]="saleForm" (ngSubmit)="submit()">
     <mat-dialog-content>
       <div class="row">
-        <div class="col-12">
+        <div class="col-md-8">
           <mat-form-field class="w-100">
             <input type="datetime-local" matInput placeholder="Choose DateTime" formControlName="date">
             <mat-error *ngIf="saleForm.get('date').hasError('required')">Datetime required</mat-error>
           </mat-form-field>
+        </div>
+        <div class="col-md-4">
+          <mat-label for="type" class="mr-4">Type</mat-label>
+          <mat-button-toggle-group formControlName="type" name="fontStyle" aria-label="Font Style">
+            <mat-button-toggle [value]="saleType.Sale">Sale</mat-button-toggle>
+            <mat-button-toggle [value]="saleType.Gift">Gift</mat-button-toggle>
+            <mat-button-toggle [value]="saleType.Welfare">Welfare</mat-button-toggle>
+          </mat-button-toggle-group>
         </div>
       </div>
 
@@ -54,12 +62,12 @@
         </div>
       </div>
 
-      <div class="row" formGroupName="weightPriceGroup">      
+      <div class="row" formGroupName="weightPriceGroup">
         <div class="col-md-3">
           <div class="row">
             <div class="col-md-12 d-flex">
              <p class="pl-2"><b> Maund: </b>
-              {{saleForm.get('weightPriceGroup.totalMaund').value}} </p> 
+              {{saleForm.get('weightPriceGroup.totalMaund').value}} </p>
             </div>
           </div>
           <div class="row">
@@ -135,7 +143,7 @@
         <div class="col-md-12">
           <mat-divider class="mb-2"></mat-divider>
         </div>
-      </div> 
+      </div>
       <div formArrayName="additionalCharges">
         <div *ngFor="let labour of saleForm.get('additionalCharges')['controls']; index as i" [formGroupName]="i"
           class="row">

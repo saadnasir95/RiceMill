@@ -82,10 +82,11 @@
                   <a href="javascript:;" (click)="editGatepass(gatepass)">
                     <i class="fa fa-pen" aria-hidden="true"></i></a>
                   &nbsp;
-                  <a href="javascript:;" (click)="deleteGatepass(gatepass)"
-                    *ngIf="!gatepass.saleId && !gatepass.purchaseId"><i class="fa fa-trash text-danger"
-                      aria-hidden="true"></i></a>
-                  &nbsp;
+                  <span *ngIf="!gatepass.saleId && !gatepass.purchaseId">
+                    <a href="javascript:;" (click)="deleteGatepass(gatepass)"><i class="fa fa-trash text-danger"
+                        aria-hidden="true"></i></a>
+                    &nbsp;
+                  </span>
                   <a href="javascript:;" (click)="printGatepass(gatepass)"><i class="material-icons text-info">
                       print
                     </i></a>

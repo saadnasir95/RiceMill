@@ -56,6 +56,7 @@ namespace TheRiceMill.Application.Sales.Queries.GetSales
                     BasePrice = p.BasePrice,
                     Freight = p.Freight,
                     RateBasedOn = (int)p.RateBasedOn,
+                    p.Type,
                     Gatepasses = p.GatePasses.Select(gp => new GatePassResponseModel()
                     {
                         Type = (GatePassType)gp.Type,
@@ -93,7 +94,7 @@ namespace TheRiceMill.Application.Sales.Queries.GetSales
                         PurchaseId = gp.PurchaseId,
                         SaleId = gp.SaleId,
                         CompanyId = (CompanyType)gp.CompanyId,
-                        BiltyNumber = gp.BiltyNumber
+                        BiltyNumber = gp.BiltyNumber,
                     }).ToList(),
                     CreatedDate = new DateConverter().ConvertToDateTimeIso(p.Date),
                     Commission = p.Commission,

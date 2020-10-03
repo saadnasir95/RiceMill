@@ -52,6 +52,7 @@ namespace TheRiceMill.Application.Sales.Commands.CreateSale
         public DateTime Date { get; set; }
         public ChargeRequestViewModel[] AdditionalCharges { get; set; }
         public CompanyType CompanyId { get; set; }
+        public SaleType Type { get; set; }
     }
 
     public class ChargeRequestViewModel

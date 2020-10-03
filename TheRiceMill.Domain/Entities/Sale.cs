@@ -25,7 +25,14 @@ namespace TheRiceMill.Domain.Entities
         public double Freight { get; set; }
 
         public double Commission { get; set; }
+        public SaleType Type { get; set; }
         public List<Charge> Charges { get; set; }
         public List<GatePass> GatePasses { get; set; }
+    }
+    public enum SaleType
+    {
+        Sale,
+        Gift,
+        Welfare
     }
 }

@@ -48,6 +48,12 @@ export enum RateBasedOn {
   Bag
 }
 
+export enum SaleType {
+  Sale,
+  Gift,
+  Welfare
+}
+
 export enum CompanyType {
   ABRiceMill = 1,
   GDTrading
