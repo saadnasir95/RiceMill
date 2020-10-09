@@ -62,10 +62,13 @@ namespace TheRiceMill.Application.Lots.Models
     {
         public string Date { get; set; }
         public string BrokerName { get; set; }
-        public PartyRequestModel Party { get; set; }
-        public int GatepassId { get; set; }
-        public VehicleRequestModel Vehicle { get; set;  }
-        public double BoriBag { get; set; }
+        public string Party { get; set; }
+        public string GatepassIds { get; set; }
+        public string Vehicle { get; set;  }
+        public int? PurchaseId { get; set; }
+        public double Bori { get; set; }
+        public double Bag { get; set; }
+
         public double NetWeight { get; set; }
         public double Maund { get; set; }
         public double RatePer40 { get; set; }
@@ -79,9 +82,12 @@ namespace TheRiceMill.Application.Lots.Models
     {
         public string Date { get; set; }
         public string BrokerName { get; set; }
-        public PartyRequestModel Party { get; set; }
-        public int GatepassId { get; set; }
-        public double BoriBag { get; set; }
+        public string Party { get; set; }
+        public string GatepassIds { get; set; }
+        public double Bag { get; set; }
+        public double Bori { get; set; }
+        public int Type { get; set; }
+        public int? SaleId { get; set; }
         public double NetWeight { get; set; }
         public double Maund { get; set; }
         public double RatePer40 { get; set; }

@@ -20,6 +20,7 @@ import { LotReceiptComponent } from '../lot-receipt/lot-receipt.component';
 import { Stock } from '../../../../shared/model/stock-in.model';
 import { Balance } from '../../../../shared/model/balance.model';
 import { isEmpty } from 'rxjs/operators';
+import { SaleTypePipe } from '../../../../shared/pipes/sale-type.pipe';
 
 @Component({
   selector: 'app-lot',
@@ -234,15 +235,14 @@ export class LotComponent implements OnInit, OnDestroy {
       rowData: [],
       columnDefs: [
         {
-          headerName: 'Bori/Bags',
-          field: 'bagQuantity',
-          width: 75
+          headerName: 'Bori',
+          field: 'boriQuantity',
+          width: 75,
         },
         {
-          headerName: 'Bori/Bags',
-          field: 'BoriQuantity',
-          width: 75,
-          hide: true
+          headerName: 'Bags',
+          field: 'bagQuantity',
+          width: 75
         },
         {
           headerName: 'KGS.',
@@ -354,7 +354,7 @@ export class LotComponent implements OnInit, OnDestroy {
         },
         {
           headerName: 'Party Name',
-          field: 'party.name',
+          field: 'party',
           // width: 80
         },
         {
@@ -364,17 +364,22 @@ export class LotComponent implements OnInit, OnDestroy {
         },
         {
           headerName: 'INW#',
-          field: 'gatepassId',
+          field: 'gatepassIds',
           // width: 100
         },
         {
           headerName: 'Vehicle#',
-          field: 'vehicle.plateNo',
+          field: 'vehicle',
           // width: 100
         },
         {
-          headerName: 'Bori/Bag',
-          field: 'boriBag',
+          headerName: 'Bori',
+          field: 'bori',
+          // width: 100
+        },
+        {
+          headerName: 'Bag',
+          field: 'bag',
           // width: 100
         },
         {
@@ -426,11 +431,12 @@ export class LotComponent implements OnInit, OnDestroy {
         {
           headerName: 'Date',
           field: 'date',
+          valueFormatter: this.datePipe,
           // width: 80
         },
         {
           headerName: 'Party Name',
-          field: 'party.name',
+          field: 'party',
           // width: 80
         },
         {
@@ -440,17 +446,23 @@ export class LotComponent implements OnInit, OnDestroy {
         },
         {
           headerName: 'OGP#',
-          field: 'gatepassId',
+          field: 'gatepassIds',
           // width: 100
         },
         {
           headerName: 'Sale/Gift/Welfare',
-          field: 'ratePer40WithoutProcessing',
+          field: 'type',
+          valueFormatter: this.saleTypePipe,
           // width: 100
         },
         {
-          headerName: 'Bori/Bag',
-          field: 'boriBag',
+          headerName: 'Bori',
+          field: 'bori',
+          // width: 100
+        },
+        {
+          headerName: 'Bag',
+          field: 'bag',
           // width: 100
         },
         {
@@ -615,7 +627,6 @@ export class LotComponent implements OnInit, OnDestroy {
       .getLot(this.paginator.pageSize, this.paginator.pageIndex, this.advanceSearch, this.sortDirection, this.sortOrderBy, this.lotIdSearch, this.selectedYear)
       .subscribe(
         (response: LotResponse) => {
-          debugger
           if (Object.keys(response.data).length > 0) {
             this.lot = response.data;
             this.stockInsList = response.data.stockIns;
@@ -625,10 +636,13 @@ export class LotComponent implements OnInit, OnDestroy {
             this.stockOutDataSource.data = this.stockOutsList;
             this.processedMaterialDataSource.data = this.processedMaterialList;
 
+            this.balanceList.push();
             this.processedMaterialList.length > 0 && this.processedMaterialList.forEach((item,index) => {
               let balance = new Balance();
+              debugger
               if(this.stockOutsList[index].bagQuantity > 0){
                 balance.bagQuantity = item.bagQuantity - this.stockOutsList[index].bagQuantity;
+                balance.boriQuantity = item.boriQuantity - this.stockOutsList[index].boriQuantity;
                 balance.totalKG = item.totalKG - this.stockOutsList[index].totalKG;
               }
               this.balanceList.push(balance);
@@ -708,6 +722,12 @@ export class LotComponent implements OnInit, OnDestroy {
   datePipe(date: any) {
     if (date.value) {
       return new LocalDatetimePipe().transform(date.value);
+    }
+  }
+
+  saleTypePipe(date: any) {
+    if (date.value) {
+      return new SaleTypePipe().transform(date.value);
     }
   }
 

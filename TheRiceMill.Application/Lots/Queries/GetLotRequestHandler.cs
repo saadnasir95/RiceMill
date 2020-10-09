@@ -45,15 +45,15 @@ namespace TheRiceMill.Application.Lots.Queries
             {
                 return new ResponseViewModel().CreateOk(new GetLotResponseModel
                 {
-                    Purchases = new GatepassMapper().MapGatepassToLotPurchase(lot.GatePasses),
-                    Sales = new GatepassMapper().MapGatepassToLotSale(lot.GatePasses),
                     RateCosts = this.RateCostMapper(lot.RateCosts),
                     ProcessedMaterials = this.ProcessedMaterialMapper(lot.ProcessedMaterials),
                     StockIns = this.StockInMapper(lot.StockIns),
                     StockOuts = this.StockOutMapper(lot.StockOuts),
                     Year = lot.Year,
-                    Id = lot.Id
-                });
+                    Id = lot.Id,
+                    Sales = new GatepassMapper().MapGatepassToLotSale(lot.GatePasses),
+                    Purchases = new GatepassMapper().MapGatepassToLotPurchase(lot.GatePasses)
+            });
             }
             else
             {
