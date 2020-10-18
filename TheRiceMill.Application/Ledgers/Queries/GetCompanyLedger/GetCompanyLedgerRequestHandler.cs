@@ -85,7 +85,7 @@ namespace TheRiceMill.Application.Ledger.Queries.GetCompanyLedger
         {
             if ((int)LedgerType.Purchase == ledger.LedgerType)
             {
-                var purchase = _context.Purchases.GetBy(p => p.Id == ledger.Id, p => p.Include(pr => pr.GatePasses).ThenInclude(g => g.Product).Include(pr => pr.GatePasses).ThenInclude(g => g.Vehicle).Include(c => c.Charges));
+                var purchase = _context.Purchases.GetBy(p => p.Id == ledger.Id, p => p.Include(pr => pr.GatePasses).ThenInclude(g => g.Lot).Include(pr => pr.GatePasses).ThenInclude(g => g.Product).Include(pr => pr.GatePasses).ThenInclude(g => g.Vehicle).Include(c => c.Charges));
                 if (purchase != null)
                 {
                     ledger.AdditionalCharges = purchase.Charges.Sum(c => c.Total);
@@ -99,7 +99,7 @@ namespace TheRiceMill.Application.Ledger.Queries.GetCompanyLedger
                     ledger.Broker = String.Join(", ", purchase.GatePasses.Select(c => c.Broker).Distinct());
                     ledger.NetWeight = purchase.GatePasses.Select(c => c.NetWeight).Sum();
                     ledger.InvoiceId = String.Join(", ", purchase.GatePasses.Select(c => c.PurchaseId).Distinct());
-                    //ledger.LotNumber = String.Join(", ", purchase.GatePasses.Select(c => c.LotNumber).Distinct());
+                    ledger.LotNumber = String.Join(", ", purchase.GatePasses.Select(c => c.LotId).Distinct());
                     ledger.BiltyNumber = String.Join(", ", purchase.GatePasses.Select(c => c.BiltyNumber).Distinct());
                     ledger.TotalMaund = purchase.TotalMaund;
                     ledger.Rate = purchase.Rate;
@@ -108,7 +108,7 @@ namespace TheRiceMill.Application.Ledger.Queries.GetCompanyLedger
             }
             else if ((int)LedgerType.Sale == ledger.LedgerType)
             {
-                var sale = _context.Sales.GetBy(p => p.Id == ledger.Id, p => p.Include(pr => pr.GatePasses).ThenInclude(g => g.Product).Include(pr => pr.GatePasses).ThenInclude(g => g.Vehicle).Include(c => c.Charges));
+                var sale = _context.Sales.GetBy(p => p.Id == ledger.Id, p => p.Include(pr => pr.GatePasses).ThenInclude(g => g.Lot).Include(pr => pr.GatePasses).ThenInclude(g => g.Product).Include(pr => pr.GatePasses).ThenInclude(g => g.Vehicle).Include(c => c.Charges));
                 if (sale != null)
                 {
                     ledger.AdditionalCharges = sale.Charges.Sum(c => c.Total);
@@ -122,7 +122,7 @@ namespace TheRiceMill.Application.Ledger.Queries.GetCompanyLedger
                     ledger.InvoiceId = String.Join(", ", sale.GatePasses.Select(c => c.PurchaseId).Distinct());
                     ledger.NetWeight = sale.GatePasses.Select(c => c.NetWeight).Sum();
                     ledger.Broker = String.Join(", ", sale.GatePasses.Select(c => c.Broker).Distinct());
-                    //ledger.LotNumber = String.Join(", ", sale.GatePasses.Select(c => c.LotNumber).Distinct());
+                    ledger.LotNumber = String.Join(", ", sale.GatePasses.Select(c => c.LotId).Distinct());
                     ledger.BiltyNumber = String.Join(", ", sale.GatePasses.Select(c => c.BiltyNumber).Distinct());
                     ledger.TotalMaund = sale.TotalMaund;
                     ledger.Rate = sale.Rate;
