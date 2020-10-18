@@ -11,7 +11,7 @@ export class CompanyTypePipe implements PipeTransform {
       case CompanyType.ABRiceMill:
         return 'AB Rice Mill';
       case CompanyType.GDTrading:
-        return 'Gd Trading';
+        return 'GB Trading';
     }
   }
 
