@@ -89,8 +89,8 @@ export class LotModalComponent implements OnInit {
             processedMaterial.product = new Product();
             processedMaterial.product.name = response.data[i].name;
             this.lot.processedMaterials.push(processedMaterial);
-            this.populateProcessedMaterialData();
           }
+          this.populateProcessedMaterialData();
         },
         (error) => console.log(error)
       );
