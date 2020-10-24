@@ -15,7 +15,7 @@ import { Lot } from '../../../../shared/model/lot.model';
 import { LotService } from '../../../../shared/services/lot.service';
 import { ProductService } from '../../../../shared/services/product.service';
 import { ProductResponse } from '../../../../shared/model/product-response.model';
-import { CreateRateCost, RateCost } from '../../../../shared/model/create-rate-cost.model';
+import { RateCost } from '../../../../shared/model/rate-cost.model';
 @Component({
   selector: 'app-rate-cost-modal',
   templateUrl: './rate-cost-modal.component.html',
@@ -40,7 +40,7 @@ export class RateCostModalComponent implements OnInit {
     total: new FormControl(null, Validators.required),
     ratePer40WithoutProcessing : new FormControl(null, Validators.required),
     processingExpense : new FormControl(null, Validators.required),
-    bardanaMisc : new FormControl(null, Validators.required),
+    bardanaAndMisc : new FormControl(null, Validators.required),
     grandTotal : new FormControl(null, Validators.required),
     ratePer40LessByProduct: new FormControl(null, Validators.required),
     saleBrokery: new FormControl(null, Validators.required),
@@ -67,9 +67,8 @@ export class RateCostModalComponent implements OnInit {
     this.modalRef.close();
   }
 
-  editRateCost(rateCost: CreateRateCost){
+  editRateCost(rateCost: RateCost){
     this.isNew = false;
-    debugger
     this.rateCost = new RateCost();
     Object.assign(this.rateCost, rateCost);
     this.rateCostForm.setValue({
@@ -79,10 +78,10 @@ export class RateCostModalComponent implements OnInit {
       total: rateCost.total,
       ratePer40WithoutProcessing : rateCost.ratePer40WithoutProcessing,
       processingExpense : rateCost.processingExpense,
-      bardanaMisc : rateCost.bardanaAndMisc,
+      bardanaAndMisc : rateCost.bardanaAndMisc,
       grandTotal : rateCost.grandTotal,
       ratePer40LessByProduct: rateCost.ratePer40LessByProduct,
-      saleBrokery: rateCost.saleBrockery
+      saleBrokery: rateCost.saleBrokery
     }, { emitEvent: false });
   }
 
@@ -97,7 +96,7 @@ export class RateCostModalComponent implements OnInit {
       rateCost.labourUnloadingAndLoading = this.rateCostForm.value.labourUnloadingAndLoading; 
       rateCost.ratePer40LessByProduct = this.rateCostForm.value.ratePer40LessByProduct;
       rateCost.ratePer40WithoutProcessing = this.rateCostForm.value.ratePer40WithoutProcessing;
-      rateCost.saleBrockery = this.rateCostForm.value.saleBrockery;
+      rateCost.saleBrokery = this.rateCostForm.value.saleBrokery;
       rateCost.total = this.rateCostForm.value.total;
       rateCost.processingExpense = this.rateCostForm.value.processingExpense;
       rateCost.purchaseBrokery = this.rateCostForm.value.purchaseBrokery;
@@ -106,7 +105,7 @@ export class RateCostModalComponent implements OnInit {
           (response: any) => {
             this.spinner.isLoading = false;
             this.notificationService.successNotifcation('Rate Cost added successfully');
-            this.modalRef.close();
+            this.modalRef.close(true);
             // this.lotService.purchaseEmitter.emit(response.data);
           },
           (error) => {
@@ -122,7 +121,7 @@ export class RateCostModalComponent implements OnInit {
             this.spinner.isLoading = false;
             this.notificationService.successNotifcation('Rate Cost updated successfully');
             // this.lotService.purchaseEmitter.emit(true);
-            this.modalRef.close();
+            this.modalRef.close(true);
           },
           (error) => {
             this.spinner.isLoading = false;

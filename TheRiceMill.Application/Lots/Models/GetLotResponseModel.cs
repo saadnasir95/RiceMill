@@ -54,7 +54,7 @@ namespace TheRiceMill.Application.Lots.Models
         public double BardanaAndMisc { get; set; }
         public double GrandTotal { get; set; }
         public double RatePer40LessByProduct { get; set; }
-        public double SaleBrockery { get; set; }
+        public double SaleBrokery { get; set; }
     }
 
 

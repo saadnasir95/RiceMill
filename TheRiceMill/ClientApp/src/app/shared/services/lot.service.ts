@@ -8,7 +8,7 @@ import { environment } from '../../../environments/environment';
 import { CompanyService } from './company.service';
 import { LotResponse } from '../model/lot-response.model';
 import { ProcessedMaterial, CreateProcessedMaterial } from '../model/processed-material.model';
-import { CreateRateCost } from '../model/create-rate-cost.model';
+import { RateCost } from '../model/rate-cost.model';
 
 @Injectable({
   providedIn: 'root'
@@ -47,12 +47,14 @@ export class LotService {
     return this.http.post(this.apiUrl, JSON.stringify(processedMaterial), { headers: this.tokenService.getHeaders() });
   }
 
-  createRateCost(createRateCost: CreateRateCost): Observable<any> {
+  createRateCost(createRateCost: RateCost): Observable<any> {
+    createRateCost.companyId = this.companyService.getCompanyId();
     return this.http.post(this.apiUrl + '/RateCost', JSON.stringify(createRateCost), { headers: this.tokenService.getHeaders() });
   }
 
-  updateRateCost(createRateCost: CreateRateCost): Observable<any> {
-    return this.http.put(this.apiUrl + '/RateCost', JSON.stringify(createRateCost), { headers: this.tokenService.getHeaders() });
+  updateRateCost(updateRateCost: RateCost): Observable<any> {
+    updateRateCost.companyId = this.companyService.getCompanyId();
+    return this.http.put(this.apiUrl + '/RateCost', JSON.stringify(updateRateCost), { headers: this.tokenService.getHeaders() });
   }
 
   updateProcessedMaterial(processedMaterial: CreateProcessedMaterial): Observable<any> {

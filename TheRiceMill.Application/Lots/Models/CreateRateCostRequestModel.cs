@@ -11,6 +11,8 @@ namespace TheRiceMill.Application.Lots.Models
         public int Id { get; set; }
         public int LotId { get; set; }
         public int LotYear { get; set; }
+        public int CompanyId { get; set; }
+
         public double LabourUnloadingAndLoading { get; set; }
         public double Freight { get; set; }
         public double PurchaseBrokery { get; set; }
@@ -20,6 +22,6 @@ namespace TheRiceMill.Application.Lots.Models
         public double BardanaAndMisc { get; set; }
         public double GrandTotal { get; set; }
         public double RatePer40LessByProduct { get; set; }
-        public double SaleBrockery { get; set; }
+        public double SaleBrokery { get; set; }
     }
 }

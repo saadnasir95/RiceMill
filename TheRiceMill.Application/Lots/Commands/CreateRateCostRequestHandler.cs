@@ -25,12 +25,13 @@ namespace TheRiceMill.Application.Lots.Commands
             var _rateCost = new Domain.Entities.RateCost();
             _rateCost.BardanaAndMisc = request.BardanaAndMisc;
             _rateCost.LotId = request.LotId;
+            _rateCost.CompanyId = request.CompanyId;
             _rateCost.LotYear = request.LotYear;
             _rateCost.ProcessingExpense = request.ProcessingExpense;
             _rateCost.PurchaseBrokery = request.PurchaseBrokery;
             _rateCost.RatePer40LessByProduct = request.RatePer40LessByProduct;
             _rateCost.RatePer40WithoutProcessing = request.RatePer40WithoutProcessing;
-            _rateCost.SaleBrockery = request.SaleBrockery;
+            _rateCost.SaleBrockery = request.SaleBrokery;
             _rateCost.Freight= request.Freight;
             _rateCost.LabourUnloadingAndLoading = request.LabourUnloadingAndLoading;
             _rateCost.Total = request.Total;

@@ -15,28 +15,40 @@
         <div class="col-md-4">
           <mat-form-field class="w-100">
             <input type="text" matInput placeholder="Enter Labour Unloading And Loading" formControlName="labourUnloadingAndLoading">
+            <mat-error *ngIf="rateCostForm.get('labourUnloadingAndLoading').hasError('required')">
+              LabourUnloadingAndLoading is required
+            </mat-error>
           </mat-form-field>
         </div>
         <div class="col-md-4">
           <mat-form-field class="w-100">
             <input type="text" matInput placeholder="Enter Freight" formControlName="freight">
+            <mat-error *ngIf="rateCostForm.get('freight').hasError('required')">
+              Freight is required
+            </mat-error>
           </mat-form-field>
         </div>
         <div class="col-md-4">
           <mat-form-field class="w-100">
             <input type="text" matInput placeholder="Enter Purchase Brokery" formControlName="purchaseBrokery">
+            <mat-error *ngIf="rateCostForm.get('purchaseBrokery').hasError('required')">
+              Purchase Brokery is required
+            </mat-error>
           </mat-form-field>
         </div>
         <div class="col-md-4">
           <mat-form-field class="w-100">
             <input type="text" matInput placeholder="Enter Total" formControlName="total">
+            <mat-error *ngIf="rateCostForm.get('total').hasError('required')">
+              Total is required
+            </mat-error>
           </mat-form-field>
         </div>
         <div class="col-md-4">
           <mat-form-field class="w-100">
             <input type="number" matInput placeholder="Enter Rate Per 40 Without Processing" formControlName="ratePer40WithoutProcessing">
             <mat-error *ngIf="rateCostForm.get('ratePer40WithoutProcessing').hasError('required')">
-              Lot number is required
+              RatePer40WithoutProcessing is required
             </mat-error>
           </mat-form-field>
         </div>
@@ -44,15 +56,15 @@
           <mat-form-field class="w-100">
             <input type="number" matInput placeholder="Enter Processing Expense" formControlName="processingExpense">
             <mat-error *ngIf="rateCostForm.get('processingExpense').hasError('required')">
-              Lot number is required
+              Processing Expense is required
             </mat-error>
           </mat-form-field>
         </div>
         <div class="col-md-4">
           <mat-form-field class="w-100">
-            <input type="number" matInput placeholder="Enter Bardana/Misc." formControlName="bardanaMisc">
-            <mat-error *ngIf="rateCostForm.get('bardanaMisc').hasError('required')">
-              Lot number is required
+            <input type="number" matInput placeholder="Enter Bardana/Misc." formControlName="bardanaAndMisc">
+            <mat-error *ngIf="rateCostForm.get('bardanaAndMisc').hasError('required')">
+              bardanaAndMisc is required
             </mat-error>
           </mat-form-field>
         </div>
@@ -60,7 +72,7 @@
           <mat-form-field class="w-100">
             <input type="number" matInput placeholder="Enter Grand Total" formControlName="grandTotal">
             <mat-error *ngIf="rateCostForm.get('grandTotal').hasError('required')">
-              Lot number is required
+              Grand Total is required
             </mat-error>
           </mat-form-field>
         </div>
@@ -68,7 +80,7 @@
           <mat-form-field class="w-100">
             <input type="number" matInput placeholder="Enter Rate Per 40 Less By Product" formControlName="ratePer40LessByProduct">
             <mat-error *ngIf="rateCostForm.get('ratePer40LessByProduct').hasError('required')">
-              Lot number is required
+              RatePer40LessByProduct is required
             </mat-error>
           </mat-form-field>
         </div>
@@ -76,7 +88,7 @@
           <mat-form-field class="w-100">
             <input type="number" matInput placeholder="Enter Sale Brokery" formControlName="saleBrokery">
             <mat-error *ngIf="rateCostForm.get('saleBrokery').hasError('required')">
-              Lot number is required
+              Sale Brokery is required
             </mat-error>
           </mat-form-field>
         </div>

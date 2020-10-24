@@ -15,7 +15,7 @@ import { GridOptions } from 'ag-grid-community';
 import { LocalDatetimePipe } from '../../../../shared/pipes/local-datetime.pipe';
 import { TemplateRendererComponent } from '../../../../shared/components/template-renderer/template-renderer.component';
 import { RateCostModalComponent } from '../rate-cost-modal/rate-cost-modalcomponent';
-import { RateCost } from '../../../../shared/model/create-rate-cost.model';
+import { RateCost } from '../../../../shared/model/rate-cost.model';
 import { LotReceiptComponent } from '../lot-receipt/lot-receipt.component';
 import { Stock } from '../../../../shared/model/stock-in.model';
 import { Balance } from '../../../../shared/model/balance.model';
@@ -315,7 +315,7 @@ export class LotComponent implements OnInit, OnDestroy {
         },
         {
           headerName: 'Sale Brokery',
-          field: 'saleBrockery',
+          field: 'saleBrokery',
         },
         {
           headerName: 'Edit RateCost',
@@ -594,6 +594,11 @@ export class LotComponent implements OnInit, OnDestroy {
       }
     });
     this.dialogRefRateCost.componentInstance.modalRef = this.dialogRefRateCost;
+    this.dialogRefRateCost.afterClosed().subscribe((res: boolean) => {
+      if(res){
+        this.getLotHistory();
+      }
+    })
   }
 
   editRateCost(rateCost: RateCost) {
@@ -607,15 +612,11 @@ export class LotComponent implements OnInit, OnDestroy {
     });
     this.dialogRefRateCost.componentInstance.modalRef = this.dialogRefRateCost;
     this.dialogRefRateCost.componentInstance.editRateCost(rateCost);
-  }
-
-  deleteGatepass(gatepass: Gatepass) {
-    // this.dialogRef = this.matDialog.open(LotModalComponent, {
-    //   disableClose: true,
-    //   width: '400px'
-    // });
-    // this.dialogRef.componentInstance.modalRef = this.dialogRef;
-    // this.dialogRef.componentInstance.deleteGatepass(gatepass);
+    this.dialogRefRateCost.afterClosed().subscribe((res: boolean) => {
+      if(res){
+        this.getLotHistory();
+      }
+    })
   }
 
   getLotHistory() {
@@ -639,7 +640,6 @@ export class LotComponent implements OnInit, OnDestroy {
             this.balanceList.push();
             this.processedMaterialList.length > 0 && this.processedMaterialList.forEach((item,index) => {
               let balance = new Balance();
-              debugger
               if(this.stockOutsList[index].bagQuantity > 0){
                 balance.bagQuantity = item.bagQuantity - this.stockOutsList[index].bagQuantity;
                 balance.boriQuantity = item.boriQuantity - this.stockOutsList[index].boriQuantity;

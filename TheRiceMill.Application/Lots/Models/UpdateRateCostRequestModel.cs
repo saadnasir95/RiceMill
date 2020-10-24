@@ -8,6 +8,7 @@ namespace TheRiceMill.Application.Lots.Models
 {
     public class UpdateRateCostRequestModel : IRequest<ResponseViewModel>
     {
+        public int CompanyId { get; set; }
         public int Id { get; set; }
         public int LotId { get; set; }
         public int LotYear { get; set; }
@@ -20,6 +21,6 @@ namespace TheRiceMill.Application.Lots.Models
         public double BardanaAndMisc { get; set; }
         public double GrandTotal { get; set; }
         public double RatePer40LessByProduct { get; set; }
-        public double SaleBrockery { get; set; }
+        public double SaleBrokery { get; set; }
     }
 }

@@ -145,7 +145,7 @@ namespace TheRiceMill.Application.Lots.Queries
                     PurchaseBrokery = rateCost.PurchaseBrokery,
                     RatePer40LessByProduct = rateCost.RatePer40LessByProduct,
                     RatePer40WithoutProcessing = rateCost.RatePer40WithoutProcessing,
-                    SaleBrockery = rateCost.SaleBrockery,
+                    SaleBrokery = rateCost.SaleBrockery,
                     Total = rateCost.Total
                 };
                 rateCostList.Add(_stockIn);
