@@ -301,7 +301,7 @@ export class LotComponent implements OnInit, OnDestroy {
         },
         {
           headerName: 'Bardana/Misc.',
-          field: 'bardanaMisc',
+          field: 'bardanaAndMisc',
           // width: 100
         },
         {

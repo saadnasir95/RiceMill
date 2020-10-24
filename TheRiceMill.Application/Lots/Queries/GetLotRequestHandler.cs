@@ -139,7 +139,7 @@ namespace TheRiceMill.Application.Lots.Queries
                     LotYear = rateCost.LotYear,
                     BardanaAndMisc = rateCost.BardanaAndMisc,
                     Freight = rateCost.Freight,
-                    GrandTotal = rateCost.Freight,
+                    GrandTotal = rateCost.GrandTotal,
                     LabourUnloadingAndLoading = rateCost.LabourUnloadingAndLoading,
                     ProcessingExpense = rateCost.ProcessingExpense,
                     PurchaseBrokery = rateCost.PurchaseBrokery,
