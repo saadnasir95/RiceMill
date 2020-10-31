@@ -4,8 +4,10 @@ import { MatDialogRef } from '@angular/material';
 import { NotificationService } from '../../../../shared/services/notification.service';
 import { BankAccount } from '../../../../shared/model/bank-account.model';
 import { BankAccountService } from '../../../../shared/services/bank-account.service';
-import { Bank } from '../../../../shared/model/enums';
 import { SpinnerService } from '../../../../shared/services/spinner.service';
+import { BankService } from '../../../../shared/services/bank.service';
+import { BankResponse } from '../../../../shared/model/bank-response.model';
+import { Bank } from '../../../../shared/model/bank.model';
 
 @Component({
   selector: 'app-bank-account-modal',
@@ -14,9 +16,9 @@ import { SpinnerService } from '../../../../shared/services/spinner.service';
 })
 
 export class BankAccountModalComponent implements OnInit {
-  bankEnumList = Bank;
+  bankList: Bank[];
   public bankAccountForm: FormGroup = new FormGroup({
-    bankId: new FormControl(+Bank.AlliedBank, Validators.required),
+    bankId: new FormControl('', Validators.required),
     accountNumber: new FormControl(null, Validators.required),
     currentBalance: new FormControl(null, [Validators.required, Validators.min(0)]),
   });
@@ -26,10 +28,19 @@ export class BankAccountModalComponent implements OnInit {
   private bankAccount: BankAccount;
   constructor(
     private bankAccountService: BankAccountService,
+    private bankService: BankService,
     private notificationService: NotificationService,
     public spinner: SpinnerService) { }
 
   ngOnInit() {
+    this.bankService
+      .getBanks(10, 0)
+      .subscribe(
+        (response: BankResponse) => {
+          this.bankList = response.data;
+        },
+        (error) => console.log(error)
+      );
   }
 
   closeModal() {

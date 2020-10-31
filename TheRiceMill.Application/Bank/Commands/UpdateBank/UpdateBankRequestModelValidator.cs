@@ -7,7 +7,7 @@ namespace TheRiceMill.Application.Bank.Commands.UpdateBank
     {
         public UpdateBankRequestModelValidator()
         {
-            RuleFor(p => p.BankId).Required();
+            RuleFor(p => p.Id).Required();
             RuleFor(p => p.Name).Required();
         }
     }

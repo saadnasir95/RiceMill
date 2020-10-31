@@ -8,6 +8,8 @@ import { JwtModule, JwtHelperService } from '@auth0/angular-jwt';
 import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { TranslateHttpLoader } from '@ngx-translate/http-loader';
 import { TranslateModule, TranslateLoader } from '@ngx-translate/core';
+import { LoginModule } from './features/login/login.module';
+import { LayoutModule } from './features/layout/layout.module';
 
 export function jwtTokenGetter() {
   const token = null;
@@ -22,9 +24,11 @@ export function HttpLoaderFactory(http: HttpClient) {
   declarations: [AppComponent],
   imports: [
     BrowserModule,
+    LoginModule,
+    LayoutModule,
+    SharedModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    SharedModule,
     HttpClientModule,
     JwtModule.forRoot({
       config: {

@@ -17,7 +17,8 @@ import {
   MatAutocompleteModule,
   MatRadioModule,
   MatDividerModule,
-  MatButtonToggleModule
+  MatButtonToggleModule,
+  MatTabsModule
 } from '@angular/material';
 import { ModalComponent } from './components/modal/modal.component';
 import { ProductTypePipe } from './pipes/product-type.pipe';
@@ -70,7 +71,8 @@ import { SaleTypePipe } from './pipes/sale-type.pipe';
     MatCheckboxModule,
     MatDividerModule,
     TranslateModule,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatTabsModule
   ],
   exports: [
     MatButtonModule,
@@ -104,7 +106,8 @@ import { SaleTypePipe } from './pipes/sale-type.pipe';
     MatButtonToggleModule,
     RateBasedOnPipe,
     CompanyTypePipe,
-    SaleTypePipe
+    SaleTypePipe,
+    MatTabsModule
   ],
   entryComponents: [ModalComponent]
 })

@@ -33,8 +33,8 @@ namespace TheRiceMill.Presentation.Controllers.Api.V1
         }
 
 
-        [HttpDelete("{BankId}")]
-        public async Task<IActionResult> DeleteBank([FromRoute]DeleteBankRequestModel model)
+        [HttpDelete]
+        public async Task<IActionResult> DeleteBank([FromQuery]DeleteBankRequestModel model)
         {
             var response = await Mediator.Send(model);
             return StatusCode(response.Status, response.Response);

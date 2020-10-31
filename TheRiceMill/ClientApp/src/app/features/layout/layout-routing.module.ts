@@ -5,9 +5,9 @@ import { AuthGuard } from '../../shared/services/auth-guard.service';
 
 
 const routes: Routes = [
-  { path: '', redirectTo: '/admin/gatepass', pathMatch: 'full' },
+  { path: 'admin', redirectTo: '/admin/gatepass', pathMatch: 'full' },
   {
-    path: '',
+    path: 'admin',
     component: LayoutComponent,
     canActivateChild: [AuthGuard],
     children: [
@@ -21,7 +21,7 @@ const routes: Routes = [
       { path: 'ledger', loadChildren: '../ledger/ledger.module#LedgerModule', data: { role: ['Administrator'] } },
       { path: 'lot', loadChildren: '../lot/lot.module#LotModule', data: { role: ['Administrator'] } },
       { path: 'bank-transaction', loadChildren: '../bank-transaction/bank-transaction.module#BankTransactionModule', data: { role: ['Administrator'] } },
-      { path: 'bank-account', loadChildren: '../bank-account/bank-account.module#BankAccountModule', data: { role: ['Administrator'] } },
+      { path: 'bank', loadChildren: '../bank/bank.module#BankModule', data: { role: ['Administrator'] } },
     ]
   }
 ];

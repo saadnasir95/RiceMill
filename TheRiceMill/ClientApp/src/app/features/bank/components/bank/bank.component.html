@@ -1,0 +1,60 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <!-- <div class="card-header card-header-primary rounded py-4">
+          <h3 class="card-title"><i class="fa fa-university" aria-hidden="true"></i> Bank </h3>
+        </div> -->
+        <div class="card-body">
+          <div class="row">
+            <mat-form-field class="col-md-8">
+              <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+            </mat-form-field>
+            <div class="col-md-4">
+              <button mat-raised-button type="button" class="btn btn-primary" (click)="addBank()"><i
+                  class="material-icons">add</i> Add Bank </button>
+            </div>
+          </div>
+          <mat-spinner *ngIf="isLoadingData"></mat-spinner>
+          <div class="mat-elevation-z8">
+            <table class="table-responsive-sm" mat-table [dataSource]="dataSource" matSort (matSortChange)="sortData()">
+              <ng-container matColumnDef="Id">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header>  Id </th>
+                <td mat-cell *matCellDef="let bank"> {{bank.id}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="Name">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+                <td mat-cell *matCellDef="let bank"> {{bank.name}} </td>
+              </ng-container>
+
+              <ng-container matColumnDef="Action">
+                <th mat-header-cell *matHeaderCellDef> Action </th>
+                <td mat-cell *matCellDef="let bank">
+                  <a href="javascript:;" (click)="editBank(bank)"><i class="fa fa-pen"
+                      aria-hidden="true"></i></a>
+                  &nbsp;
+                  <a href="javascript:;" (click)="deleteBank(bank)"><i class="fa fa-trash text-danger"
+                      aria-hidden="true"></i></a>
+                </td>
+              </ng-container>
+              <ng-container matColumnDef="disclaimer">
+                <td mat-footer-cell *matFooterCellDef colspan="3" class="no-records">
+                  No records found
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+              <div *ngIf="banks">
+                <tr mat-footer-row *matFooterRowDef="['disclaimer']" class="no-records"></tr>
+              </div>
+            </table>
+            <mat-paginator [pageSizeOptions]="[10, 50, 100,200]" [showFirstLastButtons]="true" (page)="changePage()">
+            </mat-paginator>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

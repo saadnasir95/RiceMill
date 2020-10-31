@@ -28,7 +28,7 @@ namespace TheRiceMill.Application.Bank.Commands.DeleteBank
             }
             _context.Remove(bank);
             await _context.SaveChangesAsync(cancellationToken);
-            return new ResponseViewModel();
+            return new ResponseViewModel().CreateOk();
         }
     }
 

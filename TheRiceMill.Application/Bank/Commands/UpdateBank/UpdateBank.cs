@@ -21,10 +21,10 @@ namespace TheRiceMill.Application.Bank.Commands.UpdateBank
 
         public async Task<ResponseViewModel> Handle(UpdateBankRequestModel request, CancellationToken cancellationToken)
         {
-            var bank = _context.Banks.GetBy(p => p.Id == request.BankId);
+            var bank = _context.Banks.GetBy(p => p.Id == request.Id);
             if (bank == null)
             {
-                throw new NotFoundException(nameof(Domain.Entities.Bank),request.BankId);
+                throw new NotFoundException(nameof(Domain.Entities.Bank),request.Id);
             }
 
             bank.Name = request.Name;
