@@ -187,27 +187,13 @@ export class SaleModalComponent implements OnInit {
     this.isNew = false;
     this.sale = new Sale();
     Object.assign(this.sale, sale);
+    this.gatepasses = this.sale.gatepasses;
     this.commission = this.sale.commission;
     this.basePrice = this.sale.basePrice;
-
     this.saleForm.patchValue({
       date: moment.utc(sale.date).tz('Asia/Karachi').format().slice(0, 16),
       type: sale.type,
-      // direction: purchase.direction,
       weightPriceGroup: {
-        // bagQuantity: purchase.bagQuantity,
-        // bagWeight: purchase.bagWeight,
-        // kandaWeight: purchase.kandaWeight,
-        // emptyBagWeight: purchase.expectedEmptyBagWeight,
-        // totalEmptyBagWeight: purchase.totalExpectedEmptyBagWeight,
-        // expectedBagWeight: purchase.expectedBagWeight,
-        // totalExpectedBagWeight: purchase.totalExpectedBagWeight,
-        // actualBagWeight: purchase.actualBagWeight,
-        // totalActualBagWeight: purchase.totalActualBagWeight,
-        // vibration: purchase.vibration,
-        // actualBags: purchase.actualBags,
-        // percentCommission: purchase.percentCommission,
-        // ratePerKg: purchase.ratePerKg,
         isMaundBasedRate: sale.rateBasedOn.toString(),
         totalMaund: sale.totalMaund,
         bagQuantity: sale.bagQuantity,
