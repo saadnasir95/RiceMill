@@ -38,6 +38,9 @@ namespace TheRiceMill.Persistence
         public DbSet<StockOut> StockOuts { get; set; }
         public DbSet<ProcessedMaterial> ProcessedMaterials { get; set; }
         public DbSet<RateCost> RateCosts { get; set; }
+        public DbSet<Voucher> Voucher { get; set; }
+        public DbSet<VoucherDetail> VoucherDetail { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);

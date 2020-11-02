@@ -28,6 +28,10 @@ namespace TheRiceMill.Application.Constants
         None = 0,
         Sale = 1,
         Purchase,
+        CashReceivable,
+        CashPayable,
+        BankReceivable,
+        BankPayable,
         BankTransaction
     }
 

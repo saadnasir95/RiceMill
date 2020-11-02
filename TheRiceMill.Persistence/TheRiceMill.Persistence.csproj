@@ -5,6 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Migrations\20201102183314_Added-Voucher-Enitity.cs" />
+    <Compile Remove="Migrations\20201102183314_Added-Voucher-Enitity.Designer.cs" />
+    <Compile Remove="Migrations\20201102192322_Vouchar-entity.cs" />
+    <Compile Remove="Migrations\20201102192322_Vouchar-entity.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="2.2.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.6" />
