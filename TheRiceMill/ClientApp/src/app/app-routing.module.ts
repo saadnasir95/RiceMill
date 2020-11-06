@@ -1,7 +1,5 @@
 import { ExtraOptions, RouterModule, Routes } from '@angular/router';
 import { NgModule } from '@angular/core';
-import { AuthGuard } from './shared/services/auth-guard.service';
-import { LayoutComponent } from './features/layout/components/layout/layout.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -9,8 +7,7 @@ const routes: Routes = [
 ];
 
 const config: ExtraOptions = {
-  useHash: false,
-  enableTracing: true
+  useHash: false
 };
 
 

@@ -22,6 +22,7 @@ const routes: Routes = [
       { path: 'lot', loadChildren: '../lot/lot.module#LotModule', data: { role: ['Administrator'] } },
       { path: 'bank-transaction', loadChildren: '../bank-transaction/bank-transaction.module#BankTransactionModule', data: { role: ['Administrator'] } },
       { path: 'bank', loadChildren: '../bank/bank.module#BankModule', data: { role: ['Administrator'] } },
+      { path: 'voucher', loadChildren: '../voucher/voucher.module#VoucherModule', data: { role: ['Administrator'] } },
     ]
   }
 ];

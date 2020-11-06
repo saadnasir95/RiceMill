@@ -26,14 +26,15 @@ export class SidebarComponent implements OnInit {
       { path: '/admin/gatepass', title: 'Gate Pass', icon: 'fas fa-passport', class: '' },
       { path: '/admin/purchase', title: 'Purchase', icon: 'fa fa-shopping-cart', class: '' },
       { path: '/admin/sale', title: 'Sale', icon: 'fa fa-shopping-cart', class: '' },
+      { path: '/admin/lot', title: 'Lot', icon: 'fa fa-book', class: '' },
       { path: '/admin/party', title: 'Party', icon: 'fa fa-building', class: '' },
       { path: '/admin/vehicle', title: 'Vehicle', icon: 'fa fa-truck', class: '' },
       { path: '/admin/product', title: 'Product', icon: 'fa fa-shopping-bag', class: '' },
       { path: '/admin/ledger/party', title: 'Party Ledger', icon: 'fa fa-book', class: '' },
       { path: '/admin/ledger/company', title: 'Company Ledger', icon: 'fa fa-book', class: '' },
-      { path: '/admin/lot', title: 'Lot', icon: 'fa fa-book', class: '' },
       // { path: '/admin/bank-transaction', title: 'Bank Transaction', icon: 'fa fa-exchange-alt', class: '' },
-      { path: '/admin/bank', title: 'Bank', icon: 'fa fa-university', class: '' }
+      { path: '/admin/bank', title: 'Bank', icon: 'fa fa-university', class: '' },
+      { path: '/admin/voucher', title: 'Voucher', icon: 'fa fa-university', class: '' }
     ];
     const userItems = [
       { path: '/admin/settings', title: 'Settings', icon: 'fa fa-cog', class: '' },

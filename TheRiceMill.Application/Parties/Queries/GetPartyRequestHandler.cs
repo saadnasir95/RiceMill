@@ -25,7 +25,7 @@ namespace TheRiceMill.Application.Companies.Queries
         public Task<ResponseViewModel> Handle(GetPartyRequestModel request, CancellationToken cancellationToken)
         {
             request.SetDefaultValue();
-            var list = _context.Parties.GetMany(p => p.Name.Contains(request.Search) && p.CompanyId == request.CompanyId.ToInt(), request.OrderBy, request.Page,
+            var list = _context.Parties.GetMany(p => (p.Name.Contains(request.Search) || p.Id.ToString() == request.Search) && p.CompanyId == request.CompanyId.ToInt(), request.OrderBy, request.Page,
                 request.PageSize, request.IsDescending).Select(party => new PartyInfoResponseModel()
                 {
                     Name = party.Name,

@@ -64,3 +64,15 @@ export enum ProductType {
   ProcessedMaterial,
   NonProcessedMaterial
 }
+
+export enum VoucherType {
+  Sale = 0,
+  Purchase
+}
+
+export enum VoucherDetailType {
+  CashReceivable = 0,
+  CashPayable = 1,
+  BankReceivable = 2,
+  BankPayable = 3,
+}
