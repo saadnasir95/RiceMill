@@ -1,12 +1,21 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { MatAutocompleteSelectedEvent, MatDialogRef } from '@angular/material';
+import { BankAccountResponse } from '../../../../shared/model/bank-account-response.model';
+import { BankAccount } from '../../../../shared/model/bank-account.model';
 import { VoucherDetailType, VoucherType } from '../../../../shared/model/enums';
 import { PartyResponse } from '../../../../shared/model/party-response.model';
 import { Party } from '../../../../shared/model/party.model';
+import { PurchaseResponse } from '../../../../shared/model/purchase-response.model';
+import { Purchase } from '../../../../shared/model/purchase.model';
+import { SaleResponse } from '../../../../shared/model/sale-response.model';
+import { Sale } from '../../../../shared/model/sale.model';
 import { Voucher } from '../../../../shared/model/voucher.model';
+import { BankAccountService } from '../../../../shared/services/bank-account.service';
 import { NotificationService } from '../../../../shared/services/notification.service';
 import { PartyService } from '../../../../shared/services/party.service';
+import { PurchaseService } from '../../../../shared/services/purchase.service';
+import { SaleService } from '../../../../shared/services/sale.service';
 import { SpinnerService } from '../../../../shared/services/spinner.service';
 import { VoucherService } from '../../../../shared/services/voucher.service';
 
@@ -17,6 +26,9 @@ import { VoucherService } from '../../../../shared/services/voucher.service';
 })
 export class VoucherModalComponent implements OnInit {
   partySuggestions: Party[];
+  saleSuggestions: Sale[];
+  purchaseSuggestions: Purchase[];
+  bankAccountSuggestions: BankAccount[];
   isGatein = true;
   voucherType = VoucherType;
   voucherDetailType = VoucherDetailType;
@@ -30,8 +42,11 @@ export class VoucherModalComponent implements OnInit {
         partyId: new FormControl(''),
         party: new FormControl(''),
         saleId: new FormControl(''),
+        sale: new FormControl(''),
         purchaseId: new FormControl(''),
+        purchase: new FormControl(''),
         bankAccountId: new FormControl(''),
+        bankAccount: new FormControl(''),
         credit: new FormControl(''),
         debit: new FormControl(''),
         remarks: new FormControl('')
@@ -45,6 +60,9 @@ export class VoucherModalComponent implements OnInit {
   constructor(
     private voucherService: VoucherService,
     private partyService: PartyService,
+    private saleService: SaleService,
+    private purchaseService: PurchaseService,
+    private bankAccountService: BankAccountService,
     private notificationService: NotificationService,
     public spinner: SpinnerService) { }
 
@@ -97,6 +115,36 @@ export class VoucherModalComponent implements OnInit {
       this.partyService.getParties(5, 0, value).subscribe(
         (response: PartyResponse) => {
           this.partySuggestions = response.data;
+        },
+        (error) => console.log(error)
+      );
+    }
+  }
+  onSaleInput(value: string) {
+    if (value) {
+      this.saleService.getSaleList(5, 0, value).subscribe(
+        (response: SaleResponse) => {
+          this.saleSuggestions = response.data;
+        },
+        (error) => console.log(error)
+      );
+    }
+  }
+  onPurchaseInput(value: string) {
+    if (value) {
+      this.purchaseService.getPurchaseList(5, 0, value).subscribe(
+        (response: PurchaseResponse) => {
+          this.purchaseSuggestions = response.data;
+        },
+        (error) => console.log(error)
+      );
+    }
+  }
+  onBankAccountInput(value: string) {
+    if (value) {
+      this.bankAccountService.getBankAccounts(5, 0, value).subscribe(
+        (response: BankAccountResponse) => {
+          this.bankAccountSuggestions = response.data;
         },
         (error) => console.log(error)
       );
@@ -251,28 +299,35 @@ export class VoucherModalComponent implements OnInit {
       party: 'Party: ' + event.option.value.name + ' | ' + event.option.value.address,
       partyId: event.option.value.id
     });
-    // (this.voucherForm.get('voucherDetails') as FormArray).at(i).value.part=event
-    // this.gatepassForm.get('partyGroup').setValue({
-    //   name: event.option.value.name,
-    //   phoneNumber: event.option.value.phoneNumber,
-    //   address: event.option.value.address
-    // }, { emitEvent: false });
-    // if (this.gatepass === undefined || this.gatepass === null) {
-    //   this.gatepass = new Gatepass();
-    // }
-    // if (this.gatepass.party === undefined || this.gatepass.party === null) {
-    //   this.gatepass.party = new Party();
-    // }
-    // this.gatepass.partyId = event.option.value.id;
-    // this.gatepass.party = event.option.value;
+  }
+  selectedSale(i: number, event: MatAutocompleteSelectedEvent) {
+    (this.voucherForm.get('voucherDetails') as FormArray).at(i).patchValue({
+      // sale: 'Party: ' + event.option.value.name + ' | ' + event.option.value.address,
+      saleId: event.option.value.id
+    });
+  }
+  selectedPurchase(i: number, event: MatAutocompleteSelectedEvent) {
+    (this.voucherForm.get('voucherDetails') as FormArray).at(i).patchValue({
+      // sale: 'Party: ' + event.option.value.name + ' | ' + event.option.value.address,
+      purchaseId: event.option.value.id
+    });
+  }
+  selectedBankAccount(i: number, event: MatAutocompleteSelectedEvent) {
+    (this.voucherForm.get('voucherDetails') as FormArray).at(i).patchValue({
+      // sale: 'Party: ' + event.option.value.name + ' | ' + event.option.value.address,
+      bankAccountId: event.option.value.id
+    });
   }
   addVoucherDetail() {
     const formGroup = new FormGroup({
       partyId: new FormControl(''),
       party: new FormControl(''),
       saleId: new FormControl(''),
+      sale: new FormControl(''),
       purchaseId: new FormControl(''),
+      purchase: new FormControl(''),
       bankAccountId: new FormControl(''),
+      bankAccount: new FormControl(''),
       credit: new FormControl(''),
       debit: new FormControl(''),
       remarks: new FormControl('')

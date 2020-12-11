@@ -36,7 +36,7 @@
       <div formArrayName="voucherDetails">
         <div *ngFor="let voucherDetail of voucherForm.get('voucherDetails')['controls'];let i=index" [formGroupName]="i"
           class="row mb-1">
-          <mat-form-field class="col-2">
+          <mat-form-field class="col-1">
             <input type="number" matInput placeholder="Party Id" formControlName="partyId"
               [matAutocomplete]="partyAutoComplete" (input)="onPartyInput($event.target.value)">
             <mat-autocomplete #partyAutoComplete="matAutocomplete" (optionSelected)="selectedParty(i,$event)">
@@ -45,18 +45,33 @@
             </mat-autocomplete>
           </mat-form-field>
           <mat-form-field class="col-2" *ngIf="isSaleVoucher">
-            <input type="number" matInput placeholder="Sale Invoice" formControlName="saleId">
+            <input type="number" matInput placeholder="Sale Invoice" formControlName="saleId"
+              [matAutocomplete]="saleAutoComplete" (input)="onSaleInput($event.target.value)">
+            <mat-autocomplete #saleAutoComplete="matAutocomplete" (optionSelected)="selectedSale(i,$event)">
+              <mat-option *ngFor="let sale of saleSuggestions" [value]="sale">
+                {{sale.gatepasses[0].party.name + ' -- ' + sale.basePrice}}</mat-option>
+            </mat-autocomplete>
           </mat-form-field>
           <mat-form-field class="col-2" *ngIf="!isSaleVoucher">
-            <input type="number" matInput placeholder="Purhcase Invoice" formControlName="purchaseId">
+            <input type="number" matInput placeholder="Purhcase Invoice" formControlName="purchaseId"
+              [matAutocomplete]="purchaseAutoComplete" (input)="onPurchaseInput($event.target.value)">
+            <mat-autocomplete #purchaseAutoComplete="matAutocomplete" (optionSelected)="selectedPurchase(i,$event)">
+              <mat-option *ngFor="let purchase of purchaseSuggestions" [value]="purchase">
+                {{purchase.gatepasses[0].party.name + ' -- ' + purchase.basePrice}}</mat-option>
+            </mat-autocomplete>
           </mat-form-field>
-          <mat-form-field class="col-2" *ngIf="isBankVoucher">
-            <input type="number" matInput placeholder="Bank Account" formControlName="purchaseId">
+          <mat-form-field class="col-1" *ngIf="isBankVoucher">
+            <input type="number" matInput placeholder="Bank Account" formControlName="bankAccountId"
+              [matAutocomplete]="bankAccountAutoComplete" (input)="onBankAccountInput($event.target.value)">
+            <mat-autocomplete #bankAccountAutoComplete="matAutocomplete" (optionSelected)="selectedBankAccount(i,$event)">
+              <mat-option *ngFor="let bankAccount of bankAccountSuggestions" [value]="bankAccount">
+                {{bankAccount.accountNumber}}</mat-option>
+            </mat-autocomplete>
           </mat-form-field>
-          <mat-form-field class="col-1">
+          <mat-form-field class="col-2">
             <input type="number" matInput placeholder="Credit" formControlName="credit">
           </mat-form-field>
-          <mat-form-field class="col-1">
+          <mat-form-field class="col-2">
             <input type="number" matInput placeholder="Debit" formControlName="debit">
           </mat-form-field>
           <mat-form-field [ngClass]="{'col-3': isBankVoucher, 'col-4': !isBankVoucher}">
@@ -68,7 +83,18 @@
             </i>
           </div>
           <mat-chip-list class="col-12">
-            <mat-chip *ngIf="voucherDetail.get('party').value"><p class="m-0">{{voucherDetail.get('party').value}}</p></mat-chip>
+            <mat-chip *ngIf="voucherDetail.get('party').value">
+              <p class="m-0">{{voucherDetail.get('party').value}}</p>
+            </mat-chip>
+            <mat-chip *ngIf="voucherDetail.get('sale').value && isSaleVoucher">
+              <p class="m-0">{{voucherDetail.get('sale').value}}</p>
+            </mat-chip>
+            <mat-chip *ngIf="voucherDetail.get('purchase').value && !isSaleVoucher">
+              <p class="m-0">{{voucherDetail.get('purchase').value}}</p>
+            </mat-chip>
+            <mat-chip *ngIf="voucherDetail.get('bankAccount').value && isBankVoucher">
+              <p class="m-0">{{voucherDetail.get('bankAccount').value}}</p>
+            </mat-chip>
           </mat-chip-list>
         </div>
       </div>
