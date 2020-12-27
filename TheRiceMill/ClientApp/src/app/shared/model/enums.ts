@@ -76,3 +76,8 @@ export enum VoucherDetailType {
   BankReceivable = 2,
   BankPayable = 3,
 }
+
+export enum HeadType {
+  BalanceSheet = 0,
+  ProfitAndLoss = 1
+}

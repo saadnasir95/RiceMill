@@ -1,0 +1,115 @@
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="card">
+        <div class="card-header card-header-primary rounded py-4">
+          <h3 class="card-title"><i class="fa fa-passport" aria-hidden="true"></i>
+            Gate Pass</h3>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            <mat-form-field class="col-md-8">
+              <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
+            </mat-form-field>
+            <div class="col-md-4">
+              <!-- <button mat-raised-button type="button" class="btn btn-primary" (click)="openModal()"><i
+                  class="material-icons">add</i> Add Gate Pass</button> -->
+            </div>
+          </div>
+          <mat-accordion>
+            <!-- level 1 -->
+            <mat-expansion-panel *ngFor="let head1 of head1">
+              <mat-expansion-panel-header>
+                <mat-panel-title>
+                  {{head1.code}}
+                </mat-panel-title>
+                <mat-panel-description>
+                  {{head1.name}}
+                  <span>
+                    <a href="javascript:;"><i class="fa fa-plus-circle text-success" aria-hidden="true"></i></a>&nbsp;
+                    <a href="javascript:;"><i class="fa fa-pen" aria-hidden="true"></i></a>&nbsp;
+                    <a href="javascript:;"><i class="fa fa-trash text-danger" aria-hidden="true"></i></a>
+                  </span>
+                </mat-panel-description>
+              </mat-expansion-panel-header>
+              <!-- level 2 -->
+              <mat-expansion-panel *ngFor="let head2 of head1.head2">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    {{head2.code}}
+                  </mat-panel-title>
+                  <mat-panel-description>
+                    {{head2.name}}
+                    <span>
+                      <a href="javascript:;"><i class="fa fa-plus-circle text-success" aria-hidden="true"></i></a>&nbsp;
+                      <a href="javascript:;"><i class="fa fa-pen" aria-hidden="true"></i></a>&nbsp;
+                      <a href="javascript:;"><i class="fa fa-trash text-danger" aria-hidden="true"></i></a>
+                    </span>
+                  </mat-panel-description>
+                </mat-expansion-panel-header>
+                <!-- level 3 -->
+                <mat-expansion-panel *ngFor="let head3 of head2.head3">
+                  <mat-expansion-panel-header>
+                    <mat-panel-title>
+                      {{head3.code}}
+                    </mat-panel-title>
+                    <mat-panel-description>
+                      {{head3.name}}
+                      <span>
+                        <a href="javascript:;"><i class="fa fa-plus-circle text-success"
+                            aria-hidden="true"></i></a>&nbsp;
+                        <a href="javascript:;"><i class="fa fa-pen" aria-hidden="true"></i></a>&nbsp;
+                        <a href="javascript:;"><i class="fa fa-trash text-danger" aria-hidden="true"></i></a>
+                      </span>
+                    </mat-panel-description>
+                  </mat-expansion-panel-header>
+                  <!-- level 4 -->
+                  <mat-expansion-panel *ngFor="let head4 of head3.head4">
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>
+                        {{head4.code}}
+                      </mat-panel-title>
+                      <mat-panel-description>
+                        {{head4.name}}
+                        <span>
+                          <a href="javascript:;"><i class="fa fa-plus-circle text-success"
+                              aria-hidden="true"></i></a>&nbsp;
+                          <a href="javascript:;"><i class="fa fa-pen" aria-hidden="true"></i></a>&nbsp;
+                          <a href="javascript:;"><i class="fa fa-trash text-danger" aria-hidden="true"></i></a>
+                        </span>
+                      </mat-panel-description>
+                    </mat-expansion-panel-header>
+                    <!-- level 5 -->
+                    <table mat-table [dataSource]="head4.head5">
+                      <ng-container matColumnDef="code">
+                        <th mat-header-cell *matHeaderCellDef>Code</th>
+                        <td mat-cell *matCellDef="let element"> {{element.code}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="name">
+                        <th mat-header-cell *matHeaderCellDef>Name</th>
+                        <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+                      </ng-container>
+
+                      <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef>Action</th>
+                        <td mat-cell *matCellDef="let element">
+                          <a href="javascript:;"><i class="fa fa-pen" aria-hidden="true"></i></a>
+                          &nbsp;
+                          <a href="javascript:;"><i class="fa fa-trash text-danger" aria-hidden="true"></i></a>
+                        </td>
+                      </ng-container>
+
+                      <!-- <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr> -->
+                      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                  </mat-expansion-panel>
+                </mat-expansion-panel>
+              </mat-expansion-panel>
+            </mat-expansion-panel>
+          </mat-accordion>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

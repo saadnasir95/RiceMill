@@ -34,7 +34,8 @@ export class SidebarComponent implements OnInit {
       { path: '/admin/ledger/company', title: 'Company Ledger', icon: 'fa fa-book', class: '' },
       // { path: '/admin/bank-transaction', title: 'Bank Transaction', icon: 'fa fa-exchange-alt', class: '' },
       { path: '/admin/bank', title: 'Bank', icon: 'fa fa-university', class: '' },
-      { path: '/admin/voucher', title: 'Voucher', icon: 'fa fa-university', class: '' }
+      { path: '/admin/voucher', title: 'Voucher', icon: 'fa fa-university', class: '' },
+      { path: '/admin/head', title: 'Heads', icon: 'fa fa-university', class: '' }
     ];
     const userItems = [
       { path: '/admin/settings', title: 'Settings', icon: 'fa fa-cog', class: '' },

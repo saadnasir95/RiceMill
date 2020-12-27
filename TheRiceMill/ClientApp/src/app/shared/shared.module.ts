@@ -18,7 +18,8 @@ import {
   MatRadioModule,
   MatDividerModule,
   MatButtonToggleModule,
-  MatTabsModule
+  MatTabsModule,
+  MatExpansionModule,
 } from '@angular/material';
 import { ModalComponent } from './components/modal/modal.component';
 import { ProductTypePipe } from './pipes/product-type.pipe';
@@ -72,7 +73,8 @@ import { SaleTypePipe } from './pipes/sale-type.pipe';
     MatDividerModule,
     TranslateModule,
     MatButtonToggleModule,
-    MatTabsModule
+    MatTabsModule,
+    MatExpansionModule
   ],
   exports: [
     MatButtonModule,
@@ -107,7 +109,8 @@ import { SaleTypePipe } from './pipes/sale-type.pipe';
     RateBasedOnPipe,
     CompanyTypePipe,
     SaleTypePipe,
-    MatTabsModule
+    MatTabsModule,
+    MatExpansionModule
   ],
   entryComponents: [ModalComponent]
 })
