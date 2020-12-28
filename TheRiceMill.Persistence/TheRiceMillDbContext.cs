@@ -40,6 +40,12 @@ namespace TheRiceMill.Persistence
         public DbSet<RateCost> RateCosts { get; set; }
         public DbSet<Voucher> Voucher { get; set; }
         public DbSet<VoucherDetail> VoucherDetail { get; set; }
+        public DbSet<Head1> Head1 { get; set; }
+        public DbSet<Head2> Head2 { get; set; }
+        public DbSet<Head3> Head3 { get; set; }
+        public DbSet<Head4> Head4 { get; set; }
+        public DbSet<Head5> Head5 { get; set; }
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

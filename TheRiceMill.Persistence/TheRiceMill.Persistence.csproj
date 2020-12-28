@@ -9,6 +9,10 @@
     <Compile Remove="Migrations\20201102183314_Added-Voucher-Enitity.Designer.cs" />
     <Compile Remove="Migrations\20201102192322_Vouchar-entity.cs" />
     <Compile Remove="Migrations\20201102192322_Vouchar-entity.Designer.cs" />
+    <Compile Remove="Migrations\20201227104143_added-heads-entities.cs" />
+    <Compile Remove="Migrations\20201227104143_added-heads-entities.Designer.cs" />
+    <Compile Remove="Migrations\20201227104413_added-heads-entities.cs" />
+    <Compile Remove="Migrations\20201227104413_added-heads-entities.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
