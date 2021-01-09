@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { HeadType } from '../../../../shared/model/enums';
-import { Head1 } from '../../../../shared/model/head.model';
+import { MatDialog, MatDialogRef } from '@angular/material';
+import { HeadLevel, HeadType } from '../../../../shared/model/enums';
+import { Head, Head1 } from '../../../../shared/model/head.model';
+import { HeadModalComponent } from '../head-modal/head-modal.component';
 
 @Component({
   selector: 'app-head',
@@ -11,6 +13,7 @@ export class HeadComponent implements OnInit {
   displayedColumns: string[] = ['code', 'name', 'action'];
   panelOpenState = true;
   headType = HeadType;
+  headLevel = HeadLevel;
   head1: Head1[] = [
     {
       id: 1,
@@ -69,10 +72,36 @@ export class HeadComponent implements OnInit {
         }
       ]
     }
-  ]
-  constructor() { }
+  ];
+  dialogRef: MatDialogRef<HeadModalComponent>;
+  constructor(private matDialog: MatDialog) { }
 
   ngOnInit() {
+  }
+
+  addHead(head: any, level: HeadLevel) {
+    this.dialogRef = this.matDialog.open(HeadModalComponent, {
+      disableClose: true,
+      width: '400px'
+    });
+    this.dialogRef.componentInstance.modalRef = this.dialogRef;
+  }
+
+  editHead(head: Head, level: HeadLevel) {
+    this.dialogRef = this.matDialog.open(HeadModalComponent, {
+      disableClose: true,
+      width: '400px'
+    });
+    this.dialogRef.componentInstance.modalRef = this.dialogRef;
+    this.dialogRef.componentInstance.editHead(head);
+  }
+  deleteHead(head: Head, level: HeadLevel) {
+    this.dialogRef = this.matDialog.open(HeadModalComponent, {
+      disableClose: true,
+      width: '400px'
+    });
+    this.dialogRef.componentInstance.modalRef = this.dialogRef;
+    this.dialogRef.componentInstance.deleteHead(head);
   }
 
 }

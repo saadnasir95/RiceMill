@@ -8,13 +8,13 @@
         </div>
         <div class="card-body">
           <div class="row">
-            <mat-form-field class="col-md-8">
+            <!-- <mat-form-field class="col-md-8">
               <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search">
             </mat-form-field>
             <div class="col-md-4">
-              <!-- <button mat-raised-button type="button" class="btn btn-primary" (click)="openModal()"><i
-                  class="material-icons">add</i> Add Gate Pass</button> -->
-            </div>
+              <button mat-raised-button type="button" class="btn btn-primary" (click)="openModal()"><i
+                  class="material-icons">add</i> Add Gate Pass</button>
+            </div> -->
           </div>
           <mat-accordion>
             <!-- level 1 -->
@@ -26,9 +26,12 @@
                 <mat-panel-description>
                   {{head1.name}}
                   <span>
-                    <a href="javascript:;"><i class="fa fa-plus-circle text-success" aria-hidden="true"></i></a>&nbsp;
-                    <a href="javascript:;"><i class="fa fa-pen" aria-hidden="true"></i></a>&nbsp;
-                    <a href="javascript:;"><i class="fa fa-trash text-danger" aria-hidden="true"></i></a>
+                    <a href="javascript:;"><i class="fa fa-plus-circle text-success" aria-hidden="true"
+                        (click)="addHead(head1, headLevel.Level2)"></i></a>
+                        &nbsp;
+                    <a href="javascript:;"><i class="fa fa-pen" aria-hidden="true"></i></a>
+                    <!-- &nbsp;
+                    <a href="javascript:;"><i class="fa fa-trash text-danger" aria-hidden="true"></i></a> -->
                   </span>
                 </mat-panel-description>
               </mat-expansion-panel-header>
@@ -42,8 +45,9 @@
                     {{head2.name}}
                     <span>
                       <a href="javascript:;"><i class="fa fa-plus-circle text-success" aria-hidden="true"></i></a>&nbsp;
-                      <a href="javascript:;"><i class="fa fa-pen" aria-hidden="true"></i></a>&nbsp;
-                      <a href="javascript:;"><i class="fa fa-trash text-danger" aria-hidden="true"></i></a>
+                      <a href="javascript:;"><i class="fa fa-pen" aria-hidden="true"></i></a>
+                      <!-- &nbsp;
+                      <a href="javascript:;"><i class="fa fa-trash text-danger" aria-hidden="true"></i></a> -->
                     </span>
                   </mat-panel-description>
                 </mat-expansion-panel-header>
@@ -58,8 +62,9 @@
                       <span>
                         <a href="javascript:;"><i class="fa fa-plus-circle text-success"
                             aria-hidden="true"></i></a>&nbsp;
-                        <a href="javascript:;"><i class="fa fa-pen" aria-hidden="true"></i></a>&nbsp;
-                        <a href="javascript:;"><i class="fa fa-trash text-danger" aria-hidden="true"></i></a>
+                        <a href="javascript:;"><i class="fa fa-pen" aria-hidden="true"></i></a>
+                        <!-- &nbsp;
+                        <a href="javascript:;"><i class="fa fa-trash text-danger" aria-hidden="true"></i></a> -->
                       </span>
                     </mat-panel-description>
                   </mat-expansion-panel-header>
@@ -74,8 +79,9 @@
                         <span>
                           <a href="javascript:;"><i class="fa fa-plus-circle text-success"
                               aria-hidden="true"></i></a>&nbsp;
-                          <a href="javascript:;"><i class="fa fa-pen" aria-hidden="true"></i></a>&nbsp;
-                          <a href="javascript:;"><i class="fa fa-trash text-danger" aria-hidden="true"></i></a>
+                          <a href="javascript:;"><i class="fa fa-pen" aria-hidden="true"></i></a>
+                          <!-- &nbsp;
+                          <a href="javascript:;"><i class="fa fa-trash text-danger" aria-hidden="true"></i></a> -->
                         </span>
                       </mat-panel-description>
                     </mat-expansion-panel-header>
@@ -95,8 +101,8 @@
                         <th mat-header-cell *matHeaderCellDef>Action</th>
                         <td mat-cell *matCellDef="let element">
                           <a href="javascript:;"><i class="fa fa-pen" aria-hidden="true"></i></a>
-                          &nbsp;
-                          <a href="javascript:;"><i class="fa fa-trash text-danger" aria-hidden="true"></i></a>
+                          <!-- &nbsp;
+                          <a href="javascript:;"><i class="fa fa-trash text-danger" aria-hidden="true"></i></a> -->
                         </td>
                       </ng-container>
 

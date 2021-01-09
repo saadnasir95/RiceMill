@@ -81,3 +81,11 @@ export enum HeadType {
   BalanceSheet = 0,
   ProfitAndLoss = 1
 }
+
+export enum HeadLevel {
+  Level1,
+  Level2,
+  Level3,
+  Level4,
+  Level5,
+}

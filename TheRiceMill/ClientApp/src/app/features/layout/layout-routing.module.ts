@@ -9,7 +9,7 @@ const routes: Routes = [
   {
     path: 'admin',
     component: LayoutComponent,
-    canActivateChild: [AuthGuard],
+    // canActivateChild: [AuthGuard],
     children: [
       { path: 'gatepass', loadChildren: '../gatepass/gatepass.module#GatepassModule', data: { role: ['Administrator', 'GateKeeper'] } },
       { path: 'purchase', loadChildren: '../purchase/purchase.module#PurchaseModule', data: { role: ['Administrator'] } },
