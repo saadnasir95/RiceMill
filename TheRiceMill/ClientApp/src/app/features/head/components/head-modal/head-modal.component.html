@@ -1,6 +1,6 @@
 <ng-template #header>
-  <h2 mat-dialog-title class="d-inline" *ngIf="isNew">Add Head</h2>
-  <h2 mat-dialog-title class="d-inline" *ngIf="!isNew">Edit Head</h2>
+  <h2 mat-dialog-title class="d-inline" *ngIf="isNew">Add {{headLevel | headLevel}}</h2>
+  <h2 mat-dialog-title class="d-inline" *ngIf="!isNew">Edit {{headLevel | headLevel}}</h2>
   <span class="float-right">
     <i class="fa fa-times show-cursor" style="cursor: pointer;" (click)="closeModal()">
     </i>
@@ -11,10 +11,19 @@
 <ng-template #body>
   <form [formGroup]="headForm" (ngSubmit)="submit()">
     <mat-dialog-content>
-      <mat-form-field class="d-block w-100">
-        <input type="text" matInput placeholder="Name" formControlName="name">
-        <mat-error *ngIf="headForm.get('name').hasError('required')">Name is required</mat-error>
-      </mat-form-field>
+      <div class="row">
+        <mat-form-field class="col-sm-12">
+          <input type="text" matInput placeholder="Name" formControlName="name">
+          <mat-error *ngIf="headForm.get('name').hasError('required')">Name is required</mat-error>
+        </mat-form-field>
+      </div>
+      <div class="col-sm-12 mb-3">
+        <label id="type" class="d-block">Select Type</label>
+        <mat-radio-group aria-labelledby="type" formControlName="type">
+          <mat-radio-button [value]="+headType.BalanceSheet" class="mr-2" color="primary"> Balance Sheet</mat-radio-button>
+          <mat-radio-button [value]="+headType.ProfitAndLoss" color="primary"> Profit And Loss</mat-radio-button>
+        </mat-radio-group>
+      </div>
     </mat-dialog-content>
     <mat-dialog-actions>
       <div class="row ml-1">

@@ -35,6 +35,7 @@ import { LocalCurrencyPipe } from './pipes/local-currency.pipe';
 import { RateBasedOnPipe } from './pipes/rate-based-on.pipe';
 import { CompanyTypePipe } from './pipes/company-type.pipe';
 import { SaleTypePipe } from './pipes/sale-type.pipe';
+import { HeadLevelPipe } from './pipes/head-level.pipe';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { SaleTypePipe } from './pipes/sale-type.pipe';
     LocalCurrencyPipe,
     RateBasedOnPipe,
     CompanyTypePipe,
-    SaleTypePipe
+    SaleTypePipe,
+    HeadLevelPipe
   ],
   imports: [
     CommonModule,
@@ -110,7 +112,8 @@ import { SaleTypePipe } from './pipes/sale-type.pipe';
     CompanyTypePipe,
     SaleTypePipe,
     MatTabsModule,
-    MatExpansionModule
+    MatExpansionModule,
+    HeadLevelPipe
   ],
   entryComponents: [ModalComponent]
 })

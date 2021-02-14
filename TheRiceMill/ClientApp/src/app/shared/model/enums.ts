@@ -83,6 +83,7 @@ export enum HeadType {
 }
 
 export enum HeadLevel {
+  None,
   Level1,
   Level2,
   Level3,

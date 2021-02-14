@@ -32,19 +32,52 @@ namespace TheRiceMill.Application.Heads.Queries
             request.SetDefaultValue();
             Expression<Func<Head1, bool>> query = p => p.CompanyId == request.CompanyId.ToInt();
 
-            List<Head1ResponseModel> head1 = _context.Head1
+            List<Head1ResponseModel> response = _context.Head1
                 .GetMany(query,
                 request.OrderBy, request.Page,
                 request.PageSize, request.IsDescending)
-                .Select(p => new Head1ResponseModel()
+                .Select(head1 => new Head1ResponseModel()
                 {
-                    Code = p.Code,
-                    HeadType = (HeadType)p.Type,
-                    Name = p.Name,
-                    CompanyId = (CompanyType)p.CompanyId
+                    Id = head1.Id,
+                    Code = head1.Code,
+                    Type = head1.Type,
+                    Name = head1.Name,
+                    CompanyId = (CompanyType)head1.CompanyId,
+                    Head2 = head1.Head2.Select(head2 => new Head2ResponseModel
+                    {
+                        Id = head2.Id,
+                        Code = head2.Code,
+                        Name = head2.Name,
+                        Head1Id = head2.Head1Id,
+                        Type = head2.Type,
+                        Head3 = head2.Head3.Select(head3 => new Head3ResponseModel
+                        {
+                            Id = head3.Id,
+                            Code = head3.Code,
+                            Name = head3.Name,
+                            Head2Id = head3.Head2Id,
+                            Type = head3.Type,
+                            Head4 = head3.Head4.Select(head4 => new Head4ResponseModel
+                            {
+                                Id = head4.Id,
+                                Code = head4.Code,
+                                Name = head4.Name,
+                                Head3Id = head4.Head3Id,
+                                Type = head4.Type,
+                                Head5 = head4.Head5.Select(head5 => new Head5ResponseModel
+                                {
+                                    Id = head5.Id,
+                                    Code = head5.Code,
+                                    Name = head5.Name,
+                                    Head4Id = head5.Head4Id,
+                                    Type = head5.Type,
+                                }).ToList()
+                            }).ToList()
+                        }).ToList()
+                    }).ToList()
                 }).ToList();
             var count = await _context.Head1.CountAsync(query, cancellationToken);
-            return new ResponseViewModel().CreateOk(head1, count);
+            return new ResponseViewModel().CreateOk(response, count);
         }
     }
 }

@@ -1,4 +1,4 @@
-import { HeadType } from "./enums";
+import { HeadType } from './enums';
 
 export class Head {
   id: number;
@@ -9,6 +9,7 @@ export class Head {
 
 export class Head1 extends Head {
   head2: Head2[];
+  companyId: number;
 }
 
 export class Head2 extends Head {

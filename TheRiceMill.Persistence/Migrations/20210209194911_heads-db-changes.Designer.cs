@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TheRiceMill.Persistence;
 
 namespace TheRiceMill.Persistence.Migrations
 {
     [DbContext(typeof(TheRiceMillDbContext))]
-    partial class TheRiceMillDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210209194911_heads-db-changes")]
+    partial class headsdbchanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -440,11 +442,21 @@ namespace TheRiceMill.Persistence.Migrations
 
                     b.Property<string>("Code");
 
+                    b.Property<int>("CompanyId");
+
+                    b.Property<string>("CreatedBy");
+
+                    b.Property<DateTime>("CreatedDate");
+
                     b.Property<int>("Head1Id");
 
                     b.Property<string>("Name");
 
                     b.Property<int>("Type");
+
+                    b.Property<string>("UpdatedBy");
+
+                    b.Property<DateTime>("UpdatedDate");
 
                     b.HasKey("Id");
 

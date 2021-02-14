@@ -10,21 +10,19 @@ using TheRiceMill.Domain.Entities;
 
 namespace TheRiceMill.Application.Heads.Models
 {
-    public class UpdateHead1RequestModel : IRequest<ResponseViewModel>
+    public class UpdateHead5RequestModel : IRequest<ResponseViewModel>
     {
         public int Id { get; set; }
         public string Code { get; set; }
         public string Name { get; set; }
         public HeadType Type { get; set; }
-        public CompanyType CompanyId { get; set; }
     }
 
-    public class UpdateHead1RequestModelValidator : AbstractValidator<UpdateHead1RequestModel>
+    public class UpdateHead5RequestModelValidator : AbstractValidator<UpdateHead5RequestModel>
     {
-        public UpdateHead1RequestModelValidator()
+        public UpdateHead5RequestModelValidator()
         {
             RuleFor(p => p.Type).IsInEnum().WithMessage(Messages.IncorrectValue);
-            RuleFor(p => p.CompanyId).IsInEnum().WithMessage(Messages.IncorrectValue);
             RuleFor(p => p.Name).NotEmpty().WithMessage(Messages.EmptyError).MaximumLength(50).WithMessage(Messages.MaxLengthError(50));
             RuleFor(p => p.Code).NotEmpty().WithMessage(Messages.EmptyError).MaximumLength(50).WithMessage(Messages.MaxLengthError(50));
             RuleFor(p => p.Id).GreaterThan(0).WithMessage(Messages.LessThan(0));
