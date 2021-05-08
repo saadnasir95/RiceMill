@@ -20,7 +20,7 @@
           </div>
           <mat-accordion>
             <!-- level 1 -->
-            <mat-expansion-panel *ngFor="let head1 of head1" [expanded]="IsExpandedDiv(head1)">
+            <mat-expansion-panel *ngFor="let head1 of head1" [expanded]="IsExpandedDiv(head1,headLevel.Level1)">
               <mat-expansion-panel-header>
                 <mat-panel-title>
                   {{ head1.code }}
@@ -39,7 +39,7 @@
                 </mat-panel-description>
               </mat-expansion-panel-header>
               <!-- level 2 -->
-              <mat-expansion-panel *ngFor="let head2 of head1.head2" [expanded]="IsExpandedDiv(head1)">
+              <mat-expansion-panel *ngFor="let head2 of head1.head2" [expanded]="IsExpandedDiv(head1,headLevel.Level2)">
                 <mat-expansion-panel-header>
                   <mat-panel-title>
                     {{ head2.code }}
@@ -57,7 +57,8 @@
                   </mat-panel-description>
                 </mat-expansion-panel-header>
                 <!-- level 3 -->
-                <mat-expansion-panel *ngFor="let head3 of head2.head3" [expanded]="IsExpandedDiv(head1)">
+                <mat-expansion-panel *ngFor="let head3 of head2.head3"
+                  [expanded]="IsExpandedDiv(head1,headLevel.Level3)">
                   <mat-expansion-panel-header>
                     <mat-panel-title>
                       {{ head3.code }}
@@ -75,7 +76,8 @@
                     </mat-panel-description>
                   </mat-expansion-panel-header>
                   <!-- level 4 -->
-                  <mat-expansion-panel *ngFor="let head4 of head3.head4" [expanded]="IsExpandedDiv(head1)">
+                  <mat-expansion-panel *ngFor="let head4 of head3.head4"
+                    [expanded]="IsExpandedDiv(head1,headLevel.Level4)">
                     <mat-expansion-panel-header>
                       <mat-panel-title>
                         {{ head4.code }}

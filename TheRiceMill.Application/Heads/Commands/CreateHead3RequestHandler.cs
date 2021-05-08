@@ -39,8 +39,8 @@ namespace TheRiceMill.Application.Heads.Commands
                     Name = head2.Name,
                     Head3 = head2.Head3.Select(head3 => new Head3
                     {
-                        Id = head2.Id,
-                        Code = head2.Code,
+                        Id = head3.Id,
+                        Code = head3.Code,
                     }).OrderByDescending(head3 => head3.Id).ToList()
                 }).ToList();
             if (head2List?.Count > 0)

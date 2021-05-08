@@ -37,12 +37,12 @@ export class HeadComponent implements OnInit, OnDestroy {
     }
   }
   addHead(parent: any, level: HeadLevel) {
-    this.expandedLevel = level;
-    this.expandedId = parent ? +parent : 0;
+    this.expandedId = parent ? +parent.id : 0;
     this.expandedDivFound = false;
     let code = '';
     switch (level) {
       case HeadLevel.Level1: {
+        this.expandedLevel = HeadLevel.None;
         const totalHeads = this.head1.length;
         if (totalHeads > 0) {
           const lastHead = this.head1[totalHeads - 1];
@@ -55,6 +55,7 @@ export class HeadComponent implements OnInit, OnDestroy {
         break;
       }
       case HeadLevel.Level2: {
+        this.expandedLevel = this.headLevel.Level1;
         const totalChilds = parent.head2.length;
         if (totalChilds > 0) {
           const lastChild = parent.head2[totalChilds - 1];
@@ -69,6 +70,7 @@ export class HeadComponent implements OnInit, OnDestroy {
         break;
       }
       case HeadLevel.Level3: {
+        this.expandedLevel = this.headLevel.Level2;
         const totalChilds = parent.head3.length;
         if (totalChilds > 0) {
           const lastChild = parent.head3[totalChilds - 1];
@@ -83,6 +85,7 @@ export class HeadComponent implements OnInit, OnDestroy {
         break;
       }
       case HeadLevel.Level4: {
+        this.expandedLevel = this.headLevel.Level3;
         const totalChilds = parent.head4.length;
         if (totalChilds > 0) {
           const lastChild = parent.head4[totalChilds - 1];
@@ -97,6 +100,7 @@ export class HeadComponent implements OnInit, OnDestroy {
         break;
       }
       case HeadLevel.Level5: {
+        this.expandedLevel = this.headLevel.Level4;
         const totalChilds = parent.head5.length;
         if (totalChilds > 0) {
           const lastChild = parent.head5[totalChilds - 1];
@@ -127,7 +131,6 @@ export class HeadComponent implements OnInit, OnDestroy {
   }
 
   editHead(head: any, level: HeadLevel) {
-    this.expandedLevel = level;
     this.expandedId = head.id;
     this.expandedDivFound = false;
     const edithead: Head = {
@@ -138,23 +141,32 @@ export class HeadComponent implements OnInit, OnDestroy {
     };
     let parentId = 0;
     switch (level) {
+      case HeadLevel.Level1: {
+        this.expandedLevel = HeadLevel.None;
+        break;
+      }
       case HeadLevel.Level2: {
+        this.expandedLevel = HeadLevel.Level1;
         parentId = head.head1Id;
         break;
       }
       case HeadLevel.Level3: {
+        this.expandedLevel = HeadLevel.Level2;
         parentId = head.head2Id;
         break;
       }
       case HeadLevel.Level4: {
+        this.expandedLevel = HeadLevel.Level3;
         parentId = head.head3Id;
         break;
       }
       case HeadLevel.Level5: {
+        this.expandedLevel = HeadLevel.Level4;
         parentId = head.head4Id;
         break;
       }
     }
+    this.expandedLevel = level;
     this.dialogRef = this.matDialog.open(HeadModalComponent, {
       disableClose: true,
       width: '400px',
@@ -178,25 +190,71 @@ export class HeadComponent implements OnInit, OnDestroy {
       error => console.log(error)
     );
   }
-  IsExpandedDiv(head1: Head1): boolean {
+  IsExpandedDiv(head1: Head1, level: HeadLevel): boolean {
     // if (!this.expandedDivFound && this.expandedId > 0 && this.expandedLevel !== HeadLevel.None && head1) {
     //   if (this.expandedLevel === HeadLevel.Level1) {
     //     this.expandedDivFound = head1.id === this.expandedId;
     //     return this.expandedDivFound;
     //   } else if (this.expandedLevel === HeadLevel.Level2) {
+    //     if (+this.expandedLevel > +level) {
+    //       return true;
+    //     }
     //     this.expandedDivFound = head1.head2 && head1.head2.length > 0 ? (head1.head2.find(c => c.id === this.expandedId) ? true : false) : false;
     //     return this.expandedDivFound;
     //   } else if (this.expandedLevel === HeadLevel.Level3) {
-    //     const head3List = [];
-    //     head1.head2.forEach(head2 => {
-    //       if (head2.head3 && head2.head3.length > 0) {
-    //         head3List.push(...head2.head3);
-    //       }
-    //     });
-    //     this.expandedDivFound = head3List.find(c => c.id === this.expandedId) ? true : false;
-    //     return this.expandedDivFound;
+    //     if (+this.expandedLevel > +level) {
+    //       return true;
+    //     } else {
+    //       const head3List = [];
+    //       head1.head2.forEach(head2 => {
+    //         if (head2.head3 && head2.head3.length > 0) {
+    //           head3List.push(...head2.head3);
+    //         }
+    //       });
+    //       this.expandedDivFound = head3List.find(c => c.id === this.expandedId) ? true : false;
+    //       return this.expandedDivFound;
+    //     }
     //   }
     // }
+    if (this.expandedId > 0 && this.expandedLevel !== HeadLevel.None && head1) {
+      if (this.expandedLevel === HeadLevel.Level1 && this.expandedId === head1.id && level <= this.expandedLevel) {
+        return true;
+      } else {
+        if (head1.head2 && head1.head2.length > 0) {
+          for (const head2 of head1.head2) {
+            if (this.expandedLevel === this.headLevel.Level2 && this.expandedId === head2.id && level <= this.expandedLevel) {
+              return true;
+            } else {
+              if (head2.head3 && head2.head3.length > 0) {
+                for (const head3 of head2.head3) {
+                  if (this.expandedLevel === this.headLevel.Level3 && this.expandedId === head3.id && level <= this.expandedLevel) {
+                    return true;
+                  } else {
+                    if (head3.head4 && head3.head4.length > 0) {
+                      for (const head4 of head3.head4) {
+                        if (this.expandedLevel === this.headLevel.Level4 && this.expandedId === head4.id && level <= this.expandedLevel) {
+                          return true;
+                        } else {
+                          if (head4.head5 && head4.head5.length > 0) {
+                            for (const head5 of head4.head5) {
+                              if (this.expandedLevel === this.headLevel.Level5 && this.expandedId === head5.id && level <= this.expandedLevel) {
+                                return true;
+                              }
+                            }
+                          }
+
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+
+          }
+        }
+      }
+    }
     return false;
   }
 }
