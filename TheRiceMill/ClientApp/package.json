@@ -43,7 +43,6 @@
     "moment": "^2.22.1",
     "moment-timezone": "^0.5.27",
     "ng2-charts": "^1.6.0",
-    "ngx-daterangepicker-material": "^2.1.8",
     "node-sass": "^4.14.1",
     "perfect-scrollbar": "^1.4.0",
     "popper.js": "^1.14.5",
